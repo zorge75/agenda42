@@ -10,7 +10,7 @@ module.exports = {
             env_prod: {
                 NODE_ENV: 'production'
             },
-            args: 'npx serve@latest out -p 4242',
+            args: 'npm run start -p 3002',
         }
     ]
 }
