@@ -14,15 +14,21 @@ var hideWarn = [
 
 const nextConfig = withInterceptStdout(
 	withImages({
-		images: {
-			disableStaticImages: true
-		},
+		images: { disableStaticImages: true },
 		reactStrictMode: true,
 		swcMinify: true,
 		i18n,
 		webpack(config, options) {
-			return config
-		}
+			return config;
+		},
+		async rewrites() {
+			return [
+				{
+					source: '/api/auth/callback',
+					destination: '/api/auth/callback', // Default, adjust if proxied
+				},
+			];
+		},
 	}),
 	(log) => (hideWarn.some((warn) => log.includes(warn)) ? '' : log),
 );

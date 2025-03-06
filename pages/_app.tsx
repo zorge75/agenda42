@@ -17,8 +17,9 @@ import Wrapper from '../layout/Wrapper/Wrapper';
 import App from '../layout/App/App';
 import AsideRoutes from '../layout/Aside/AsideRoutes';
 import { ToastCloseButton } from '../components/bootstrap/Toasts';
+import { parseCookies } from 'nookies';
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+const MyApp = ({ Component, pageProps, cookies, me }: AppProps) => {
 	getOS();
 
 	/**
@@ -38,7 +39,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 	};
 
 	return (
-		<AuthContextProvider>
+		<AuthContextProvider initialToken={cookies.token} me={me}>
 			<ThemeContextProvider>
 				<ThemeProvider theme={theme}>
 					<TourProvider
@@ -65,6 +66,31 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 			</ThemeContextProvider>
 		</AuthContextProvider>
 	);
+};
+
+MyApp.getInitialProps = async ({ ctx }: { ctx: { req?: IncomingMessage } }) => {
+	const cookies = ctx.req?.headers.cookie
+		? Object.fromEntries(
+			ctx.req.headers.cookie.split('; ').map((cookie) => {
+				const [key, value] = cookie.split('=');
+				return [key, value];
+			})
+		)
+		: {};
+
+	const response = await fetch('https://api.intra.42.fr/v2/me', {
+		headers: {
+			Authorization: `Bearer ${cookies.token}`, // From .env.local
+		},
+	});
+
+	if (!response.ok) {
+		return {cookies};
+	}
+
+	const me = await response.json();
+
+	return { cookies, me };
 };
 
 export default appWithTranslation(MyApp /* , nextI18NextConfig */);
