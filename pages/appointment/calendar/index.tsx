@@ -170,7 +170,7 @@ const MyEventDay = (data: { event: IEvent }) => {
 	);
 };
 
-const Index: NextPage = () => {
+const Index: NextPage = ({ eventsIntra }) => {
 	const { darkModeStatus, themeStatus } = useDarkMode();
 
 	// BEGIN :: Calendar
@@ -184,11 +184,21 @@ const Index: NextPage = () => {
 	// Events
 	const [events, setEvents] = useState(eventList);
 
-	// FOR DEV
 	useEffect(() => {
-		setEvents(eventList);
-		return () => {};
-	}, []);
+		if (eventsIntra) {
+			console.log("Raw eventsIntra:", eventsIntra);
+			const eventList = eventsIntra.map((event: any) => ({
+				id: event.id,
+				name: event.name,
+				start: event['begin_at'],
+				end: event['end_at'],
+				color: '',
+				user: '',
+			}));
+			console.log("Transformed eventList:", eventList);
+			setEvents(eventList);
+		}
+	}, [eventsIntra]);
 
 	const initialEventItem: IEvent = {
 		start: undefined,
@@ -299,7 +309,7 @@ const Index: NextPage = () => {
 				eventEnd: dayjs(eventItem.end).format(),
 				eventEmployee: eventItem?.user?.username || '',
 			});
-		return () => {};
+		return () => { };
 		//	eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [eventItem]);
 	// END:: Calendar
@@ -390,10 +400,10 @@ const Index: NextPage = () => {
 											i.end &&
 											i.end > now,
 									).length && (
-										<span className='position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2'>
-											<span className='visually-hidden'>Online user</span>
-										</span>
-									)}
+											<span className='position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2'>
+												<span className='visually-hidden'>Online user</span>
+											</span>
+										)}
 								</div>
 							</Popovers>
 						</div>
@@ -423,9 +433,7 @@ const Index: NextPage = () => {
 									selectable
 									toolbar={false}
 									localizer={localizer}
-									events={events.filter(
-										(i) => i?.user && employeeList[i.user.username],
-									)}
+									events={events}
 									defaultView={Views.WEEK}
 									views={views}
 									view={viewMode}
@@ -575,11 +583,11 @@ const Index: NextPage = () => {
 														value={
 															formik.values.eventAllDay
 																? dayjs(
-																		formik.values.eventStart,
-																	).format('YYYY-MM-DD')
+																	formik.values.eventStart,
+																).format('YYYY-MM-DD')
 																: dayjs(
-																		formik.values.eventStart,
-																	).format('YYYY-MM-DDTHH:mm')
+																	formik.values.eventStart,
+																).format('YYYY-MM-DDTHH:mm')
 														}
 														onChange={formik.handleChange}
 													/>
@@ -643,11 +651,35 @@ const Index: NextPage = () => {
 	);
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-	props: {
-		// @ts-ignore
-		...(await serverSideTranslations(locale, ['common', 'menu'])),
-	},
-});
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx: any) => {
+	const cookies = ctx.req?.headers.cookie
+		? Object.fromEntries(
+			ctx.req.headers.cookie.split('; ').map((cookie: any) => {
+				const [key, value] = cookie.split('=');
+				return [key, value];
+			})
+		)
+		: {};
+
+	const response = await fetch('https://api.intra.42.fr/v2/campus/1/events', {
+		headers: {
+			Authorization: `Bearer ${cookies.token}`,
+		},
+	});
+
+	let eventsIntra = null;
+	if (response.ok) {
+		eventsIntra = await response.json();
+	} else {
+		console.error("Fetch failed:", response.status, response.statusText);
+	}
+
+	return {
+		props: {
+			eventsIntra,
+			...(await serverSideTranslations(ctx.locale, ['common', 'menu'])),
+		},
+	};
+};
 
 export default Index;
