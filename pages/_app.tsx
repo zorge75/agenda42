@@ -19,7 +19,14 @@ import AsideRoutes from '../layout/Aside/AsideRoutes';
 import { ToastCloseButton } from '../components/bootstrap/Toasts';
 import { parseCookies } from 'nookies';
 
-const MyApp = ({ Component, pageProps, cookies, me }: AppProps) => {
+type Cookies = { token: string };
+
+interface CustomAppProps extends AppProps {
+  cookies?: Cookies;
+  me?: any; // Rest from api 42
+}
+
+const MyApp = ({ Component, pageProps, cookies, me }: CustomAppProps) => {
 	getOS();
 
 	/**
