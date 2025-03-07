@@ -128,8 +128,8 @@ const Index: NextPage = () => {
 
 export async function getServerSideProps({ locale }: { locale: string }) {
 	const authUrl = 'https://api.intra.42.fr/oauth/authorize?' + new URLSearchParams({
-		client_id: 'u-s4t2ud-17f322a0de33ed45f75fcb497c3418b8fa54a46174ffe1a7b7e3ec46b5bad3f4',
-		redirect_uri: 'https://agenda42.fr/api/auth/callback',
+		client_id: process.env.CLIENT_ID as string,
+		redirect_uri: process.env.API_URI as string,
 		response_type: 'code',
 		scope: '',
 	}).toString();

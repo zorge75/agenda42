@@ -29,6 +29,11 @@ const nextConfig = withInterceptStdout(
 				},
 			];
 		},
+		env: {
+			API_URI: process.env.API_URI,
+			CLIENT_ID: process.env.CLIENT_ID,
+			API_TOKEN: process.env.API_TOKEN,
+		},
 	}),
 	(log) => (hideWarn.some((warn) => log.includes(warn)) ? '' : log),
 );

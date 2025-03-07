@@ -1,5 +1,3 @@
-// import serialize from 'serialize';
-
 export default async function handler(req, res) {
     const { code } = req.query;
 
@@ -12,10 +10,10 @@ export default async function handler(req, res) {
     try {
         const requestBody = new URLSearchParams({
             grant_type: 'authorization_code',
-            client_id: 'u-s4t2ud-17f322a0de33ed45f75fcb497c3418b8fa54a46174ffe1a7b7e3ec46b5bad3f4',
-            client_secret: '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',
+            client_id: process.env.CLIENT_ID as string,
+            client_secret: process.env.API_TOKEN as string,
             code: code,
-            redirect_uri: 'https://agenda42.fr/api/auth/callback',
+            redirect_uri: process.env.API_URI as string,
         });
         // console.log('Token exchange request body:', requestBody.toString());
 
