@@ -17,9 +17,15 @@ import Wrapper from '../layout/Wrapper/Wrapper';
 import App from '../layout/App/App';
 import AsideRoutes from '../layout/Aside/AsideRoutes';
 import { ToastCloseButton } from '../components/bootstrap/Toasts';
-import { parseCookies } from 'nookies';
 
-const MyApp = ({ Component, pageProps, cookies, me }: AppProps) => {
+interface AppPropsCustom extends AppProps {
+	cookies: {
+		token: string,
+	},
+	me: any,
+}
+
+const MyApp = ({ Component, pageProps, cookies, me }: AppPropsCustom) => {
 	getOS();
 
 	/**
@@ -68,10 +74,10 @@ const MyApp = ({ Component, pageProps, cookies, me }: AppProps) => {
 	);
 };
 
-MyApp.getInitialProps = async ({ ctx }: { ctx: { req?: IncomingMessage } }) => {
+MyApp.getInitialProps = async ({ ctx }: { ctx: { req?: any } }) => {
 	const cookies = ctx.req?.headers.cookie
 		? Object.fromEntries(
-			ctx.req.headers.cookie.split('; ').map((cookie) => {
+			ctx.req.headers.cookie.split('; ').map((cookie: any) => {
 				const [key, value] = cookie.split('=');
 				return [key, value];
 			})

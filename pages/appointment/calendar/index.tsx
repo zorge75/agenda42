@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dayjs from 'dayjs';
@@ -47,6 +47,7 @@ import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Select from '../../../components/bootstrap/forms/Select';
 import Checks from '../../../components/bootstrap/forms/Checks';
 import Input from '../../../components/bootstrap/forms/Input';
+import { Props } from 'react-apexcharts';
 
 const localizer = dayjsLocalizer(dayjs);
 const now = new Date();
@@ -170,7 +171,7 @@ const MyEventDay = (data: { event: IEvent }) => {
 	);
 };
 
-const Index: NextPage = ({ eventsIntra }) => {
+const Index: NextPage = ({ eventsIntra }: any) => {
 	const { darkModeStatus, themeStatus } = useDarkMode();
 
 	// BEGIN :: Calendar

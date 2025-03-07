@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('Client Credentials Token:', access_token);
 
         res.status(200).json({ token: access_token });
-    } catch (error) {
+    } catch (error: any) {
         const errorDetails = error.response
             ? { status: error.response.status, data: error.response.data }
             : { message: error.message };

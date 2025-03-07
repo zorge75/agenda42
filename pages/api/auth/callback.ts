@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
     const { code } = req.query;
 
     if (!code) {
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
         res.setHeader('Set-Cookie', `token=${access_token}; Path=/; HttpOnly; SameSite=Strict`);
         res.redirect(302, '/crm/dashboard');
 
-    } catch (error) {
+    } catch (error: any) {
         // Enhanced error logging
         const errorDetails = error.response
             ? { status: error.response.status, data: error.response.data }
