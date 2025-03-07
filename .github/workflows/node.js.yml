@@ -20,4 +20,8 @@ jobs:
           cache: 'npm'
       - run: npm install
       - run: npm run build
+        env:
+          API_URI: ${{ secrets.API_URI }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
       - run: pm2 startOrRestart pm2.config.js
