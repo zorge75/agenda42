@@ -55,7 +55,7 @@ const Index: NextPage = () => {
 	return (
 		<PageWrapper>
 			<Head>
-				<title>{demoPagesMenu.appointment.subMenu.employeeList.text}</title>
+				<title>{demoPagesMenu.employeeList.text}</title>
 			</Head>
 			<SubHeader>
 				<SubHeaderLeft>
@@ -224,7 +224,7 @@ const Index: NextPage = () => {
 																isLight
 																hoverShadow='sm'
 																tag='a'
-																to={`../${demoPagesMenu.appointment.subMenu.employeeID.path}/${user.id}`}
+																to={`../${demoPagesMenu.employeeID.path}/${user.id}`}
 																data-tour={user.name}
 															/>
 														</div>

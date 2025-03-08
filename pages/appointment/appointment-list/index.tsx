@@ -18,7 +18,7 @@ const Index: NextPage = () => {
 	return (
 		<PageWrapper>
 			<Head>
-				<title>{demoPagesMenu.appointment.subMenu.appointmentList.text}</title>
+				<title>{demoPagesMenu.appointmentList.text}</title>
 			</Head>
 			<SubHeader>
 				<SubHeaderLeft>

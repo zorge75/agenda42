@@ -34,8 +34,11 @@ export default async function handler(req: any, res: any) {
 
         const { access_token } = json;
 
+        console.log("CODE: ", code);
+        console.log("ACESS TOKEN: ", access_token);
+
         res.setHeader('Set-Cookie', `token=${access_token}; Path=/; HttpOnly; SameSite=Strict`);
-        res.redirect(302, '/crm/dashboard');
+        res.redirect(302, '/dashboard-booking');
 
     } catch (error: any) {
         // Enhanced error logging

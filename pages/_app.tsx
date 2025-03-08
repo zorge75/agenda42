@@ -17,16 +17,37 @@ import Wrapper from '../layout/Wrapper/Wrapper';
 import App from '../layout/App/App';
 import AsideRoutes from '../layout/Aside/AsideRoutes';
 import { ToastCloseButton } from '../components/bootstrap/Toasts';
+import StoreProvider from '../storeProvider';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../store/slices/userSlice';
+import { setEvals } from '../store/slices/evalsSlice';
+import { setSlots } from '../store/slices/slotsSlice';
+import { setEvents } from '../store/slices/eventsSlice';
+import { store } from '../store';
 
 interface AppPropsCustom extends AppProps {
-	cookies: {
-		token: string,
-	},
+	token: string,
 	me: any,
+	evals: any,
+	slots: any,
 }
 
-const MyApp = ({ Component, pageProps, cookies, me }: AppPropsCustom) => {
+const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPropsCustom) => {
 	getOS();
+	const dispatch = useDispatch();
+
+	React.useEffect(() => {
+		if (me)
+			dispatch(setUser(me));
+		if (evals)
+			dispatch(setEvals(evals));
+		if (slots)
+			dispatch(setSlots(slots));
+		if (events)
+			dispatch(setEvents(events));
+	}, [me, dispatch]);
+
+	console.log(slots);
 
 	/**
 	 * Dark Mode
@@ -45,7 +66,7 @@ const MyApp = ({ Component, pageProps, cookies, me }: AppPropsCustom) => {
 	};
 
 	return (
-		<AuthContextProvider initialToken={cookies.token} me={me}>
+		<AuthContextProvider initialToken={token} me={me}>
 			<ThemeContextProvider>
 				<ThemeProvider theme={theme}>
 					<TourProvider
@@ -57,7 +78,9 @@ const MyApp = ({ Component, pageProps, cookies, me }: AppPropsCustom) => {
 							<AsideRoutes />
 							<Wrapper>
 								{/* eslint-disable-next-line react/jsx-props-no-spreading */}
-								<Component {...pageProps} />
+								<StoreProvider >
+									<Component {...pageProps} />
+								</StoreProvider>
 							</Wrapper>
 						</App>
 						<Portal id='portal-notification'>
@@ -74,29 +97,87 @@ const MyApp = ({ Component, pageProps, cookies, me }: AppPropsCustom) => {
 	);
 };
 
-MyApp.getInitialProps = async ({ ctx }: { ctx: { req?: any } }) => {
-	const cookies = ctx.req?.headers.cookie
+const AppWithRedux = (props: AppPropsCustom, cookies: any) => (
+	<StoreProvider>
+		<MyApp {...props} {...cookies} />
+	</StoreProvider>
+);
+
+AppWithRedux.getInitialProps = async (props: any) => {
+	const delay = (ms: any) => new Promise(resolve => setTimeout(resolve, ms));
+
+	const cookies = props.ctx.req?.headers.cookie
 		? Object.fromEntries(
-			ctx.req.headers.cookie.split('; ').map((cookie: any) => {
+			props.ctx.req.headers.cookie.split('; ').map((cookie: any) => {
 				const [key, value] = cookie.split('=');
 				return [key, value];
 			})
 		)
 		: {};
 
-	const response = await fetch('https://api.intra.42.fr/v2/me', {
+	const me = await fetch('https://api.intra.42.fr/v2/me', {
 		headers: {
 			Authorization: `Bearer ${cookies.token}`, // From .env.local
 		},
 	});
 
-	if (!response.ok) {
-		return {cookies};
+	if (!me.ok) {
+            console.error(`Evaluations fetch failed with status: ${me.status}`);
+            const text = await me.text(); // Получаем текст ответа
+            console.error('Response body:', text);
+            return {cookies}; // Прерываем выполнение, если ошибка
+        }
+
+	await delay(1000);
+
+	const evaluations = await fetch('https://api.intra.42.fr/v2/me/scale_teams', {
+		headers: {
+			Authorization: `Bearer ${cookies.token}`, // From .env.local
+		},
+	});
+
+	if (!evaluations.ok) {
+		console.error(`Evaluations fetch failed with status: ${evaluations.status}`);
+		const text = await evaluations.text(); // Получаем текст ответа
+            console.error('Response body:', text);
+            return {cookies}; // Прерываем выполнение, если ошибка
+        }
+
+	// delay(3000);
+
+	// const slots = await fetch('https://api.intra.42.fr/v2/me/slots', {
+	// 	headers: {
+	// 		Authorization: `Bearer ${cookies.token}`, // From .env.local
+	// 	},
+	// });
+
+	await delay(2000);
+
+	const events = await fetch('https://api.intra.42.fr/v2/campus/1/events', {
+		headers: {
+			Authorization: `Bearer ${cookies.token}`, // From .env.local
+		}
+	});
+
+	if (!events.ok) {
+		console.error(`Evaluations fetch failed with status: ${events.status}`);
+		const text = await events.text(); // Получаем текст ответа
+		console.error('Response body:', text);
+		return {cookies}; // Прерываем выполнение, если ошибка
 	}
 
-	const me = await response.json();
+	const meJson = await me.json();
+	const evaluationsJson = await evaluations.json();
+	// const slotsJson = await slots?.json();
+	const eventsJson = await events.json();
 
-	return { cookies, me };
+	return {
+		cookies,
+		me: meJson,
+		evals: evaluationsJson,
+		// slots: slotsJson,
+		events: eventsJson,
+	};
 };
 
-export default appWithTranslation(MyApp /* , nextI18NextConfig */);
+export default appWithTranslation(AppWithRedux /* , nextI18NextConfig */);

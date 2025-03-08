@@ -424,7 +424,7 @@ const Navigation = forwardRef<HTMLElement, INavigationProps>(
 			isMore: boolean | undefined,
 		) {
 			return Object.keys(data).map((item) =>
-				data[item].path ? (
+				!data[item].isDisable ? (
 					<Item
 						key={data[item].id}
 						rootId={rootId}
@@ -449,6 +449,7 @@ const Navigation = forwardRef<HTMLElement, INavigationProps>(
 							)}
 					</Item>
 				) : (
+					!data[item].isDisable &&
 					!isMore &&
 					!isHorizontal && (
 						<NavigationTitle key={data[item].id}>{t(data[item].text)}</NavigationTitle>

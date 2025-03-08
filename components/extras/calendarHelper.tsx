@@ -66,25 +66,27 @@ export const CalendarTodayButton: FC<ICalendarTodayButtonProps> = ({
 	unitType,
 	viewMode,
 }) => {
+	console.log(date);
+	console.log(dayjs(date).add(-1, unitType).toDate());
 	return (
 		<ButtonGroup>
 			<Button
 				color='info'
 				isLight
 				// @ts-ignore
-				onClick={() => setDate(dayjs(date).add(-1, unitType)._d)}
+				onClick={() => setDate(dayjs(date).add(-1, unitType).toDate())}
 				icon='ChevronLeft'
 				aria-label='Prev'
 			/>
 			{/* @ts-ignore */}
-			<Button color='info' isLight onClick={() => setDate(dayjs()._d)}>
+			<Button color='info' isLight onClick={() => setDate(dayjs(date)._d)}>
 				{getTodayButtonLabel(viewMode)}
 			</Button>
 			<Button
 				color='info'
 				isLight
 				// @ts-ignore
-				onClick={() => setDate(dayjs(date).add(1, unitType)._d)}
+				onClick={() => setDate(dayjs(date).add(-1, unitType).toDate())}
 				icon='ChevronRight'
 				aria-label='Next'
 			/>

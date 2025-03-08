@@ -43,7 +43,7 @@ export const dashboardPagesMenu = {
 		text: 'Dashboard Projects',
 		path: 'project-management/list',
 		icon: 'AutoStories',
-		notification: true,
+		notification: false,
 		subMenu: null,
 	},
 	dashboardBooking: {
@@ -73,12 +73,14 @@ export const demoPagesMenu = {
 		id: 'pages',
 		text: 'Pages',
 		icon: 'Extension',
+		isDisable: true,
 	},
 	singlePages: {
 		id: 'singlePages',
 		text: 'Single Pages',
 		path: 'single-pages',
 		icon: 'Article',
+		isDisable: true,
 		subMenu: {
 			boxedSingle: {
 				id: 'boxedSingle',
@@ -99,6 +101,7 @@ export const demoPagesMenu = {
 		text: 'List Pages',
 		path: 'list-pages',
 		icon: 'Dvr',
+		isDisable: true,
 		subMenu: {
 			listBoxed: {
 				id: 'listBoxed',
@@ -119,6 +122,7 @@ export const demoPagesMenu = {
 		text: 'Grid Pages',
 		path: 'grid-pages',
 		icon: 'Window',
+		isDisable: true,
 		subMenu: {
 			gridBoxed: {
 				id: 'gridBoxed',
@@ -139,6 +143,7 @@ export const demoPagesMenu = {
 		text: 'Edit Pages',
 		path: 'edit-pages',
 		icon: 'drive_file_rename_outline ',
+		isDisable: true,
 		subMenu: {
 			editModern: {
 				id: 'editModern',
@@ -184,24 +189,28 @@ export const demoPagesMenu = {
 		text: 'Pricing Table',
 		path: 'pricing-table',
 		icon: 'Local Offer',
+		isDisable: true,
 	},
 
 	auth: {
 		id: 'auth',
 		text: 'Auth Pages',
 		icon: 'Extension',
+		isDisable: true,
 	},
 	login: {
 		id: 'login',
 		text: 'Login',
 		path: 'auth-pages/login',
 		icon: 'Login',
+		isDisable: true,
 	},
 	signUp: {
 		id: 'signUp',
 		text: 'Sign Up',
 		path: 'auth-pages/sign-up',
 		icon: 'PersonAdd',
+		isDisable: true,
 	},
 
 	page404: {
@@ -209,18 +218,21 @@ export const demoPagesMenu = {
 		text: '404 Page',
 		path: '404',
 		icon: 'ReportGmailerrorred',
+		isDisable: true,
 	},
 
 	app: {
 		id: 'app',
 		text: 'Apps',
 		icon: 'Extension',
+		isDisable: true,
 	},
 	projectManagement: {
 		id: 'projectManagement',
 		text: 'Project Management',
 		path: 'project-management',
 		icon: 'AutoStories',
+		isDisable: true,
 		subMenu: {
 			list: {
 				id: 'list',
@@ -247,6 +259,7 @@ export const demoPagesMenu = {
 		text: 'Knowledge',
 		path: 'knowledge',
 		icon: 'AutoStories',
+		isDisable: true,
 		subMenu: {
 			grid: {
 				id: 'grid',
@@ -274,6 +287,7 @@ export const demoPagesMenu = {
 		text: 'Sales',
 		path: 'sales',
 		icon: 'Store',
+		isDisable: true,
 		subMenu: {
 			dashboard: dashboardPagesMenu.dashboard,
 			salesList: {
@@ -309,52 +323,45 @@ export const demoPagesMenu = {
 			},
 		},
 	},
-	appointment: {
-		id: 'appointment',
-		text: 'Appointment',
-		path: 'appointment',
-		icon: 'Today',
-		subMenu: {
-			dashboard: dashboardPagesMenu.dashboardBooking,
-			calendar: {
-				id: 'calendar',
-				text: 'Calendar',
-				path: 'appointment/calendar',
-				icon: 'EditCalendar',
-				notification: true,
-			},
-			employeeList: {
-				id: 'employeeList',
-				text: 'Employee List',
-				path: 'appointment/employee-list',
-				icon: 'PersonSearch',
-			},
-			employeeID: {
-				id: 'employeeID',
-				text: 'employeeID',
-				path: 'appointment/employee',
-				hide: true,
-			},
-			employee: {
-				id: 'employee',
-				text: 'Employee',
-				path: 'appointment/employee/[id]',
-				as: 'appointment/employee/1',
-				icon: 'QrCode2',
-			},
-			appointmentList: {
-				id: 'appointmentList',
-				text: 'Appointment List',
-				path: 'appointment/appointment-list',
-				icon: 'Event',
-			},
-		},
+	dashboard: dashboardPagesMenu.dashboardBooking,
+	calendar: {
+		id: 'calendar',
+		text: 'Calendar',
+		path: 'appointment/calendar',
+		icon: 'EditCalendar',
+		notification: true,
+	},
+	employeeList: {
+		id: 'employeeList',
+		text: 'Employee List',
+		path: 'appointment/employee-list',
+		icon: 'PersonSearch',
+	},
+	employeeID: {
+		id: 'employeeID',
+		text: 'employeeID',
+		path: 'appointment/employee',
+		hide: true,
+	},
+	employee: {
+		id: 'employee',
+		text: 'Employee',
+		path: 'appointment/employee/[id]',
+		as: 'appointment/employee/1',
+		icon: 'QrCode2',
+	},
+	appointmentList: {
+		id: 'appointmentList',
+		text: 'Appointment List',
+		path: 'appointment/appointment-list',
+		icon: 'Event',
 	},
 	crm: {
 		id: 'crm',
 		text: 'CRM',
 		path: 'crm',
 		icon: 'Contacts',
+		isDisable: true,
 		subMenu: {
 			dashboard: {
 				id: 'dashboard',
@@ -406,6 +413,7 @@ export const demoPagesMenu = {
 		text: 'Chat',
 		path: 'chat',
 		icon: 'Forum',
+		isDisable: true,
 		subMenu: {
 			withListChat: {
 				id: 'withListChat',

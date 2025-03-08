@@ -28,9 +28,19 @@ import CommonDashboardSalesByStore from '../common/partial/CommonDashboardSalesB
 import CommonDashboardWaitingAnswer from '../common/partial/CommonDashboardWaitingAnswer';
 import CommonDashboardTopSeller from '../common/partial/CommonDashboardTopSeller';
 import CommonMyWallet from '../common/partial/CommonMyWallet';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../store/slices/userSlice';
 
 const Index: NextPage = () => {
 	const { mobileDesign } = useContext(ThemeContext);
+	const dispatch = useDispatch();
+
+	React.useEffect(() => {
+		if (1) {
+			dispatch(setUser('abergman'));
+		}
+	}, [dispatch]);
+
 	/**
 	 * Tour Start
 	 */

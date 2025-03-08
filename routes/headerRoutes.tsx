@@ -38,14 +38,14 @@ const headers = [
 		path: dashboardPagesMenu.dashboardBooking.path,
 		element: <DashboardBookingHeader />,
 	},
-	{
-		path: demoPagesMenu.appointment.subMenu.calendar.path,
-		element: <DashboardBookingHeader />,
-	},
-	{
-		path: demoPagesMenu.appointment.subMenu.employeeList.path,
-		element: <DashboardBookingHeader />,
-	},
+	// {
+	// 	path: demoPagesMenu.appointment.subMenu.calendar.path,
+	// 	element: <DashboardBookingHeader />,
+	// },
+	// {
+	// 	path: demoPagesMenu.appointment.subMenu.employeeList.path,
+	// 	element: <DashboardBookingHeader />,
+	// },
 	{
 		path: demoPagesMenu.listPages.subMenu.listFluid.path,
 		element: <DashboardBookingHeader />,
@@ -54,10 +54,10 @@ const headers = [
 		path: `${demoPagesMenu.editPages.path}/*`,
 		element: <DashboardBookingHeader />,
 	},
-	{
-		path: `${demoPagesMenu.appointment.subMenu.employeeID.path}/[id]`,
-		element: <DashboardBookingHeader />,
-	},
+	// {
+	// 	path: `${demoPagesMenu.appointment.subMenu.employeeID.path}/[id]`,
+	// 	element: <DashboardBookingHeader />,
+	// },
 	{
 		path: `${demoPagesMenu.projectManagement.subMenu.itemID.path}/[id]`,
 		element: <DashboardBookingHeader />,
@@ -162,10 +162,10 @@ const headers = [
 		path: `${componentPagesMenu.icons.path}/*`,
 		element: <IconHeader />,
 	},
-	{
-		path: `/*`,
-		element: <DefaultHeader />,
-	},
+	// {
+	// 	path: `/*`,
+	// 	element: <DefaultHeader />,
+	// },
 ];
 
 export default headers;

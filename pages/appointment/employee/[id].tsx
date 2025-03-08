@@ -124,7 +124,7 @@ const Id: NextPage = () => {
 						isLink
 						icon='ArrowBack'
 						tag='a'
-						to={`../../${demoPagesMenu.appointment.subMenu.employeeList.path}`}>
+						to={`../../${demoPagesMenu.employeeList.path}`}>
 						Back to List
 					</Button>
 					<SubheaderSeparator />

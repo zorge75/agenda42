@@ -21,6 +21,8 @@ import Chart from '../../../components/extras/Chart';
 import { sales } from '../../data/chartDummyData';
 import SERVICES from '../../data/serviceDummyData';
 import useDarkMode from '../../../hooks/useDarkMode';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 interface IUserAppointment {
 	[key: string]: 'Approved' | 'Pending' | 'Canceled';
@@ -31,6 +33,8 @@ interface ICommonRightPanel {
 }
 const CommonRightPanel: FC<ICommonRightPanel> = ({ setOpen, isOpen }) => {
 	const { themeStatus, darkModeStatus } = useDarkMode();
+	const user = useSelector((state: RootState) => state.user.me);
+
 
 	const USER_APPOINTMENT: IUserAppointment = {
 		APPROVED: 'Approved',
@@ -126,7 +130,7 @@ const CommonRightPanel: FC<ICommonRightPanel> = ({ setOpen, isOpen }) => {
 								))}
 							</AvatarGroup>
 							<div className='h5 mb-0 text-muted'>
-								<strong>Gym</strong> Team
+								<strong>{user?.location}</strong>
 							</div>
 						</div>
 					</div>
@@ -156,11 +160,11 @@ const CommonRightPanel: FC<ICommonRightPanel> = ({ setOpen, isOpen }) => {
 					</div>
 				</div>
 				<div className='d-flex justify-content-center mb-3'>
-					<Avatar src={USERS.JOHN.src} color={USERS.JOHN.color} shadow='default' />
+					<Avatar src={user?.image.versions.medium} color={USERS.JOHN.color} shadow='default' />
 				</div>
 				<div className='d-flex flex-column align-items-center mb-5'>
-					<div className='h2 fw-bold'>{`${USERS.JOHN.name} ${USERS.JOHN.surname}`}</div>
-					<div className='h5 text-muted text-lowercase opacity-50'>{`@${USERS.JOHN.name}${USERS.JOHN.surname}`}</div>
+					<div className='h2 fw-bold'>{`${user?.first_name} ${user?.last_name}`}</div>
+					<div className='h5 text-muted text-lowercase opacity-50'>{`@${user?.login}`}</div>
 				</div>
 				<div
 					className={classNames('rounded-3', {
@@ -178,7 +182,7 @@ const CommonRightPanel: FC<ICommonRightPanel> = ({ setOpen, isOpen }) => {
 									color={
 										(darkModeStatus &&
 											activeUserAppointmentTab === USER_APPOINTMENT[key]) ||
-										!darkModeStatus
+											!darkModeStatus
 											? 'dark'
 											: undefined
 									}
@@ -252,9 +256,8 @@ const CommonRightPanel: FC<ICommonRightPanel> = ({ setOpen, isOpen }) => {
 													'bg-lo25-info': darkModeStatus,
 												},
 											)}>
-											{`${item.person} ${
-												item.person > 1 ? 'People' : 'Person'
-											}`}
+											{`${item.person} ${item.person > 1 ? 'People' : 'Person'
+												}`}
 										</div>
 									</div>
 								</div>

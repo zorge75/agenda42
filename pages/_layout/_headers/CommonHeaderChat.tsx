@@ -16,20 +16,20 @@ const CommonHeaderChat = () => {
 	useEffect(() => {
 		const timeout = setTimeout(() => {
 			setMsgCount(1);
-			showNotification(
-				<span className='d-flex align-items-center'>
-					<Avatar
-						src={USERS.CHLOE.src}
-						size={36}
-						color={USERS.CHLOE.color}
-						className='me-3'
-					/>
-					<span>{USERS.CHLOE.name} sent a message.</span>
-				</span>,
-				<div onClick={() => setState(!state)} role='presentation'>
-					<p>I think it's really starting to shine.</p>
-				</div>,
-			);
+			// showNotification(
+			// 	<span className='d-flex align-items-center'>
+			// 		<Avatar
+			// 			src={USERS.CHLOE.src}
+			// 			size={36}
+			// 			color={USERS.CHLOE.color}
+			// 			className='me-3'
+			// 		/>
+			// 		<span>{USERS.CHLOE.name} sent a message.</span>
+			// 	</span>,
+			// 	<div onClick={() => setState(!state)} role='presentation'>
+			// 		<p>I think it's really starting to shine.</p>
+			// 	</div>,
+			// );
 		}, 30000);
 		return () => {
 			clearTimeout(timeout);

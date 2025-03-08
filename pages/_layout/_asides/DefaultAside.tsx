@@ -40,13 +40,13 @@ const DefaultAside = () => {
 				<Brand asideStatus={asideStatus} setAsideStatus={setAsideStatus} />
 			</AsideHead>
 			<AsideBody>
-				<Navigation menu={dashboardPagesMenu} id='aside-dashboard' />
+				{/* <Navigation menu={dashboardPagesMenu} id='aside-dashboard' /> */}
 				{!doc && (
 					<>
-						<NavigationLine />
+						{/* <NavigationLine /> */}
 						<Navigation menu={demoPagesMenu} id='aside-demo-pages' />
-						<NavigationLine />
-						<Navigation menu={pageLayoutTypesPagesMenu} id='aside-menu' />
+						{/* <NavigationLine /> */}
+						{/* <Navigation menu={pageLayoutTypesPagesMenu} id='aside-menu' /> */}
 					</>
 				)}
 

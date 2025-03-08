@@ -48,6 +48,8 @@ import Select from '../../../components/bootstrap/forms/Select';
 import Checks from '../../../components/bootstrap/forms/Checks';
 import Input from '../../../components/bootstrap/forms/Input';
 import { Props } from 'react-apexcharts';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 const localizer = dayjsLocalizer(dayjs);
 const now = new Date();
@@ -171,8 +173,9 @@ const MyEventDay = (data: { event: IEvent }) => {
 	);
 };
 
-const Index: NextPage = ({ eventsIntra }: any) => {
+const Index: NextPage = () => {
 	const { darkModeStatus, themeStatus } = useDarkMode();
+	const eventsIntra = useSelector((state: RootState) => state.events.events);
 
 	// BEGIN :: Calendar
 	// Active employee
@@ -191,10 +194,10 @@ const Index: NextPage = ({ eventsIntra }: any) => {
 			const eventList = eventsIntra.map((event: any) => ({
 				id: event.id,
 				name: event.name,
-				start: event['begin_at'],
-				end: event['end_at'],
-				color: '',
-				user: '',
+				start: dayjs(event['begin_at']).format(),
+				end: dayjs(event['end_at']).format(),
+				color: 'primary',
+				user: 'abergman',
 			}));
 			console.log("Transformed eventList:", eventList);
 			setEvents(eventList);
@@ -317,7 +320,7 @@ const Index: NextPage = ({ eventsIntra }: any) => {
 	return (
 		<PageWrapper>
 			<Head>
-				<title>{demoPagesMenu.appointment.subMenu.dashboard.text}</title>
+				<title>{demoPagesMenu.dashboard.text}</title>
 			</Head>
 			<SubHeader>
 				<SubHeaderLeft>
@@ -358,19 +361,13 @@ const Index: NextPage = ({ eventsIntra }: any) => {
 										<div>
 											<b>Event: </b>
 											{
-												events.filter(
-													(i) => i.user?.username === USERS[u].username,
-												).length
+												events.length
 											}
 										</div>
 										<div>
 											<b>Approved: </b>
 											{
-												events.filter(
-													(i) =>
-														i.user?.username === USERS[u].username &&
-														i.color === 'info',
-												).length
+												events.length
 											}
 										</div>
 									</>
@@ -440,7 +437,7 @@ const Index: NextPage = ({ eventsIntra }: any) => {
 									view={viewMode}
 									date={date}
 									onNavigate={(_date) => setDate(_date)}
-									scrollToTime={new Date(1970, 1, 1, 6)}
+									scrollToTime={new Date()}
 									defaultDate={new Date()}
 									onSelectEvent={(event) => {
 										setInfoEvent();
@@ -653,31 +650,8 @@ const Index: NextPage = ({ eventsIntra }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx: any) => {
-	const cookies = ctx.req?.headers.cookie
-		? Object.fromEntries(
-			ctx.req.headers.cookie.split('; ').map((cookie: any) => {
-				const [key, value] = cookie.split('=');
-				return [key, value];
-			})
-		)
-		: {};
-
-	const response = await fetch('https://api.intra.42.fr/v2/campus/1/events', {
-		headers: {
-			Authorization: `Bearer ${cookies.token}`,
-		},
-	});
-
-	let eventsIntra = null;
-	if (response.ok) {
-		eventsIntra = await response.json();
-	} else {
-		console.error("Fetch failed:", response.status, response.statusText);
-	}
-
 	return {
 		props: {
-			eventsIntra,
 			...(await serverSideTranslations(ctx.locale, ['common', 'menu'])),
 		},
 	};
