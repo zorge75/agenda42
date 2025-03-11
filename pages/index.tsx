@@ -667,6 +667,9 @@ const Index: NextPage = () => {
 export async function getServerSideProps({ req, locale }: any) {
 	const { access_token, refresh_token, expires_at } = req.cookies;
 
+	// Detect build time: no real request exists during static generation
+	const isBuildTime = process.env.NODE_ENV === 'production' && !req.url;
+
 	// If no token, redirect to 42 OAuth
 	const authUrl = 'https://api.intra.42.fr/oauth/authorize?' + new URLSearchParams({
 		client_id: process.env.CLIENT_ID as string,
@@ -682,6 +685,17 @@ export async function getServerSideProps({ req, locale }: any) {
 				permanent: false,
 			},
 			props: {
+				...(await serverSideTranslations(locale, ['common', 'menu'])),
+			},
+		};
+	}
+
+	// Skip all logic during build and return minimal props
+	if (isBuildTime) {
+		return {
+			props: {
+				token: null,
+				userData: null,
 				...(await serverSideTranslations(locale, ['common', 'menu'])),
 			},
 		};
