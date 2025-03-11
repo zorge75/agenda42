@@ -34,8 +34,6 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children, i
   useEffect(() => {
     if (typeof window === 'undefined') return; // Skip on server
 
-    console.log("me", me);
-
     // Check localStorage for username
     // const storedUsername = localStorage.getItem('facit_authUsername') || '';
     // setUser(storedUsername);

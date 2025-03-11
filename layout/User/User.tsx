@@ -56,7 +56,7 @@ const User = () => {
 							className='navigation-item cursor-pointer'
 							onClick={() =>
 								router.push(
-									`/${demoPagesMenu.appointment.subMenu.employeeID.path}/${userData?.id}`,
+									`/${demoPagesMenu.employeeID.path}/${userData?.id}`,
 									// @ts-ignore
 									handleItem(),
 								)

@@ -20,7 +20,7 @@ const CommonDashboardDesignTeam = () => {
 	const { darkModeStatus } = useDarkMode();
 
 	const handleOnClickToEmployeeListPage = useCallback(
-		() => router.push(`../${demoPagesMenu.appointment.subMenu.employeeList.path}`),
+		() => router.push(`../${demoPagesMenu.employeeList.path}`),
 		[router],
 	);
 
@@ -41,7 +41,7 @@ const CommonDashboardDesignTeam = () => {
 						aria-label='Read More'
 						hoverShadow='default'
 						color={darkModeStatus ? 'dark' : undefined}
-						onClick={handleOnClickToEmployeeListPage}
+						// onClick={handleOnClickToEmployeeListPage}
 					/>
 				</CardActions>
 			</CardHeader>

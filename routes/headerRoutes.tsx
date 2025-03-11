@@ -39,11 +39,11 @@ const headers = [
 		element: <DashboardBookingHeader />,
 	},
 	// {
-	// 	path: demoPagesMenu.appointment.subMenu.calendar.path,
+	// 	path: demoPagesMenu.calendar.path,
 	// 	element: <DashboardBookingHeader />,
 	// },
 	// {
-	// 	path: demoPagesMenu.appointment.subMenu.employeeList.path,
+	// 	path: demoPagesMenu.employeeList.path,
 	// 	element: <DashboardBookingHeader />,
 	// },
 	{
@@ -55,7 +55,7 @@ const headers = [
 		element: <DashboardBookingHeader />,
 	},
 	// {
-	// 	path: `${demoPagesMenu.appointment.subMenu.employeeID.path}/[id]`,
+	// 	path: `${demoPagesMenu.employeeID.path}/[id]`,
 	// 	element: <DashboardBookingHeader />,
 	// },
 	{

@@ -11,17 +11,17 @@ const DefaultFooter = () => {
 			<div className='container-fluid'>
 				<div className='row'>
 					<div className='col'>
-						<span className='fw-light'>Copyright © 2023 - Version 4.3.4</span>
-					</div>
-					<div className='col-auto'>
 						<a
-							href='/pages'
+							href='https://42.fr/'
 							className={classNames('text-decoration-none', {
 								'link-dark': !darkModeStatus,
 								'link-light': darkModeStatus,
 							})}>
-							<small className='fw-bold'>Facit Theme</small>
+							<small className='fw-bold'>École 42 Paris</small>
 						</a>
+					</div>
+					<div className='col-auto'>
+						<span className='fw-light'>agenda42.fr | 2025</span>
 					</div>
 				</div>
 			</div>

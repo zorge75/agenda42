@@ -45,9 +45,7 @@ const TourModal = () => {
 					<div className='col-md-9 d-flex align-items-center'>
 						<div>
 							<h2>Hi 👋🏻, I'm Susy.</h2>
-							<p className='lead'>
-								Would you like me to introduce "Facit" to you in a few steps?
-							</p>
+							<p className='lead'>#</p>
 						</div>
 					</div>
 				</div>

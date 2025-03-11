@@ -48,8 +48,10 @@ import Select from '../../../components/bootstrap/forms/Select';
 import Checks from '../../../components/bootstrap/forms/Checks';
 import Input from '../../../components/bootstrap/forms/Input';
 import { Props } from 'react-apexcharts';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../store';
+import { setUnitType } from '../../../store/slices/calendarSlice';
+
 
 const localizer = dayjsLocalizer(dayjs);
 const now = new Date();
@@ -175,7 +177,13 @@ const MyEventDay = (data: { event: IEvent }) => {
 
 const Index: NextPage = () => {
 	const { darkModeStatus, themeStatus } = useDarkMode();
+	const dispatch = useDispatch();
+
 	const eventsIntra = useSelector((state: RootState) => state.events.events);
+	const slotsIntra = useSelector((state: RootState) => state.slots.slots);
+	const viewMode = useSelector((state: RootState) => state.calendar.unitType);
+
+	console.log('slots', slotsIntra);
 
 	// BEGIN :: Calendar
 	// Active employee
@@ -189,20 +197,26 @@ const Index: NextPage = () => {
 	const [events, setEvents] = useState(eventList);
 
 	useEffect(() => {
-		if (eventsIntra) {
-			console.log("Raw eventsIntra:", eventsIntra);
+		if (eventsIntra && slotsIntra) {
 			const eventList = eventsIntra.map((event: any) => ({
 				id: event.id,
-				name: event.name,
-				start: dayjs(event['begin_at']).format(),
-				end: dayjs(event['end_at']).format(),
+				name: event.name ?? event.id,
+				start: dayjs(event['begin_at']).toDate(),
+				end: dayjs(event['end_at']).toDate(),
 				color: 'primary',
 				user: 'abergman',
-			}));
-			console.log("Transformed eventList:", eventList);
-			setEvents(eventList);
+			}))
+			const slotsList = slotsIntra.map((slot: any) => ({
+				id: slot.id,
+				name: (slot.scale_team == 'invisible' || slot.scale_team?.id) ? '' : 'Available',
+				start: dayjs(slot['begin_at']).toDate(),
+				end: dayjs(slot['end_at']).toDate(),
+				color: (slot.scale_team == 'invisible' || slot.scale_team?.id) ? 'danger' : 'success',
+				user: slot.user.firstname
+			}))
+			setEvents([...eventList, ...slotsList]);
 		}
-	}, [eventsIntra]);
+	}, [eventsIntra, slotsIntra]);
 
 	const initialEventItem: IEvent = {
 		start: undefined,
@@ -214,7 +228,7 @@ const Index: NextPage = () => {
 	// Selected Event
 	const [eventItem, setEventItem] = useState<IEvent>(initialEventItem);
 	// Calendar View Mode
-	const [viewMode, setViewMode] = useState<TView>(Views.MONTH);
+	// const [viewMode, setViewMode] = useState<TView>(Views.MONTH);
 	// Calendar Date
 	const [date, setDate] = useState(new Date());
 	// Item edit panel status
@@ -230,7 +244,8 @@ const Index: NextPage = () => {
 	// Change view mode
 	const handleViewMode = (e: dayjs.ConfigType) => {
 		setDate(dayjs(e).toDate());
-		setViewMode(Views.DAY);
+		console.log("CHANGE VIEW MODE");
+		dispatch(setUnitType(Views.DAY));
 	};
 
 	// View modes; Month, Week, Work Week, Day and Agenda
@@ -421,7 +436,6 @@ const Index: NextPage = () => {
 								</CardActions>
 								<CardActions>
 									<CalendarViewModeButtons
-										setViewMode={setViewMode}
 										viewMode={viewMode}
 									/>
 								</CardActions>
@@ -444,8 +458,8 @@ const Index: NextPage = () => {
 										setEventItem(event);
 									}}
 									onSelectSlot={handleSelect}
-									onView={handleViewMode}
-									onDrillDown={handleViewMode}
+									// onView={handleViewMode}
+									// onDrillDown={handleViewMode}
 									components={{
 										event: MyEvent, // used by each view (Month, Day, Week)
 										week: {
@@ -469,10 +483,10 @@ const Index: NextPage = () => {
 								</CardLabel>
 								<CardActions>
 									<CalendarTodayButton
-										unitType={Views.DAY}
+										unitType={unitType}
 										date={date}
 										setDate={setDate}
-										viewMode={Views.DAY}
+										viewMode={unitType}
 									/>
 								</CardActions>
 							</CardHeader>

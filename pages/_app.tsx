@@ -24,11 +24,13 @@ import { setEvals } from '../store/slices/evalsSlice';
 import { setSlots } from '../store/slices/slotsSlice';
 import { setEvents } from '../store/slices/eventsSlice';
 import { store } from '../store';
+import { IEvent } from './dashboard-booking';
 
 interface AppPropsCustom extends AppProps {
 	token: string,
 	me: any,
 	evals: any,
+	events: any,
 	slots: any,
 }
 
@@ -41,13 +43,45 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPro
 			dispatch(setUser(me));
 		if (evals)
 			dispatch(setEvals(evals));
-		if (slots)
-			dispatch(setSlots(slots));
+		if (slots) {
+
+			const preparationSlots = (data: any[]) => {
+				let sorted = data.sort((a: any, b: any) => (new Date(a.begin_at).getTime() - new Date(b.begin_at).getTime()));
+				// let index_inf = 0;
+				let item_buffer: any;
+				let res: any[] = [];
+
+				console.log('sorted', sorted);
+
+				if (sorted.length == 0)
+					return res;
+
+				item_buffer = { ...sorted[0] };
+
+				for (let i = 0; i < sorted.length; i++) {
+					let current_item = sorted[i];
+
+					if (item_buffer['end_at'] == current_item.begin_at)
+						item_buffer.end_at = current_item.end_at;
+					else {
+						res.push(item_buffer);
+						item_buffer = { ...current_item };
+					}
+				}
+
+				res.push(item_buffer);
+
+				console.log(res);
+				return (res);
+			}
+
+			dispatch(setSlots(preparationSlots(slots)));
+		}
 		if (events)
 			dispatch(setEvents(events));
 	}, [me, dispatch]);
 
-	console.log(slots);
+	// console.log("slots", slots);
 
 	/**
 	 * Dark Mode
@@ -65,6 +99,8 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPro
 		light: COLORS.LIGHT.code,
 	};
 
+	console.log(process.env.STATUS)
+
 	return (
 		<AuthContextProvider initialToken={token} me={me}>
 			<ThemeContextProvider>
@@ -75,7 +111,7 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPro
 						showNavigation={false}
 						showBadge={false}>
 						<App>
-							<AsideRoutes />
+							{ process.env.STATUS == 'production' ? <AsideRoutes /> : null}
 							<Wrapper>
 								{/* eslint-disable-next-line react/jsx-props-no-spreading */}
 								<StoreProvider >
@@ -122,11 +158,13 @@ AppWithRedux.getInitialProps = async (props: any) => {
 	});
 
 	if (!me.ok) {
-            console.error(`Evaluations fetch failed with status: ${me.status}`);
-            const text = await me.text(); // Получаем текст ответа
-            console.error('Response body:', text);
-            return {cookies}; // Прерываем выполнение, если ошибка
-        }
+		console.error(`Evaluations fetch failed with status: ${me.status}`);
+		const text = await me.text(); // Получаем текст ответа
+		console.error('Response body:', text);
+		return { cookies }; // Прерываем выполнение, если ошибка
+	}
+
+	const meJson = await me.json();
 
 	await delay(1000);
 
@@ -139,21 +177,32 @@ AppWithRedux.getInitialProps = async (props: any) => {
 	if (!evaluations.ok) {
 		console.error(`Evaluations fetch failed with status: ${evaluations.status}`);
 		const text = await evaluations.text(); // Получаем текст ответа
-            console.error('Response body:', text);
-            return {cookies}; // Прерываем выполнение, если ошибка
-        }
+		console.error('Response body:', text);
+		return { cookies, me: meJson }; // Прерываем выполнение, если ошибка
+	}
 
-	// delay(3000);
+	const evaluationsJson = await evaluations.json();
 
-	// const slots = await fetch('https://api.intra.42.fr/v2/me/slots', {
-	// 	headers: {
-	// 		Authorization: `Bearer ${cookies.token}`, // From .env.local
-	// 	},
-	// });
+	await delay(1000);
 
-	await delay(2000);
+	const slots = await fetch('https://api.intra.42.fr/v2/me/slots', {
+		headers: {
+			Authorization: `Bearer ${cookies.token}`, // From .env.local
+		},
+	});
 
-	const events = await fetch('https://api.intra.42.fr/v2/campus/1/events', {
+	if (!slots.ok) {
+		console.error(`Evaluations fetch failed with status: ${slots.status}`);
+		const text = await slots.text(); // Получаем текст ответа
+		console.error('Response body:', text);
+		return { cookies, me: meJson, evals: evaluationsJson }; // Прерываем выполнение, если ошибка
+	}
+
+	const slotsJson = await slots?.json();
+
+	await delay(1000);
+
+	const events = await fetch('https://api.intra.42.fr/v2/users/' + 177543 + '/events?sort=-begin_at', {
 		headers: {
 			Authorization: `Bearer ${cookies.token}`, // From .env.local
 		}
@@ -163,19 +212,34 @@ AppWithRedux.getInitialProps = async (props: any) => {
 		console.error(`Evaluations fetch failed with status: ${events.status}`);
 		const text = await events.text(); // Получаем текст ответа
 		console.error('Response body:', text);
-		return {cookies}; // Прерываем выполнение, если ошибка
+		return { cookies, me: meJson, evals: evaluationsJson, slots: slotsJson }; // Прерываем выполнение, если ошибка
 	}
 
-	const meJson = await me.json();
-	const evaluationsJson = await evaluations.json();
-	// const slotsJson = await slots?.json();
 	const eventsJson = await events.json();
+	// await delay(1000);
+
+	// const exams = await fetch('https://api.intra.42.fr/', {
+	// 	headers: {
+	// 		Authorization: `Bearer ${cookies.token}`, // From .env.local
+	// 	}
+	// });
+
+	// if (!exams.ok) {
+	// 	console.error(`Evaluations fetch failed with status: ${exams.status}`);
+	// 	const text = await exams.text(); // Получаем текст ответа
+	// 	console.error('Response body:', text);
+	// 	return { cookies }; // Прерываем выполнение, если ошибка
+	// }
+
+	// const examsJson = await exams.json();
+
+	// console.log(examsJson);
 
 	return {
 		cookies,
 		me: meJson,
 		evals: evaluationsJson,
-		// slots: slotsJson,
+		slots: slotsJson,
 		events: eventsJson,
 	};
 };

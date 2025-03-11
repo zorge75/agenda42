@@ -214,7 +214,7 @@ const Index: NextPage = () => {
 				</SubHeaderLeft>
 				<SubHeaderRight>
 					<CommonAvatarTeam>
-						<strong>Facit</strong> Team
+						<strong>Agenda42</strong> Team
 					</CommonAvatarTeam>
 				</SubHeaderRight>
 			</SubHeader>

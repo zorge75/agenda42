@@ -135,7 +135,7 @@ const Index: NextPage = () => {
 	const { darkModeStatus } = useDarkMode();
 	const router = useRouter();
 	const handleOnClickToEmployeeListPage = useCallback(
-		() => router.push(`../${demoPagesMenu.appointment.subMenu.employeeList.path}`),
+		() => router.push(`../${demoPagesMenu.employeeList.path}`),
 		[router],
 	);
 

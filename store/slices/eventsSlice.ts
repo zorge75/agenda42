@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface UserState {
+interface EventsState {
     events: any | null; // Replace `any` with a proper type for your user data if available
     loading: boolean;
     error: string | null;

@@ -4,6 +4,8 @@ import { Views } from 'react-big-calendar';
 import dayjs from 'dayjs';
 import Button, { ButtonGroup } from '../bootstrap/Button';
 import Dropdown, { DropdownItem, DropdownMenu, DropdownToggle } from '../bootstrap/Dropdown';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUnitType } from '../../store/slices/calendarSlice';
 
 export const getUnitType = (viewMode: 'month' | 'week' | 'work_week' | 'day' | 'agenda') => {
 	let unitType = null;
@@ -66,27 +68,27 @@ export const CalendarTodayButton: FC<ICalendarTodayButtonProps> = ({
 	unitType,
 	viewMode,
 }) => {
-	console.log(date);
-	console.log(dayjs(date).add(-1, unitType).toDate());
+	console.log("date", date);
+	console.log("unitType", unitType);
 	return (
 		<ButtonGroup>
 			<Button
 				color='info'
 				isLight
 				// @ts-ignore
-				onClick={() => setDate(dayjs(date).add(-1, unitType).toDate())}
+				onClick={() => setDate(dayjs(date).add(-1, unitType).format())}
 				icon='ChevronLeft'
 				aria-label='Prev'
 			/>
 			{/* @ts-ignore */}
-			<Button color='info' isLight onClick={() => setDate(dayjs(date)._d)}>
+			<Button color='info' isLight >
 				{getTodayButtonLabel(viewMode)}
 			</Button>
 			<Button
 				color='info'
 				isLight
 				// @ts-ignore
-				onClick={() => setDate(dayjs(date).add(-1, unitType).toDate())}
+				onClick={() => setDate(dayjs(date).add(1, unitType).format())}
 				icon='ChevronRight'
 				aria-label='Next'
 			/>
@@ -105,12 +107,15 @@ CalendarTodayButton.propTypes = {
 
 interface ICalendarViewModeButtonsProps {
 	viewMode: 'month' | 'week' | 'work_week' | 'day' | 'agenda';
-	setViewMode(...args: unknown[]): unknown;
 }
 export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
 	viewMode,
-	setViewMode,
 }) => {
+	const dispatch = useDispatch();
+	const setViewMode = (viewMode: 'month' | 'week' | 'work_week' | 'day' | 'agenda') => {
+		dispatch(setUnitType(viewMode));
+	}
+
 	return (
 		<Dropdown>
 			<DropdownToggle>

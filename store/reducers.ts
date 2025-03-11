@@ -3,12 +3,14 @@ import userReducer from './slices/userSlice';
 import evalsReducer from './slices/evalsSlice';
 import slotsReducer from './slices/slotsSlice';
 import eventsReducer from './slices/eventsSlice';
+import calendarReducer from './slices/calendarSlice';
 
 const rootReducer = combineReducers({
     user: userReducer, // Add your reducers here
     evals: evalsReducer,
     slots: slotsReducer,
     events: eventsReducer,
+    calendar: calendarReducer,
 });
 
 export default rootReducer;

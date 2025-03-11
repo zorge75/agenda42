@@ -68,11 +68,11 @@ const AnswerCustomer: FC<IAnswerCustomerProps> = (props: IAnswerCustomerProps) =
 			},
 			colors: [
 				(color === 'primary' && String(process.env.NEXT_PUBLIC_PRIMARY_COLOR)) ||
-					(color === 'secondary' && String(process.env.NEXT_PUBLIC_SECONDARY_COLOR)) ||
-					(color === 'success' && String(process.env.NEXT_PUBLIC_SUCCESS_COLOR)) ||
-					(color === 'info' && String(process.env.NEXT_PUBLIC_INFO_COLOR)) ||
-					(color === 'warning' && String(process.env.NEXT_PUBLIC_WARNING_COLOR)) ||
-					(color === 'danger' && String(process.env.NEXT_PUBLIC_DANGER_COLOR)),
+				(color === 'secondary' && String(process.env.NEXT_PUBLIC_SECONDARY_COLOR)) ||
+				(color === 'success' && String(process.env.NEXT_PUBLIC_SUCCESS_COLOR)) ||
+				(color === 'info' && String(process.env.NEXT_PUBLIC_INFO_COLOR)) ||
+				(color === 'warning' && String(process.env.NEXT_PUBLIC_WARNING_COLOR)) ||
+				(color === 'danger' && String(process.env.NEXT_PUBLIC_DANGER_COLOR)),
 			],
 		},
 	});
@@ -85,14 +85,14 @@ const AnswerCustomer: FC<IAnswerCustomerProps> = (props: IAnswerCustomerProps) =
 					</div>
 					<div className='flex-grow-1 ms-3 d-flex justify-content-between align-items-center'>
 						<div>
-							<Link
-								href={`../${demoPagesMenu.appointment.subMenu.employeeID.path}/${id}`}
+							{/* <Link
+								// href={`../${demoPagesMenu.employeeID.path}/${id}`}
 								className={classNames('fw-bold fs-6 mb-0', {
 									'link-dark': !darkModeStatus,
 									'link-light': darkModeStatus,
 								})}>
 								{name}
-							</Link>
+							</Link> */}
 							<div className='text-muted mt-n1'>
 								<small>{job}</small>
 							</div>

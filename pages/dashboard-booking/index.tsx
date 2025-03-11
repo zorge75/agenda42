@@ -54,7 +54,7 @@ import CommonPercentageOfLoadChart from '../../common/partial/CommonPercentageOf
 const localizer = dayjsLocalizer(dayjs);
 const now = new Date();
 
-interface IEvent extends IEvents {
+export interface IEvent extends IEvents {
 	user?: IUserProps;
 	users?: IUserProps[];
 	color?: TColor;
@@ -160,7 +160,7 @@ const Index: NextPage = () => {
 	// FOR DEV
 	useEffect(() => {
 		setEvents(eventList);
-		return () => {};
+		return () => { };
 	}, []);
 
 	const initialEventItem: IEvent = {
@@ -189,7 +189,7 @@ const Index: NextPage = () => {
 	// Change view mode
 	const handleViewMode = (e: dayjs.ConfigType) => {
 		setDate(dayjs(e).toDate());
-		setViewMode(Views.DAY);
+		// setViewMode(Views.DAY);
 	};
 	// View modes; Month, Week, Work Week, Day and Agenda
 	const views = getViews();
@@ -274,7 +274,7 @@ const Index: NextPage = () => {
 				eventEnd: dayjs(eventItem.end).format(),
 				eventEmployee: eventItem?.user?.username || '',
 			});
-		return () => {};
+		return () => { };
 		//	eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [eventItem]);
 	// END:: Calendar
@@ -284,7 +284,7 @@ const Index: NextPage = () => {
 	return (
 		<PageWrapper>
 			<Head>
-				<title>demoPages.appointment.subMenu.dashboard.text</title>
+				<title>demoPages.dashboard.text</title>
 			</Head>
 			<SubHeader>
 				<SubHeaderLeft>
@@ -338,23 +338,20 @@ const Index: NextPage = () => {
 										desc={
 											<>
 												<div className='h6'>{`${USERS[u].name} ${USERS[u].surname}`}</div>
-												<div>
+												{/* <div>
 													<b>Event: </b>
 													{
-														events.filter(
-															(i) =>
-																i.user?.username ===
-																USERS[u].username,
+														events.filter(handleViewMode[u].username,
 														).length
 													}
-												</div>
+												</div> */}
 												<div>
 													<b>Approved: </b>
 													{
 														events.filter(
 															(i) =>
 																i.user?.username ===
-																	USERS[u].username &&
+																USERS[u].username &&
 																i.color === 'info',
 														).length
 													}
@@ -389,12 +386,12 @@ const Index: NextPage = () => {
 													i.end &&
 													i.end > now,
 											).length && (
-												<span className='position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2'>
-													<span className='visually-hidden'>
-														Online user
+													<span className='position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2'>
+														<span className='visually-hidden'>
+															Online user
+														</span>
 													</span>
-												</span>
-											)}
+												)}
 										</div>
 									</Popovers>
 								</div>
@@ -418,7 +415,6 @@ const Index: NextPage = () => {
 										</CardActions>
 										<CardActions>
 											<CalendarViewModeButtons
-												setViewMode={setViewMode}
 												viewMode={viewMode}
 											/>
 										</CardActions>
@@ -443,8 +439,8 @@ const Index: NextPage = () => {
 												setEventItem(event);
 											}}
 											onSelectSlot={handleSelect}
-											onView={handleViewMode}
-											onDrillDown={handleViewMode}
+											// onView={handleViewMode}
+											// onDrillDown={handleViewMode}
 											components={{
 												event: MyEvent, // used by each view (Month, Day, Week)
 												week: {
@@ -573,11 +569,11 @@ const Index: NextPage = () => {
 														value={
 															formik.values.eventAllDay
 																? dayjs(
-																		formik.values.eventStart,
-																	).format('YYYY-MM-DD')
+																	formik.values.eventStart,
+																).format('YYYY-MM-DD')
 																: dayjs(
-																		formik.values.eventStart,
-																	).format('YYYY-MM-DDTHH:mm')
+																	formik.values.eventStart,
+																).format('YYYY-MM-DDTHH:mm')
 														}
 														onChange={formik.handleChange}
 													/>

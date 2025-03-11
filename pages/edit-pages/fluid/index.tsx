@@ -184,7 +184,7 @@ const Index: NextPage = () => {
 
 	const handleViewMode = (e: dayjs.ConfigType) => {
 		setDate(dayjs(e).toDate());
-		setViewMode(Views.DAY);
+		// setViewMode(Views.DAY);
 	};
 
 	// View modes; Month, Week, Work Week, Day and Agenda
@@ -797,7 +797,6 @@ const Index: NextPage = () => {
 												viewMode={viewMode}
 											/>
 											<CalendarViewModeButtons
-												setViewMode={setViewMode}
 												viewMode={viewMode}
 											/>
 										</ButtonGroup>

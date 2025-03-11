@@ -32,13 +32,16 @@ export default async function handler(req: any, res: any) {
             throw new Error(json.error || 'Token exchange failed');
         }
 
-        const { access_token } = json;
+        const { access_token, refresh_token, expires_in } = json;
 
-        console.log("CODE: ", code);
-        console.log("ACESS TOKEN: ", access_token);
+        // Set cookies with token details
+        res.setHeader('Set-Cookie', [
+            `access_token=${access_token}; Path=/; HttpOnly; SameSite=Strict`,
+            `refresh_token=${refresh_token || ''}; Path=/; HttpOnly; SameSite=Strict`,
+            `expires_at=${Date.now() + expires_in * 1000}; Path=/; HttpOnly; SameSite=Strict`, // Store expiration time in milliseconds
+        ]);
 
-        res.setHeader('Set-Cookie', `token=${access_token}; Path=/; HttpOnly; SameSite=Strict`);
-        res.redirect(302, '/dashboard-booking');
+        res.redirect(302, '/');
 
     } catch (error: any) {
         // Enhanced error logging

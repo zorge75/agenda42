@@ -1,158 +1,774 @@
-import React, { useContext, useEffect, useState } from 'react';
-import type { NextPage } from 'next';
+import React, { useEffect, useState } from 'react';
+import type { GetServerSideProps, NextPage } from 'next';
 import { GetStaticProps } from 'next';
-import Head from 'next/head';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTour } from '@reactour/tour';
-import Button, { ButtonGroup } from '../components/bootstrap/Button';
+import dayjs from 'dayjs';
+import classNames from 'classnames';
+import { Calendar, dayjsLocalizer, View as TView, Views } from 'react-big-calendar';
+import { useFormik } from 'formik';
+import Head from 'next/head';
+import { Calendar as DatePicker } from 'react-date-range';
+import eventList, { IEvents } from '../common/data/events';
+import USERS, { getUserDataWithUsername, IUserProps } from '../common/data/userDummyData';
+import { TColor } from '../type/color-type';
+import useDarkMode from '../hooks/useDarkMode';
+import Icon from '../components/icon/Icon';
+import Avatar, { AvatarGroup } from '../components/Avatar';
+import Tooltips from '../components/bootstrap/Tooltips';
+import {
+	CalendarTodayButton,
+	CalendarViewModeButtons,
+	getLabel,
+	getUnitType,
+	getViews,
+} from '../components/extras/calendarHelper';
+import SERVICES, { getServiceDataWithServiceName } from '../common/data/serviceDummyData';
 import PageWrapper from '../layout/PageWrapper/PageWrapper';
 import { demoPagesMenu } from '../menu';
-import SubHeader, {
-	SubHeaderLeft,
-	SubHeaderRight,
-	SubheaderSeparator,
-} from '../layout/SubHeader/SubHeader';
-import CommonAvatarTeam from '../common/partial/other/CommonAvatarTeam';
-import ThemeContext from '../context/themeContext';
-import useDarkMode from '../hooks/useDarkMode';
-import { TABS, TTabs } from '../common/type/helper';
+import SubHeader, { SubHeaderLeft, SubHeaderRight } from '../layout/SubHeader/SubHeader';
+import Popovers from '../components/bootstrap/Popovers';
+import Button from '../components/bootstrap/Button';
+import Option from '../components/bootstrap/Option';
 import Page from '../layout/Page/Page';
-import CommonDashboardAlert from '../common/partial/CommonDashboardAlert';
-import CommonDashboardUserCard from '../common/partial/CommonDashboardUserCard';
-import CommonDashboardMarketingTeam from '../common/partial/CommonDashboardMarketingTeam';
-import CommonDashboardDesignTeam from '../common/partial/CommonDashboardDesignTeam';
-import CommonDashboardIncome from '../common/partial/CommonDashboardIncome';
-import CommonDashboardRecentActivities from '../common/partial/CommonDashboardRecentActivities';
-import CommonDashboardUserIssue from '../common/partial/CommonDashboardUserIssue';
-import CommonDashboardSalesByStore from '../common/partial/CommonDashboardSalesByStore';
-import CommonDashboardWaitingAnswer from '../common/partial/CommonDashboardWaitingAnswer';
-import CommonDashboardTopSeller from '../common/partial/CommonDashboardTopSeller';
-import CommonMyWallet from '../common/partial/CommonMyWallet';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../store/slices/userSlice';
+import Card, {
+	CardActions,
+	CardBody,
+	CardHeader,
+	CardLabel,
+	CardSubTitle,
+	CardTitle,
+} from '../components/bootstrap/Card';
+import OffCanvas, {
+	OffCanvasBody,
+	OffCanvasHeader,
+	OffCanvasTitle,
+} from '../components/bootstrap/OffCanvas';
+import FormGroup from '../components/bootstrap/forms/FormGroup';
+import Select from '../components/bootstrap/forms/Select';
+import Checks from '../components/bootstrap/forms/Checks';
+import Input from '../components/bootstrap/forms/Input';
+import { Props } from 'react-apexcharts';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store';
+import { setUnitType } from '../store/slices/calendarSlice';
+import axios from 'axios';
+
+const localizer = dayjsLocalizer(dayjs);
+const now = new Date();
+
+interface IEvent extends IEvents {
+	user?: IUserProps;
+	users?: IUserProps[];
+	color?: TColor;
+}
+
+const MyEvent = (data: { event: IEvent }) => {
+	const { darkModeStatus } = useDarkMode();
+
+	const { event } = data;
+	return (
+		<div className='row g-2'>
+			<div className='col text-truncate'>
+				{event?.icon && <Icon icon={event?.icon} size='lg' className='me-2' />}
+				{event?.name}
+			</div>
+			{event?.user?.src && (
+				<div className='col-auto'>
+					<div className='row g-1 align-items-baseline'>
+						<div className='col-auto'>
+							<Avatar src={event?.user?.src} size={18} />
+						</div>
+						<small
+							className={classNames('col-auto text-truncate', {
+								'text-dark': !darkModeStatus,
+								'text-white': darkModeStatus,
+							})}>
+							{event?.user?.name}
+						</small>
+					</div>
+				</div>
+			)}
+			{event?.users && (
+				<div className='col-auto'>
+					<AvatarGroup size={18}>
+						{event.users.map((user) => (
+							// eslint-disable-next-line react/jsx-props-no-spreading
+							<Avatar key={user.src} {...user} />
+						))}
+					</AvatarGroup>
+				</div>
+			)}
+		</div>
+	);
+};
+
+const MyWeekEvent = (data: { event: IEvent }) => {
+	const { darkModeStatus } = useDarkMode();
+
+	const { event } = data;
+	return (
+		<div className='row g-2'>
+			<div className='col-12 text-truncate'>
+				{event?.icon && <Icon icon={event?.icon} size='lg' className='me-2' />}
+				{event?.name}
+			</div>
+			{event?.user && (
+				<div className='col-12'>
+					<div className='row g-1 align-items-baseline'>
+						<div className='col-auto'>
+							{/* eslint-disable-next-line react/jsx-props-no-spreading */}
+							<Avatar {...event?.user} size={18} />
+						</div>
+						<small
+							className={classNames('col-auto text-truncate', {
+								'text-dark': !darkModeStatus,
+								'text-white': darkModeStatus,
+							})}>
+							{event?.user?.name}
+						</small>
+					</div>
+				</div>
+			)}
+			{event?.users && (
+				<div className='col-12'>
+					<AvatarGroup size={18}>
+						{event.users.map((user) => (
+							// eslint-disable-next-line react/jsx-props-no-spreading
+							<Avatar key={user.src} {...user} />
+						))}
+					</AvatarGroup>
+				</div>
+			)}
+		</div>
+	);
+};
+
+const MyEventDay = (data: { event: IEvent }) => {
+	const { event } = data;
+	return (
+		<Tooltips
+			title={`${event?.name} / ${dayjs(event.start).format('LT')} - ${dayjs(event.end).format(
+				'LT',
+			)}`}>
+			<div className='row g-2'>
+				{event?.user?.src && (
+					<div className='col-auto'>
+						<Avatar src={event?.user?.src} size={16} />
+					</div>
+				)}
+				{event?.users && (
+					<div className='col'>
+						<AvatarGroup size={16}>
+							{event.users.map((user) => (
+								// eslint-disable-next-line react/jsx-props-no-spreading
+								<Avatar key={user.src} {...user} />
+							))}
+						</AvatarGroup>
+					</div>
+				)}
+				<small className='col text-truncate'>
+					{event?.icon && <Icon icon={event?.icon} size='lg' className='me-2' />}
+					{event?.name}
+				</small>
+			</div>
+		</Tooltips>
+	);
+};
 
 const Index: NextPage = () => {
-	const { mobileDesign } = useContext(ThemeContext);
+	const { darkModeStatus, themeStatus } = useDarkMode();
 	const dispatch = useDispatch();
 
-	React.useEffect(() => {
-		if (1) {
-			dispatch(setUser('abergman'));
-		}
-	}, [dispatch]);
+	const eventsIntra = useSelector((state: RootState) => state.events.events);
+	const slotsIntra = useSelector((state: RootState) => state.slots.slots);
+	const viewMode = useSelector((state: RootState) => state.calendar.unitType);
 
-	/**
-	 * Tour Start
-	 */
-	const { setIsOpen } = useTour();
+	console.log('slots', slotsIntra);
+
+	// BEGIN :: Calendar
+	// Active employee
+	const [employeeList, setEmployeeList] = useState({
+		[USERS.JOHN.username]: true,
+		[USERS.ELLA.username]: true,
+		[USERS.RYAN.username]: true,
+		[USERS.GRACE.username]: true,
+	});
+	// Events
+	const [events, setEvents] = useState(eventList);
+
 	useEffect(() => {
-		if (
-			typeof window !== 'undefined' &&
-			localStorage.getItem('tourModalStarted') !== 'shown' &&
-			!mobileDesign
-		) {
-			setTimeout(() => {
-				setIsOpen(true);
-				localStorage.setItem('tourModalStarted', 'shown');
-			}, 3000);
+		if (eventsIntra && slotsIntra) {
+			const eventList = eventsIntra.map((event: any) => ({
+				id: event.id,
+				name: event.name ?? event.id,
+				start: dayjs(event['begin_at']).toDate(),
+				end: dayjs(event['end_at']).toDate(),
+				color: 'primary',
+				user: 'abergman',
+			}))
+			const slotsList = slotsIntra.map((slot: any) => ({
+				id: slot.id,
+				name: (slot.scale_team == 'invisible' || slot.scale_team?.id) ? '' : 'Available',
+				start: dayjs(slot['begin_at']).toDate(),
+				end: dayjs(slot['end_at']).toDate(),
+				color: (slot.scale_team == 'invisible' || slot.scale_team?.id) ? 'danger' : 'success',
+				user: slot.user.firstname
+			}))
+			setEvents([...eventList, ...slotsList]);
 		}
-		return () => { };
+	}, [eventsIntra, slotsIntra]);
+
+	const initialEventItem: IEvent = {
+		start: undefined,
+		end: undefined,
+		name: undefined,
+		id: undefined,
+		user: undefined,
+	};
+	// Selected Event
+	const [eventItem, setEventItem] = useState<IEvent>(initialEventItem);
+	// Calendar View Mode
+	// const [viewMode, setViewMode] = useState<TView>(Views.MONTH);
+	// Calendar Date
+	const [date, setDate] = useState(new Date());
+	// Item edit panel status
+	const [toggleInfoEventCanvas, setToggleInfoEventCanvas] = useState(false);
+	const setInfoEvent = () => setToggleInfoEventCanvas(!toggleInfoEventCanvas);
+	const [eventAdding, setEventAdding] = useState(false);
+
+	// Calendar Unit Type
+	const unitType = getUnitType(viewMode);
+	// Calendar Date Label
+	const calendarDateLabel = getLabel(date, viewMode);
+
+	// Change view mode
+	const handleViewMode = (e: dayjs.ConfigType) => {
+		setDate(dayjs(e).toDate());
+		console.log("CHANGE VIEW MODE");
+		dispatch(setUnitType(Views.DAY));
+	};
+
+	// View modes; Month, Week, Work Week, Day and Agenda
+	const views = getViews();
+
+	// New Event
+	const handleSelect = ({ start, end }: { start: any; end: any }) => {
+		setEventAdding(true);
+		setEventItem({ start, end });
+	};
+
+	useEffect(() => {
+		if (eventAdding) {
+			setInfoEvent();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [eventAdding]);
 
-	const { themeStatus } = useDarkMode();
+	const eventStyleGetter = (
+		event: { color?: TColor },
+		start: any,
+		end: any,
+		// isSelected: boolean,
+	) => {
+		const isActiveEvent = start <= now && end >= now;
+		const isPastEvent = end < now;
+		const color = isActiveEvent ? 'success' : event.color;
 
-	const [activeTab, setActiveTab] = useState<TTabs>(TABS.YEARLY);
+		return {
+			className: classNames({
+				[`bg-l${darkModeStatus ? 'o25' : '10'}-${color} text-${color}`]: color,
+				'border border-success': isActiveEvent,
+				'opacity-50': isPastEvent,
+			}),
+		};
+	};
 
+	const formik = useFormik({
+		initialValues: {
+			eventName: '',
+			eventStart: '',
+			eventEnd: '',
+			eventEmployee: '',
+			eventAllDay: false,
+		},
+		onSubmit: (values) => {
+			if (eventAdding) {
+				setEvents((prevEvents) => [
+					...prevEvents,
+					{
+						id: values.eventStart,
+						...getServiceDataWithServiceName(values.eventName),
+						end: values.eventEnd,
+						start: values.eventStart,
+						user: { ...getUserDataWithUsername(values.eventEmployee) },
+					},
+				]);
+			}
+			setToggleInfoEventCanvas(false);
+			setEventAdding(false);
+			setEventItem(initialEventItem);
+			formik.setValues({
+				eventName: '',
+				eventStart: '',
+				eventEnd: '',
+				eventEmployee: '',
+				eventAllDay: false,
+			});
+		},
+	});
+
+	useEffect(() => {
+		if (eventItem)
+			formik.setValues({
+				...formik.values,
+				// @ts-ignore
+				eventId: eventItem.id || null,
+				eventName: eventItem.name || '',
+				eventStart: dayjs(eventItem.start).format(),
+				eventEnd: dayjs(eventItem.end).format(),
+				eventEmployee: eventItem?.user?.username || '',
+			});
+		return () => { };
+		//	eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [eventItem]);
+	// END:: Calendar
 	return (
 		<PageWrapper>
 			<Head>
-				<title>{demoPagesMenu.sales.subMenu.dashboard.text}</title>
+				<title>{demoPagesMenu.dashboard.text}</title>
 			</Head>
 			<SubHeader>
 				<SubHeaderLeft>
-					<span className='h4 mb-0 fw-bold'>Overview</span>
-					<SubheaderSeparator />
-					<ButtonGroup>
-						{Object.keys(TABS).map((key) => (
-							<Button
-								key={key}
-								color={activeTab === TABS[key] ? 'success' : themeStatus}
-								onClick={() => setActiveTab(TABS[key])}>
-								{TABS[key]}
-							</Button>
-						))}
-					</ButtonGroup>
+					<Icon icon='Info' className='me-2' size='2x' />
+					<span className='text-muted'>
+						You have{' '}
+						<Icon icon='Check Circle ' color='success' className='mx-1' size='lg' /> 12
+						approved appointments and{' '}
+						<Icon icon='pending_actions ' color='danger' className='mx-1' size='lg' /> 3
+						pending appointments for today.
+					</span>
 				</SubHeaderLeft>
 				<SubHeaderRight>
-					<CommonAvatarTeam>
-						<strong>Marketing</strong> Team
-					</CommonAvatarTeam>
+					<Popovers
+						desc={
+							<DatePicker
+								onChange={(item) => setDate(item)}
+								date={date}
+								color={process.env.NEXT_PUBLIC_PRIMARY_COLOR}
+							/>
+						}
+						placement='bottom-end'
+						className='mw-100'
+						trigger='click'>
+						<Button color='light'>{calendarDateLabel}</Button>
+					</Popovers>
 				</SubHeaderRight>
 			</SubHeader>
 			<Page container='fluid'>
-				<div className='row'>
-					<div className='col-12'>
-						<CommonDashboardAlert />
+				<div className='row mb-4 g-3'>
+					{Object.keys(USERS).map((u) => (
+						<div key={USERS[u].username} className='col-auto'>
+							<Popovers
+								trigger='hover'
+								desc={
+									<>
+										<div className='h6'>{`${USERS[u].name} ${USERS[u].surname}`}</div>
+										<div>
+											<b>Event: </b>
+											{
+												events.length
+											}
+										</div>
+										<div>
+											<b>Approved: </b>
+											{
+												events.length
+											}
+										</div>
+									</>
+								}>
+								<div className='position-relative'>
+									<Avatar
+										src={USERS[u].src}
+										color={USERS[u].color}
+										size={64}
+										border={4}
+										className='cursor-pointer'
+										borderColor={
+											employeeList[USERS[u].username] ? 'info' : themeStatus
+										}
+										onClick={() =>
+											setEmployeeList({
+												...employeeList,
+												[USERS[u].username]:
+													!employeeList[USERS[u].username],
+											})
+										}
+									/>
+									{!!events.filter(
+										(i) =>
+											i.user?.username === USERS[u].username &&
+											i.start &&
+											i.start < now &&
+											i.end &&
+											i.end > now,
+									).length && (
+											<span className='position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2'>
+												<span className='visually-hidden'>Online user</span>
+											</span>
+										)}
+								</div>
+							</Popovers>
+						</div>
+					))}
+				</div>
+				<div className='row h-100'>
+					<div className='col-xl-9'>
+						<Card stretch style={{ minHeight: 600 }}>
+							<CardHeader>
+								<CardActions>
+									<CalendarTodayButton
+										unitType={unitType}
+										date={date}
+										setDate={setDate}
+										viewMode={viewMode}
+									/>
+								</CardActions>
+								<CardActions>
+									<CalendarViewModeButtons
+										viewMode={viewMode}
+									/>
+								</CardActions>
+							</CardHeader>
+							<CardBody isScrollable>
+								<Calendar
+									selectable
+									toolbar={false}
+									localizer={localizer}
+									events={events}
+									defaultView={Views.WEEK}
+									views={views}
+									view={viewMode}
+									date={date}
+									onNavigate={(_date) => setDate(_date)}
+									scrollToTime={new Date()}
+									defaultDate={new Date()}
+									onSelectEvent={(event) => {
+										setInfoEvent();
+										setEventItem(event);
+									}}
+									onSelectSlot={handleSelect}
+									// onView={handleViewMode}
+									// onDrillDown={handleViewMode}
+									components={{
+										event: MyEvent, // used by each view (Month, Day, Week)
+										week: {
+											event: MyWeekEvent,
+										},
+										work_week: {
+											event: MyWeekEvent,
+										},
+									}}
+									eventPropGetter={eventStyleGetter}
+								/>
+							</CardBody>
+						</Card>
 					</div>
-
-					<div className='col-xl-4'>
-						<CommonDashboardUserCard />
-					</div>
-					<div className='col-xl-4'>
-						<CommonDashboardMarketingTeam />
-					</div>
-					<div className='col-xl-4'>
-						<CommonDashboardDesignTeam />
-					</div>
-
-					<div className='col-xxl-6'>
-						<CommonDashboardIncome activeTab={activeTab} />
-					</div>
-					<div className='col-xxl-3'>
-						<CommonDashboardRecentActivities />
-					</div>
-					<div className='col-xxl-3'>
-						<CommonDashboardUserIssue />
-					</div>
-
-					<div className='col-xxl-8'>
-						<CommonDashboardSalesByStore />
-					</div>
-					<div className='col-xxl-4 col-xl-6'>
-						<CommonDashboardWaitingAnswer />
-					</div>
-
-					<div className='col-xxl-4 col-xl-6'>
-						<CommonMyWallet />
-					</div>
-					<div className='col-xxl-8'>
-						<CommonDashboardTopSeller />
+					<div className='col-xl-3'>
+						<Card stretch style={{ minHeight: 600 }}>
+							<CardHeader>
+								<CardLabel icon='Today' iconColor='info'>
+									<CardTitle>{dayjs(date).format('MMMM Do YYYY')}</CardTitle>
+									<CardSubTitle>{dayjs(date).fromNow()}</CardSubTitle>
+								</CardLabel>
+								<CardActions>
+									<CalendarTodayButton
+										unitType={unitType}
+										date={date}
+										setDate={setDate}
+										viewMode={unitType}
+									/>
+								</CardActions>
+							</CardHeader>
+							<CardBody isScrollable>
+								<Calendar
+									selectable
+									toolbar={false}
+									localizer={localizer}
+									events={events}
+									defaultView={Views.WEEK}
+									views={views}
+									view={Views.DAY}
+									date={date}
+									scrollToTime={new Date(1970, 1, 1, 6)}
+									defaultDate={new Date()}
+									onSelectEvent={(event) => {
+										setInfoEvent();
+										setEventItem(event);
+									}}
+									onSelectSlot={handleSelect}
+									onView={handleViewMode}
+									onDrillDown={handleViewMode}
+									components={{
+										event: MyEventDay, // used by each view (Month, Day, Week)
+									}}
+									eventPropGetter={eventStyleGetter}
+								/>
+							</CardBody>
+						</Card>
 					</div>
 				</div>
+
+				<OffCanvas
+					setOpen={(status: boolean) => {
+						setToggleInfoEventCanvas(status);
+						setEventAdding(status);
+					}}
+					isOpen={toggleInfoEventCanvas}
+					titleId='canvas-title'>
+					<OffCanvasHeader
+						setOpen={(status: boolean) => {
+							setToggleInfoEventCanvas(status);
+							setEventAdding(status);
+						}}
+						className='p-4'>
+						<OffCanvasTitle id='canvas-title'>
+							{eventAdding ? 'Add Event' : 'Edit Event'}
+						</OffCanvasTitle>
+					</OffCanvasHeader>
+					<OffCanvasBody tag='form' onSubmit={formik.handleSubmit} className='p-4'>
+						<div className='row g-4'>
+							{/* Name */}
+							<div className='col-12'>
+								<FormGroup id='eventName' label='Name'>
+									<Select
+										ariaLabel='Service select'
+										placeholder='Please select...'
+										size='lg'
+										value={formik.values.eventName}
+										onChange={formik.handleChange}>
+										{Object.keys(SERVICES).map((s) => (
+											<Option key={SERVICES[s].name} value={SERVICES[s].name}>
+												{SERVICES[s].name}
+											</Option>
+										))}
+									</Select>
+								</FormGroup>
+							</div>
+							{/* Date */}
+							<div className='col-12'>
+								<Card className='mb-0 bg-l10-info' shadow='sm'>
+									<CardHeader className='bg-l25-info'>
+										<CardLabel icon='DateRange' iconColor='info'>
+											<CardTitle className='text-info'>
+												Date Options
+											</CardTitle>
+										</CardLabel>
+									</CardHeader>
+									<CardBody>
+										<div className='row g-3'>
+											<div className='col-12'>
+												<FormGroup id='eventAllDay'>
+													<Checks
+														type='switch'
+														value='true'
+														label='All day event'
+														checked={formik.values.eventAllDay}
+														onChange={formik.handleChange}
+													/>
+												</FormGroup>
+											</div>
+											<div className='col-12'>
+												<FormGroup
+													id='eventStart'
+													label={
+														formik.values.eventAllDay
+															? 'Date'
+															: 'Start Date'
+													}>
+													<Input
+														type={
+															formik.values.eventAllDay
+																? 'date'
+																: 'datetime-local'
+														}
+														value={
+															formik.values.eventAllDay
+																? dayjs(
+																	formik.values.eventStart,
+																).format('YYYY-MM-DD')
+																: dayjs(
+																	formik.values.eventStart,
+																).format('YYYY-MM-DDTHH:mm')
+														}
+														onChange={formik.handleChange}
+													/>
+												</FormGroup>
+											</div>
+
+											{!formik.values.eventAllDay && (
+												<div className='col-12'>
+													<FormGroup id='eventEnd' label='End Date'>
+														<Input
+															type='datetime-local'
+															value={dayjs(
+																formik.values.eventEnd,
+															).format('YYYY-MM-DDTHH:mm')}
+															onChange={formik.handleChange}
+														/>
+													</FormGroup>
+												</div>
+											)}
+										</div>
+									</CardBody>
+								</Card>
+							</div>
+							{/* Employee */}
+							<div className='col-12'>
+								<Card className='mb-0 bg-l10-dark' shadow='sm'>
+									<CardHeader className='bg-l25-dark'>
+										<CardLabel icon='Person Add' iconColor='dark'>
+											<CardTitle>Employee Options</CardTitle>
+										</CardLabel>
+									</CardHeader>
+									<CardBody>
+										<FormGroup id='eventEmployee' label='Employee'>
+											<Select
+												placeholder='Please select...'
+												value={formik.values.eventEmployee}
+												onChange={formik.handleChange}
+												ariaLabel='Employee select'>
+												{Object.keys(USERS).map((u) => (
+													<Option
+														key={USERS[u].id}
+														value={USERS[u].username}>
+														{`${USERS[u].name} ${USERS[u].surname}`}
+													</Option>
+												))}
+											</Select>
+										</FormGroup>
+									</CardBody>
+								</Card>
+							</div>
+							<div className='col'>
+								<Button color='info' type='submit'>
+									Save
+								</Button>
+							</div>
+						</div>
+					</OffCanvasBody>
+				</OffCanvas>
 			</Page>
 		</PageWrapper>
 	);
 };
 
 
-export async function getServerSideProps({ locale }: { locale: string }) {
+export async function getServerSideProps({ req, locale }: any) {
+	const { access_token, refresh_token, expires_at } = req.cookies;
+
+	// If no token, redirect to 42 OAuth
 	const authUrl = 'https://api.intra.42.fr/oauth/authorize?' + new URLSearchParams({
 		client_id: process.env.CLIENT_ID as string,
 		redirect_uri: process.env.API_URI as string,
-		response_type: 'code',
-		scope: '',
+		response_type: 'code' as string,
+		scope: 'public projects profile' as string,
 	}).toString();
 
+	if (!access_token) {
+		return {
+			redirect: {
+				destination: authUrl,
+				permanent: false,
+			},
+			props: {
+				...(await serverSideTranslations(locale, ['common', 'menu'])),
+			},
+		};
+	}
+
+	// Check if token is expired
+	const isExpired = expires_at ? Date.now() > parseInt(expires_at, 10) : false;
+
+	let validToken = access_token;
+	let userData = null;
+
+	if (isExpired && refresh_token) {
+		// Try to refresh the token
+		try {
+			const response = await axios.post(
+				'https://api.intra.42.fr/oauth/token',
+				new URLSearchParams({
+					grant_type: 'refresh_token' as string,
+					client_id: process.env.CLIENT_ID as string,
+					client_secret: process.env.CLIENT_SECRET as string,
+					refresh_token,
+				}).toString(),
+				{
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				}
+			);
+
+			const { access_token: newAccessToken, refresh_token: newRefreshToken, expires_in } = response.data;
+
+			// Update cookies (this happens on the client via a redirect, so we'll simulate it)
+			validToken = newAccessToken;
+
+			// Return with a redirect to update cookies (Next.js limitation: can't set cookies directly in getServerSideProps)
+			return {
+				redirect: {
+					destination: '/api/refresh?new_access_token=' + newAccessToken +
+						'&new_refresh_token=' + (newRefreshToken || '') +
+						'&expires_in=' + expires_in,
+					permanent: false,
+				},
+				props: {},
+			};
+		} catch (error: any) {
+			console.error('Refresh token error:', error.response?.data || error.message);
+		}
+	}
+
+	if (isExpired && !refresh_token) {
+		// No refresh token available, force re-authentication
+		return {
+			redirect: {
+				destination: authUrl,
+				permanent: false,
+			},
+			props: {
+				...(await serverSideTranslations(locale, ['common', 'menu'])),
+			},
+		};
+	}
+
+	// Token is valid or refreshed, fetch user data
+	try {
+		const response = await axios.get('https://api.intra.42.fr/v2/me', {
+			headers: { Authorization: `Bearer ${validToken}` },
+		});
+		userData = response.data;
+	} catch (error: any) {
+		console.error('User data fetch error:', error.response?.data || error.message);
+		// If token is invalid, redirect to re-auth
+		return {
+			redirect: {
+				destination: authUrl,
+				permanent: false,
+			},
+			props: {
+				...(await serverSideTranslations(locale, ['common', 'menu'])),
+			},
+		};
+	}
+
 	return {
-		redirect: {
-			destination: authUrl,
-			permanent: false,
-		},
 		props: {
+			token: validToken,
+			userData,
 			...(await serverSideTranslations(locale, ['common', 'menu'])),
 		},
 	};
-};
+}
 
 export default Index;
