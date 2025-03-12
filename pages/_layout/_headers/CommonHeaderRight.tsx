@@ -121,7 +121,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 				</div>
 
 				{/* Lang Selector */}
-				<div className='col-auto'>
+				{/* <div className='col-auto'>
 					<Dropdown>
 						<DropdownToggle hasIcon={false}>
 							{typeof getLangWithKey(router.locale as ILang['key']['lng'])?.icon ===
@@ -158,14 +158,14 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 							))}
 						</DropdownMenu>
 					</Dropdown>
-				</div>
+				</div> */}
 
 				{/* Quick Panel */}
-				<div className='col-auto'>
+				{/* <div className='col-auto'>
 					<Dropdown>
 						<DropdownToggle hasIcon={false}>
 							{/* eslint-disable-next-line react/jsx-props-no-spreading */}
-							<Button {...styledBtn} icon='Tune' aria-label='Quick menu' />
+							{/* <Button {...styledBtn} icon='Tune' aria-label='Quick menu' />
 						</DropdownToggle>
 						<DropdownMenu isAlignmentEnd size='lg' className='py-0 overflow-hidden'>
 							<div className='row g-0'>
@@ -230,10 +230,10 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 							</div>
 						</DropdownMenu>
 					</Dropdown>
-				</div>
+				</div> */}
 
 				{/*	Notifications */}
-				<div className='col-auto'>
+				{/* <div className='col-auto'>
 					<Button
 						// eslint-disable-next-line react/jsx-props-no-spreading
 						{...styledBtn}
@@ -241,7 +241,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 						onClick={() => setOffcanvasStatus(true)}
 						aria-label='Notifications'
 					/>
-				</div>
+				</div> */}
 				{afterChildren}
 			</div>
 

@@ -10,7 +10,6 @@ module.exports = {
             env_prod: {
                 NODE_ENV: 'production'
             },
-            args: 'npm run dev',
         }
     ]
 }

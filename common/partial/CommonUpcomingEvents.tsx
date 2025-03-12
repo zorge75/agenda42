@@ -154,7 +154,7 @@ const CommonUpcomingEvents: FC<ICommonUpcomingEventsProps> = ({ isFluid }) => {
 											</span>
 											<span className='text-nowrap'>
 												{dayjs(`${item.date} ${item.time}`).format(
-													'MMM Do YYYY, h:mm a',
+													'MMM Do YYYY, H:mm',
 												)}
 											</span>
 										</div>
@@ -263,7 +263,7 @@ const CommonUpcomingEvents: FC<ICommonUpcomingEventsProps> = ({ isFluid }) => {
 											// @ts-ignore
 											data.find((e) => e.id === 1).time
 										}`,
-									).format('MMM Do YYYY, h:mm a')}
+									).format('MMM Do YYYY, H:mm')}
 									readOnly
 									disabled
 								/>

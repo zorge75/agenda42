@@ -25,10 +25,10 @@ const CommonDashboardRecentActivities = () => {
 			</CardHeader>
 			<CardBody isScrollable>
 				<Timeline>
-					<TimelineItem label={dayjs().add(-0.25, 'hours').format('LT')} color='primary'>
+					<TimelineItem label={dayjs().add(-0.25, 'hours').format('H:mm')} color='primary'>
 						Extended license purchased from France.
 					</TimelineItem>
-					<TimelineItem label={dayjs().add(-4.54, 'hours').format('LT')} color='success'>
+					<TimelineItem label={dayjs().add(-4.54, 'hours').format('H:mm')} color='success'>
 						<Popovers desc='5 stars' trigger='hover'>
 							<span>
 								<Icon icon='Star' color='warning' />
@@ -40,7 +40,7 @@ const CommonDashboardRecentActivities = () => {
 						</Popovers>
 						<b>, a new rating has been received.</b>
 					</TimelineItem>
-					<TimelineItem label={dayjs().add(-9.34, 'hours').format('LT')} color='warning'>
+					<TimelineItem label={dayjs().add(-9.34, 'hours').format('H:mm')} color='warning'>
 						Customer's problem solved.
 					</TimelineItem>
 					<TimelineItem label={dayjs().add(-1, 'day').fromNow()} color='primary'>

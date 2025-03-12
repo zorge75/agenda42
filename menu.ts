@@ -48,7 +48,7 @@ export const dashboardPagesMenu = {
 	},
 	dashboardBooking: {
 		id: 'dashboard-booking',
-		text: 'Dashboard Booking',
+		text: 'Slots + Events = 42',
 		path: 'dashboard-booking',
 		icon: 'emoji_transportation',
 		subMenu: null,

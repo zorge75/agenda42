@@ -5,7 +5,7 @@ interface CalendarState {
 }
 
 const initialState: CalendarState = {
-    unitType: 'month',
+    unitType: 'week',
 };
 
 const calendarSlice = createSlice({

@@ -61,7 +61,7 @@ const CommonApprovedAppointmentChart = () => {
 			xaxis: {
 				type: 'datetime',
 				categories: [
-					dayjs().format(),
+					dayjs().format('H:mm'),
 					dayjs().add(1, 'days').format(),
 					dayjs().add(2, 'days').format(),
 					dayjs().add(3, 'days').format(),

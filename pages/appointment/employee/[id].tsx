@@ -534,7 +534,7 @@ const Id: NextPage = () => {
 															<span className='text-nowrap'>
 																{dayjs(
 																	`${item.date} ${item.time}`,
-																).format('MMM Do YYYY, h:mm a')}
+																).format('MMM Do YYYY, H:mm')}
 															</span>
 														</div>
 													</td>

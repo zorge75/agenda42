@@ -54,6 +54,12 @@ import CommonPercentageOfLoadChart from '../../common/partial/CommonPercentageOf
 const localizer = dayjsLocalizer(dayjs);
 const now = new Date();
 
+const customFormats = {
+  timeGutterFormat: 'H:mm', // Simple string format: "8:00", "9:00", etc.
+  eventTimeRangeFormat: ({ start, end }: { start: Date; end: Date }, culture: string, localizer: any) =>
+    `${localizer.format(start, 'H:mm')} - ${localizer.format(end, 'H:mm')}`, // For event blocks
+};
+
 export interface IEvent extends IEvents {
 	user?: IUserProps;
 	users?: IUserProps[];
@@ -421,6 +427,7 @@ const Index: NextPage = () => {
 									</CardHeader>
 									<CardBody isScrollable>
 										<Calendar
+											formats={customFormats}
 											selectable
 											toolbar={false}
 											localizer={localizer}

@@ -8,10 +8,13 @@ import USERS from '../../../common/data/userDummyData';
 import Avatar from '../../../components/Avatar';
 import showNotification from '../../../components/extras/showNotification';
 import CHATS from '../../../common/data/chatDummyData';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 const CommonHeaderChat = () => {
 	const [state, setState] = useState<boolean>(false);
 	const [msgCount, setMsgCount] = useState<number>(0);
+	const user = useSelector((state: RootState) => state.user.me);
 
 	useEffect(() => {
 		const timeout = setTimeout(() => {
@@ -40,25 +43,25 @@ const CommonHeaderChat = () => {
 	useEffect(() => {
 		setMsgCount(0);
 	}, [state]);
-
+console.log(user);
 	return (
 		<>
 			<div
 				className='col d-flex align-items-center cursor-pointer'
-				onClick={() => setState(!state)}
+				// onClick={() => setState(!state)}
 				role='presentation'>
 				<div className='me-3'>
 					<div className='text-end'>
 						<div className='fw-bold fs-6 mb-0'>
-							{`${USERS.CHLOE.name} ${USERS.CHLOE.surname}`}
+							{`${user?.first_name} ${user?.last_name}`}
 						</div>
 						<div className='text-muted'>
-							<small>{USERS.CHLOE.position}</small>
+							<small>{user?.location}</small>
 						</div>
 					</div>
 				</div>
 				<div className='position-relative'>
-					<Avatar src={USERS.CHLOE.src} size={48} color={USERS.CHLOE.color} />
+					<Avatar src={user.image.versions.small} size={48} color={USERS.CHLOE.color} />
 					{!!msgCount && (
 						<span className='position-absolute top-15 start-85 translate-middle badge rounded-pill bg-danger'>
 							{msgCount} <span className='visually-hidden'>unread messages</span>

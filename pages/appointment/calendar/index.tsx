@@ -56,6 +56,12 @@ import { setUnitType } from '../../../store/slices/calendarSlice';
 const localizer = dayjsLocalizer(dayjs);
 const now = new Date();
 
+const customFormats = {
+	timeGutterFormat: 'H:mm', // Simple string format: "8:00", "9:00", etc.
+	eventTimeRangeFormat: ({ start, end }: { start: Date; end: Date }, culture: string, localizer: any) =>
+		`${localizer.format(start, 'H:mm')} - ${localizer.format(end, 'H:mm')}`, // For event blocks
+};
+
 interface IEvent extends IEvents {
 	user?: IUserProps;
 	users?: IUserProps[];
@@ -147,8 +153,8 @@ const MyEventDay = (data: { event: IEvent }) => {
 	const { event } = data;
 	return (
 		<Tooltips
-			title={`${event?.name} / ${dayjs(event.start).format('LT')} - ${dayjs(event.end).format(
-				'LT',
+			title={`${event?.name} / ${dayjs(event.start).format('H:mm')} - ${dayjs(event.end).format(
+				'H:mm',
 			)}`}>
 			<div className='row g-2'>
 				{event?.user?.src && (
@@ -201,16 +207,16 @@ const Index: NextPage = () => {
 			const eventList = eventsIntra.map((event: any) => ({
 				id: event.id,
 				name: event.name ?? event.id,
-				start: dayjs(event['begin_at']).toDate(),
-				end: dayjs(event['end_at']).toDate(),
+				start: dayjs(event['begin_at']).format('H:mm'),
+				end: dayjs(event['end_at']).format('H:mm'),
 				color: 'primary',
 				user: 'abergman',
 			}))
 			const slotsList = slotsIntra.map((slot: any) => ({
 				id: slot.id,
 				name: (slot.scale_team == 'invisible' || slot.scale_team?.id) ? '' : 'Available',
-				start: dayjs(slot['begin_at']).toDate(),
-				end: dayjs(slot['end_at']).toDate(),
+				start: dayjs(slot['begin_at']).format('H:mm'),
+				end: dayjs(slot['end_at']).format('H:mm'),
 				color: (slot.scale_team == 'invisible' || slot.scale_team?.id) ? 'danger' : 'success',
 				user: slot.user.firstname
 			}))
@@ -324,8 +330,8 @@ const Index: NextPage = () => {
 				// @ts-ignore
 				eventId: eventItem.id || null,
 				eventName: eventItem.name || '',
-				eventStart: dayjs(eventItem.start).format(),
-				eventEnd: dayjs(eventItem.end).format(),
+				eventStart: dayjs(eventItem.start).format('H:mm'),
+				eventEnd: dayjs(eventItem.end).format('H:mm'),
 				eventEmployee: eventItem?.user?.username || '',
 			});
 		return () => { };
@@ -442,6 +448,7 @@ const Index: NextPage = () => {
 							</CardHeader>
 							<CardBody isScrollable>
 								<Calendar
+									formats={customFormats}
 									selectable
 									toolbar={false}
 									localizer={localizer}
@@ -492,6 +499,7 @@ const Index: NextPage = () => {
 							</CardHeader>
 							<CardBody isScrollable>
 								<Calendar
+									formats={customFormats}
 									selectable
 									toolbar={false}
 									localizer={localizer}

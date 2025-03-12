@@ -60,6 +60,12 @@ import Checks from '../../../components/bootstrap/forms/Checks';
 const localizer = dayjsLocalizer(dayjs);
 const now = new Date();
 
+const customFormats = {
+  timeGutterFormat: 'H:mm', // Simple string format: "8:00", "9:00", etc.
+  eventTimeRangeFormat: ({ start, end }: { start: Date; end: Date }, culture: string, localizer: any) =>
+    `${localizer.format(start, 'H:mm')} - ${localizer.format(end, 'H:mm')}`, // For event blocks
+};
+
 const MyEvent = (data: { event: IEvents }) => {
 	const { event } = data;
 	return (
@@ -210,7 +216,7 @@ const Index: NextPage = () => {
 				eventAllDay: eventItem.allDay,
 				eventEmployee: `${eventItem?.user?.name} ${eventItem?.user?.surname}`,
 			});
-		return () => {};
+		return () => { };
 		//	eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [eventItem]);
 
@@ -735,6 +741,7 @@ const Index: NextPage = () => {
 								</CardHeader>
 								<CardBody isScrollable>
 									<Calendar
+										formats={customFormats}
 										selectable
 										toolbar={false}
 										localizer={localizer}

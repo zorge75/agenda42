@@ -56,6 +56,12 @@ import axios from 'axios';
 const localizer = dayjsLocalizer(dayjs);
 const now = new Date();
 
+const customFormats = {
+  timeGutterFormat: 'H:mm', // Simple string format: "8:00", "9:00", etc.
+  eventTimeRangeFormat: ({ start, end }: { start: Date; end: Date }, culture: string, localizer: any) =>
+    `${localizer.format(start, 'H:mm')} - ${localizer.format(end, 'H:mm')}`, // For event blocks
+};
+
 interface IEvent extends IEvents {
 	user?: IUserProps;
 	users?: IUserProps[];
@@ -147,8 +153,8 @@ const MyEventDay = (data: { event: IEvent }) => {
 	const { event } = data;
 	return (
 		<Tooltips
-			title={`${event?.name} / ${dayjs(event.start).format('LT')} - ${dayjs(event.end).format(
-				'LT',
+			title={`${event?.name} / ${dayjs(event.start).format('H:mm')} - ${dayjs(event.end).format(
+				'H:mm',
 			)}`}>
 			<div className='row g-2'>
 				{event?.user?.src && (
@@ -442,6 +448,7 @@ const Index: NextPage = () => {
 							</CardHeader>
 							<CardBody isScrollable>
 								<Calendar
+									formats={customFormats}
 									selectable
 									toolbar={false}
 									localizer={localizer}
@@ -492,6 +499,7 @@ const Index: NextPage = () => {
 							</CardHeader>
 							<CardBody isScrollable>
 								<Calendar
+									formats={customFormats}
 									selectable
 									toolbar={false}
 									localizer={localizer}
@@ -663,126 +671,58 @@ const Index: NextPage = () => {
 	);
 };
 
-
 export async function getServerSideProps({ req, locale }: any) {
-	const { access_token, refresh_token, expires_at } = req.cookies;
+	const { token, expires_at } = req.cookies || {};
 
-	// Detect build time: no real request exists during static generation
-	const isBuildTime = process.env.NODE_ENV === 'production' && !req.url;
+	console.log('Cookies received:', { token, expires_at });
 
-	// If no token, redirect to 42 OAuth
 	const authUrl = 'https://api.intra.42.fr/oauth/authorize?' + new URLSearchParams({
 		client_id: process.env.CLIENT_ID as string,
 		redirect_uri: process.env.API_URI as string,
-		response_type: 'code' as string,
-		scope: 'public projects profile' as string,
+		response_type: 'code',
+		scope: 'public projects profile',
 	}).toString();
 
-	if (!access_token) {
+	if (!token) {
+		console.log('No token, redirecting to:', authUrl);
 		return {
-			redirect: {
-				destination: authUrl,
-				permanent: false,
-			},
-			props: {
-				...(await serverSideTranslations(locale, ['common', 'menu'])),
-			},
+			redirect: { destination: authUrl, permanent: false },
+			props: { ...(await serverSideTranslations(locale, ['common', 'menu'])) },
 		};
 	}
 
-	// Skip all logic during build and return minimal props
-	if (isBuildTime) {
+	const expiresAtNum = expires_at ? parseInt(expires_at, 10) : 0;
+	const isExpired = Date.now() > expiresAtNum;
+	console.log('Token expiration check:', { expires_at, isExpired, now: Date.now() });
+
+	if (isExpired) {
+		console.log('Token expired, redirecting to:', authUrl);
 		return {
-			props: {
-				token: null,
-				userData: null,
-				...(await serverSideTranslations(locale, ['common', 'menu'])),
-			},
+			redirect: { destination: authUrl, permanent: false },
+			props: { ...(await serverSideTranslations(locale, ['common', 'menu'])) },
 		};
 	}
 
-	// Check if token is expired
-	const isExpired = expires_at ? Date.now() > parseInt(expires_at, 10) : false;
-
-	let validToken = access_token;
-	let userData = null;
-
-	if (isExpired && refresh_token) {
-		// Try to refresh the token
-		try {
-			const response = await axios.post(
-				'https://api.intra.42.fr/oauth/token',
-				new URLSearchParams({
-					grant_type: 'refresh_token' as string,
-					client_id: process.env.CLIENT_ID as string,
-					client_secret: process.env.CLIENT_SECRET as string,
-					refresh_token,
-				}).toString(),
-				{
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-				}
-			);
-
-			const { access_token: newAccessToken, refresh_token: newRefreshToken, expires_in } = response.data;
-
-			// Update cookies (this happens on the client via a redirect, so we'll simulate it)
-			validToken = newAccessToken;
-
-			// Return with a redirect to update cookies (Next.js limitation: can't set cookies directly in getServerSideProps)
-			return {
-				redirect: {
-					destination: '/api/refresh?new_access_token=' + newAccessToken +
-						'&new_refresh_token=' + (newRefreshToken || '') +
-						'&expires_in=' + expires_in,
-					permanent: false,
-				},
-				props: {},
-			};
-		} catch (error: any) {
-			console.error('Refresh token error:', error.response?.data || error.message);
-		}
-	}
-
-	if (isExpired && !refresh_token) {
-		// No refresh token available, force re-authentication
-		return {
-			redirect: {
-				destination: authUrl,
-				permanent: false,
-			},
-			props: {
-				...(await serverSideTranslations(locale, ['common', 'menu'])),
-			},
-		};
-	}
-
-	// Token is valid or refreshed, fetch user data
 	try {
+		console.log('Fetching user data with token:', token);
 		const response = await axios.get('https://api.intra.42.fr/v2/me', {
-			headers: { Authorization: `Bearer ${validToken}` },
+			headers: { Authorization: `Bearer ${token}` },
 		});
-		userData = response.data;
-	} catch (error: any) {
-		console.error('User data fetch error:', error.response?.data || error.message);
-		// If token is invalid, redirect to re-auth
+		console.log('User data fetched:', response.data.login);
 		return {
-			redirect: {
-				destination: authUrl,
-				permanent: false,
-			},
 			props: {
+				token,
+				userData: response.data,
 				...(await serverSideTranslations(locale, ['common', 'menu'])),
 			},
 		};
+	} catch (error: any) {
+		console.error('API error:', error.response?.status, error.response?.data);
+		return {
+			redirect: { destination: authUrl, permanent: false },
+			props: { ...(await serverSideTranslations(locale, ['common', 'menu'])) },
+		};
 	}
-
-	return {
-		props: {
-			token: validToken,
-			userData,
-			...(await serverSideTranslations(locale, ['common', 'menu'])),
-		},
-	};
 }
 
 export default Index;
