@@ -19,7 +19,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm install
-      - run: npm run build
+      # - run: npm run build
         env:
           API_URI: ${{ secrets.API_URI }}
           API_TOKEN: ${{ secrets.API_TOKEN }}
