@@ -33,6 +33,8 @@ const nextConfig = withInterceptStdout(
       API_URI: process.env.API_URI,
       CLIENT_ID: process.env.CLIENT_ID,
       API_TOKEN: process.env.API_TOKEN,
+      PORT: process.env.PORT,
+      STATUS: process.env.STATUS,
     },
   }),
   (log) => (hideWarn.some((warn) => log.includes(warn)) ? "" : log),

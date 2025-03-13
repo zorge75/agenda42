@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
         {
-            name: 'graph42.fr',
+            name: 'agenda42',
             script : "npx",
             // instances: 4,
             exec_mode: 'fork',
