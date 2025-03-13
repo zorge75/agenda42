@@ -328,6 +328,7 @@ const Index: NextPage = ({ token }: any) => {
         themes: event.themes,
         scale_team: "event",
       }));
+      console.log("events", eventList);
       const slotsList = slotsIntra.map((slot: any) => ({
         id: slot.id,
         name:
@@ -544,24 +545,14 @@ const Index: NextPage = ({ token }: any) => {
         <SubHeaderLeft>
           <Icon icon="Info" className="me-2" size="2x" />
           <span className="text-muted">
-            You have{" "}
-            <Icon
-              icon="Check Circle "
-              color="success"
-              className="mx-1"
-              size="lg"
-            />{" "}
-            12 approved appointments and{" "}
-            <Icon
-              icon="pending_actions "
-              color="danger"
-              className="mx-1"
-              size="lg"
-            />{" "}
-            3 pending appointments for today.
+          Attention ! L'agenda ne prend pas en compte <strong>les examens</strong>.
+          Pour vous inscrire aux examens, veuillez vous rendre sur l'intra !
+          <span style={{ marginLeft: '15px' }}>
+          <img src="https://i.pinimg.com/originals/34/c8/94/34c89435b2d4fdf7eda92070013058d5.gif" alt="Petit chat" style={{ width: '45px', height: '45px', borderRadius: '50%' }} />
+          </span>
           </span>
         </SubHeaderLeft>
-        <SubHeaderRight>
+        {/* <SubHeaderRight>
           <Popovers
             desc={
               <DatePicker
@@ -576,7 +567,7 @@ const Index: NextPage = ({ token }: any) => {
           >
             <Button color="light">{calendarDateLabel}</Button>
           </Popovers>
-        </SubHeaderRight>
+        </SubHeaderRight> */}
       </SubHeader>
       <Page container="fluid">
         <div className="row mb-4 g-3">
@@ -682,6 +673,20 @@ const Index: NextPage = ({ token }: any) => {
                   }}
                   eventPropGetter={eventStyleGetter}
                 />
+            <p style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+        <span>
+          <span style={{ display: 'inline-block', width: '10px', height: '10px', backgroundColor: 'green', borderRadius: '50%', marginRight: '5px' }}></span>
+          Slot disponible
+        </span>
+        <span>
+          <span style={{ display: 'inline-block', width: '10px', height: '10px', backgroundColor: 'orange', borderRadius: '50%', marginRight: '5px' }}></span>
+          Slot résérvé
+        </span>
+        <span>
+          <span style={{ display: 'inline-block', width: '10px', height: '10px', backgroundColor: 'purple', borderRadius: '50%', marginRight: '5px' }}></span>
+          Événement
+        </span>
+          </p>
               </CardBody>
             </Card>
           </div>
