@@ -15,7 +15,7 @@ export default async function handler(req: any, res: any) {
     const response = await axios.post(
       "https://api.intra.42.fr/v2/slots",
       {
-        user_id: 177543,
+        user_id: id,
         begin_at: start,
         end_at: end,
       },
@@ -27,7 +27,6 @@ export default async function handler(req: any, res: any) {
     );
     res.status(200).json(response.data);
   } catch (error: any) {
-    res.status(error.response?.status || 500).json({ message: error.message });
-    console.log(error);
+    res.status(error.response?.status || 500).json({ message: error.response.data.error });
   }
 }

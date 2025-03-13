@@ -69,6 +69,9 @@ import axios from "axios";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/fr";
 import router from "next/router";
+import showNotification from "../components/extras/showNotification";
+import { setOriginalSlots, setSlots } from "../store/slices/slotsSlice";
+import { preparationSlots } from "./utilities/preparationSlots";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
@@ -244,18 +247,50 @@ const MyEventDay = (data: { event: IEvent }) => {
 const Index: NextPage = ({ token }: any) => {
   const { darkModeStatus, themeStatus } = useDarkMode();
   const dispatch = useDispatch();
-
+  const [localRemoved, setLocalRemoved] = useState([]);
   const eventsIntra = useSelector((state: RootState) => state.events.events);
   const slotsIntra = useSelector((state: RootState) => state.slots.slots);
+  const originalSlotsIntra = useSelector((state: RootState) => state.slots.original);
   const viewMode = useSelector((state: RootState) => state.calendar.unitType);
   const me = useSelector((state: RootState) => state.user.me);
 
   const unsubscribeHandler = async (event: any) => {
     console.log("unsubscribe ", event);
-    if (event?.name === "Available") {
+    if (event.scale_team !== 'event') {
       const res = await fetch("/api/proxy?id=" + event.id, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      if (res.ok) {
+        const filtredSlots = originalSlotsIntra.filter((i: any) => i.id != event.id);
+        dispatch(setOriginalSlots(filtredSlots));
+        dispatch(setSlots(preparationSlots(filtredSlots)));
+        showNotification(
+          <span className='d-flex align-items-center'>
+            <Icon
+              icon='Info'
+              size='lg'
+              className='me-1'
+            />
+            <span>Successfully</span>
+          </span>,
+          'Slot has been deleted',
+          'success'
+        );
+      } else {
+        showNotification(
+          <span className='d-flex align-items-center'>
+            <Icon
+              icon='Error'
+              size='lg'
+              className='me-1'
+            />
+            <span>Error</span>
+          </span>,
+          "Slot not removed",
+          'danger'
+        );
+      }
     } else {
       // router.push(`https://profile.intra.42.fr/events/${event.id}`);
       window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
@@ -291,7 +326,7 @@ const Index: NextPage = ({ token }: any) => {
         nbr_subscribers: event.nbr_subscribers,
         prohibition_of_cancellation: event.prohibition_of_cancellation,
         themes: event.themes,
-        scale_team: "",
+        scale_team: "event",
       }));
       const slotsList = slotsIntra.map((slot: any) => ({
         id: slot.id,
@@ -314,6 +349,7 @@ const Index: NextPage = ({ token }: any) => {
         prohibition_of_cancellation: "event.prohibition_of_cancellation",
         themes: "event.themes",
         scale_team: slot.scale_team,
+        slots_data: slot?.slots_data,
       }));
       setEvents([...eventList, ...slotsList]);
     }
@@ -356,22 +392,72 @@ const Index: NextPage = ({ token }: any) => {
   const handleSelect = async ({ start, end }: { start: any; end: any }) => {
     const startFormated = dayjs(start).add(-1, "h").format();
     const endFormated = dayjs(end).add(-1, "h").format();
-    setEventAdding(true);
-    setEventItem({ start, end });
+    // setEventAdding(true);
+    // setEventItem({ start, end });
 
     const res = await fetch(
       "/api/make_slot?id=" +
-        me.id +
-        "&end=" +
-        endFormated +
-        "&start=" +
-        startFormated,
+      me.id +
+      "&end=" +
+      endFormated +
+      "&start=" +
+      startFormated,
       {
         headers: { Authorization: `Bearer ${token}` },
       },
     );
 
-    // TODO: add notification
+    const slotJson = await res?.json();
+
+    if (res.ok) {
+      showNotification(
+        <span className='d-flex align-items-center'>
+          <Icon
+            icon='Info'
+            size='lg'
+            className='me-1'
+          />
+          <span>Updated Successfully</span>
+        </span>,
+        'Slot has been created',
+        'success'
+      );
+      console.log(">", slotJson);
+      setEvents((events) => [
+        ...events,
+        {
+          id: slotJson[0].id,
+          name: "Available",
+          start,
+          end,
+          color: "success",
+          user: "",
+          description: "description",
+          kind: "kind",
+          location: "event.location",
+          max_people: "event.max_people",
+          nbr_subscribers: "event.nbr_subscribers",
+          prohibition_of_cancellation: "event.prohibition_of_cancellation",
+          themes: "event.themes",
+          scale_team: "",
+          slots_data: slotJson,
+        }
+      ]);
+      console.log(events);
+    } else {
+      showNotification(
+        <span className='d-flex align-items-center'>
+          <Icon
+            icon='Error'
+            size='lg'
+            className='me-1'
+          />
+          <span>Error</span>
+        </span>,
+        slotJson.message,
+        'danger'
+      );
+    }
   };
 
   useEffect(() => {
@@ -445,7 +531,7 @@ const Index: NextPage = ({ token }: any) => {
         eventEnd: dayjs(eventItem.end).format(),
         eventEmployee: eventItem?.user?.username || "",
       });
-    return () => {};
+    return () => { };
     //	eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventItem]);
   // END:: Calendar
@@ -537,10 +623,10 @@ const Index: NextPage = ({ token }: any) => {
                       i.end &&
                       i.end > now,
                   ).length && (
-                    <span className="position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2">
-                      <span className="visually-hidden">Online user</span>
-                    </span>
-                  )}
+                      <span className="position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2">
+                        <span className="visually-hidden">Online user</span>
+                      </span>
+                    )}
                 </div>
               </Popovers>
             </div>
@@ -790,44 +876,21 @@ const Index: NextPage = ({ token }: any) => {
                             columnCount: 2,
                           }}
                         >
-                          <div className="col">
-                            <Button
-                              color="danger"
-                              type="submit"
-                              onClick={() => unsubscribeHandler(eventItem)}
-                            >
-                              Remove 15:00 - 15:15
-                            </Button>
-                          </div>
-                          <br />
-                          <div className="col">
-                            <Button
-                              color="danger"
-                              type="submit"
-                              onClick={() => unsubscribeHandler(eventItem)}
-                            >
-                              Remove 15:15 - 15:30
-                            </Button>
-                          </div>
-                          <div className="col">
-                            <Button
-                              color="danger"
-                              type="submit"
-                              onClick={() => unsubscribeHandler(eventItem)}
-                            >
-                              Remove 15:30 - 15:45
-                            </Button>
-                          </div>
-                          <br />
-                          <div className="col">
-                            <Button
-                              color="danger"
-                              type="submit"
-                              onClick={() => unsubscribeHandler(eventItem)}
-                            >
-                              Remove 15:45 - 16:00
-                            </Button>
-                          </div>
+                          {
+                            eventItem.slots_data.map((item: any) => {
+                              return (
+                                <div className="col" id={item.id}>
+                                  <Button
+                                    color="danger"
+                                    type="submit"
+                                    onClick={() => unsubscribeHandler(item)}
+                                  >
+                                    {dayjs(item.begin_at).format('H:mm')} - {dayjs(item.end_at).format('H:mm')}
+                                  </Button>
+                                </div>
+                              );
+                            })
+                          }
                         </div>
                       </>
                     )}
@@ -947,7 +1010,7 @@ const Index: NextPage = ({ token }: any) => {
 							</div> */}
               </div>
             ) : (
-              <div className="row g-4">{}</div>
+              <div className="row g-4">{ }</div>
             )}
           </OffCanvasBody>
         </OffCanvas>

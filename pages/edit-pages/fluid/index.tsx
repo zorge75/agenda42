@@ -158,6 +158,7 @@ const Index: NextPage = () => {
           <span>Updated Successfully</span>
         </span>,
         "The user's address have been successfully updated.",
+        'warning'
       );
     },
   });

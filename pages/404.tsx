@@ -30,10 +30,6 @@ const Page404 = () => {
               Page not found
             </div>
           </div>
-          <div className="col-12 d-flex align-items-baseline justify-content-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={Humans} alt="Humans" style={{ height: "50vh" }} />
-          </div>
           <div className="col-12 d-flex flex-column justify-content-center align-items-center">
             <Button
               className="px-5 py-3"
@@ -46,6 +42,10 @@ const Page404 = () => {
               Homepage
             </Button>
           </div>
+          <div className="col-12 d-flex align-items-baseline justify-content-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={Humans} alt="Humans" style={{ height: "50vh" }} />
+          </div>
         </div>
       </Page>
     </PageWrapper>
@@ -53,10 +53,6 @@ const Page404 = () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-  redirect: {
-    destination: "/",
-    permanent: false,
-  },
   props: {
     // @ts-ignore
     ...(await serverSideTranslations(locale, ["common", "menu"])),

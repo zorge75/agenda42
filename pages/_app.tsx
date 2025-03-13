@@ -21,10 +21,10 @@ import StoreProvider from '../storeProvider';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../store/slices/userSlice';
 import { setEvals } from '../store/slices/evalsSlice';
-import { setSlots } from '../store/slices/slotsSlice';
+import { setSlots, setOriginalSlots } from '../store/slices/slotsSlice';
 import { setEvents } from '../store/slices/eventsSlice';
-import { store } from '../store';
-import { IEvent } from './dashboard-booking';
+import { current } from '@reduxjs/toolkit';
+import { preparationSlots } from './utilities/preparationSlots';
 
 interface AppPropsCustom extends AppProps {
 	token: string,
@@ -44,37 +44,8 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPro
 		if (evals)
 			dispatch(setEvals(evals));
 		if (slots) {
-
-			const preparationSlots = (data: any[]) => {
-				let sorted = data.sort((a: any, b: any) => (new Date(a.begin_at).getTime() - new Date(b.begin_at).getTime()));
-				// let index_inf = 0;
-				let item_buffer: any;
-				let res: any[] = [];
-
-				console.log('sorted', sorted);
-
-				if (sorted.length == 0)
-					return res;
-
-				item_buffer = { ...sorted[0] };
-
-				for (let i = 0; i < sorted.length; i++) {
-					let current_item = sorted[i];
-
-					if (item_buffer['end_at'] == current_item.begin_at)
-						item_buffer.end_at = current_item.end_at;
-					else {
-						res.push(item_buffer);
-						item_buffer = { ...current_item };
-					}
-				}
-
-				res.push(item_buffer);
-
-				console.log(res);
-				return (res);
-			}
-
+			dispatch(setOriginalSlots(slots));
+			console.log(">>", slots);
 			dispatch(setSlots(preparationSlots(slots)));
 		}
 		if (events)
@@ -111,7 +82,7 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPro
 						showNavigation={false}
 						showBadge={false}>
 						<App>
-							{ process.env.STATUS == 'production' ? <AsideRoutes /> : null}
+							{process.env.STATUS !== 'production' && <AsideRoutes />}
 							<Wrapper>
 								{/* eslint-disable-next-line react/jsx-props-no-spreading */}
 								<StoreProvider >
@@ -187,7 +158,7 @@ AppWithRedux.getInitialProps = async (props: any) => {
 
 	const slots = await fetch('https://api.intra.42.fr/v2/me/slots', {
 		headers: {
-			Authorization: `Bearer ${cookies.token}`, // From .env.local
+			Authorization: `Bearer ${cookies.token}`,
 		},
 	});
 
@@ -202,9 +173,9 @@ AppWithRedux.getInitialProps = async (props: any) => {
 
 	await delay(1000);
 
-	const events = await fetch('https://api.intra.42.fr/v2/users/' + 177543 + '/events?sort=-begin_at', {
+	const events = await fetch('https://api.intra.42.fr/v2/users/' + meJson?.id + '/events?sort=-begin_at', {
 		headers: {
-			Authorization: `Bearer ${cookies.token}`, // From .env.local
+			Authorization: `Bearer ${cookies.token}`,
 		}
 	});
 

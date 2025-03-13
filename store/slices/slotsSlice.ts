@@ -2,12 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
     slots: any | null; // Replace `any` with a proper type for your user data if available
+    original: any | null;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: UserState = {
     slots: null,
+    original: null,
     loading: false,
     error: null,
 };
@@ -18,6 +20,12 @@ const slotsSlice = createSlice({
     reducers: {
         setSlots(state, action: PayloadAction<any>) {
             state.slots = action.payload;
+            state.loading = false;
+            state.error = null;
+        },
+        setOriginalSlots(state, action: PayloadAction<any>) {
+            state.slots = state.slots;
+            state.original = action.payload;
             state.loading = false;
             state.error = null;
         },
@@ -32,5 +40,5 @@ const slotsSlice = createSlice({
     },
 });
 
-export const { setSlots, setLoading, setError } = slotsSlice.actions;
+export const { setSlots, setOriginalSlots, setLoading, setError } = slotsSlice.actions;
 export default slotsSlice.reducer;
