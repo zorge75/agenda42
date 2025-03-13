@@ -548,8 +548,19 @@ const Index: NextPage = ({ token }: any) => {
           Attention ! L'agenda ne prend pas en compte <strong>les examens</strong>.
           Pour vous inscrire aux examens, veuillez vous rendre sur l'intra !
           <span style={{ marginLeft: '15px' }}>
-          <img src="https://i.pinimg.com/originals/34/c8/94/34c89435b2d4fdf7eda92070013058d5.gif" alt="Petit chat" style={{ width: '45px', height: '45px', borderRadius: '50%' }} />
-          </span>
+    <img 
+      src="https://i.pinimg.com/originals/34/c8/94/34c89435b2d4fdf7eda92070013058d5.gif" 
+      alt="Petit chat" 
+      style={{ 
+        width: '40px', 
+        height: '40px', 
+        borderRadius: '50%', 
+        transition: 'transform 0.3s ease-in-out' 
+      }}
+      onMouseOver={(e) => e.currentTarget.style.transform = 'scale(2)'}
+      onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+    />
+  </span>
           </span>
         </SubHeaderLeft>
         {/* <SubHeaderRight>
@@ -673,20 +684,6 @@ const Index: NextPage = ({ token }: any) => {
                   }}
                   eventPropGetter={eventStyleGetter}
                 />
-            <p style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-        <span>
-          <span style={{ display: 'inline-block', width: '10px', height: '10px', backgroundColor: 'green', borderRadius: '50%', marginRight: '5px' }}></span>
-          Slot disponible
-        </span>
-        <span>
-          <span style={{ display: 'inline-block', width: '10px', height: '10px', backgroundColor: 'orange', borderRadius: '50%', marginRight: '5px' }}></span>
-          Slot résérvé
-        </span>
-        <span>
-          <span style={{ display: 'inline-block', width: '10px', height: '10px', backgroundColor: 'purple', borderRadius: '50%', marginRight: '5px' }}></span>
-          Événement
-        </span>
-          </p>
               </CardBody>
             </Card>
           </div>
