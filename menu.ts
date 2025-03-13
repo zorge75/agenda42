@@ -221,7 +221,7 @@ export const demoPagesMenu = {
 
   page404: {
     id: "Page404",
-    text: "404 Page",
+    text: "Auth Page",
     path: "404",
     icon: "ReportGmailerrorred",
     isDisable: true,

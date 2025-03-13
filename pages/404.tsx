@@ -21,13 +21,13 @@ const Page404 = () => {
               className="text-primary fw-bold"
               style={{ fontSize: "calc(3rem + 3vw)" }}
             >
-              404
+              200
             </div>
             <div
               className="text-dark fw-bold"
               style={{ fontSize: "calc(1.5rem + 1.5vw)" }}
             >
-              Page not found
+             Authentification is success
             </div>
           </div>
           <div className="col-12 d-flex flex-column justify-content-center align-items-center">
@@ -39,7 +39,7 @@ const Page404 = () => {
               tag="a"
               href="/"
             >
-              Homepage
+              Go to agenda
             </Button>
           </div>
           <div className="col-12 d-flex align-items-baseline justify-content-center">

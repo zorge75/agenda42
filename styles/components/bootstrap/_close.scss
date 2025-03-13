@@ -3,11 +3,15 @@
 //
 
 .btn-close {
+	border: 1px solid #000 !important;
 	@include dark-mode {
-		background: transparent escape-svg($dark-btn-close-bg) center / $btn-close-width auto
-			no-repeat; // include transparent for button elements
+		background: transparent escape-svg($dark-btn-close-bg) center / $btn-close-width auto no-repeat; // include transparent for button elements
 
 		--bs-btn-close-color: #{$dark-btn-close-color};
 		filter: none;
+		border: 1px solid #{$dark-btn-close-color} !important;
 	}
+
+	opacity: 1 !Important;
+	padding: 10px !Important;
 }

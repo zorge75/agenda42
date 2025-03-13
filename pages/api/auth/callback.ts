@@ -35,7 +35,7 @@ export default async function handler(req: any, res: any) {
     ]);
 
     console.log("Cookies set:", { token: access_token, expiresAt });
-    res.redirect(302, "/dashboard");
+    res.redirect(302, "/paris");
   } catch (error: any) {
     console.error("Callback error:", error.message);
     res

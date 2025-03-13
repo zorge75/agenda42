@@ -7,8 +7,6 @@ export const preparationSlots = (data: any) => {
     let slots_data: any[] = [];
     let res: any[] = [];
 
-    console.log('sorted', sorted);
-
     if (sorted.length === 0) return res;
 
     // Initialize with first item
@@ -28,13 +26,10 @@ export const preparationSlots = (data: any) => {
             item_buffer = { ...current_item };
             slots_data = [current_item]; // Reset with current item
         }
-        console.log("slots_data", slots_data);
     }
 
     // Push the final buffer with its slots_data
     item_buffer.slots_data = [...slots_data];
     res.push({ ...item_buffer });
-
-    console.log("PREPARATION: ", res);
     return res;
 };

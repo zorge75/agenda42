@@ -21,10 +21,11 @@ import StoreProvider from '../storeProvider';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../store/slices/userSlice';
 import { setEvals } from '../store/slices/evalsSlice';
-import { setSlots, setOriginalSlots } from '../store/slices/slotsSlice';
+import { setSlots, setOriginalSlots, setScaleTeams } from '../store/slices/slotsSlice';
 import { setEvents } from '../store/slices/eventsSlice';
 import { current } from '@reduxjs/toolkit';
 import { preparationSlots } from './utilities/preparationSlots';
+import { getScaleTeams } from './utilities/getScaleTeams';
 
 interface AppPropsCustom extends AppProps {
 	token: string,
@@ -45,14 +46,11 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPro
 			dispatch(setEvals(evals));
 		if (slots) {
 			dispatch(setOriginalSlots(slots));
-			console.log(">>", slots);
 			dispatch(setSlots(preparationSlots(slots)));
 		}
 		if (events)
 			dispatch(setEvents(events));
 	}, [me, dispatch]);
-
-	// console.log("slots", slots);
 
 	/**
 	 * Dark Mode
@@ -82,7 +80,6 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPro
 						showNavigation={false}
 						showBadge={false}>
 						<App>
-							{process.env.STATUS !== 'production' && <AsideRoutes />}
 							<Wrapper>
 								{/* eslint-disable-next-line react/jsx-props-no-spreading */}
 								<StoreProvider >
@@ -212,6 +209,7 @@ AppWithRedux.getInitialProps = async (props: any) => {
 		evals: evaluationsJson,
 		slots: slotsJson,
 		events: eventsJson,
+		token: cookies.token,
 	};
 };
 

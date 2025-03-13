@@ -70,8 +70,9 @@ import utc from "dayjs/plugin/utc";
 import "dayjs/locale/fr";
 import router from "next/router";
 import showNotification from "../components/extras/showNotification";
-import { setOriginalSlots, setSlots } from "../store/slices/slotsSlice";
+import { setOriginalSlots, setScaleTeams, setSlots } from "../store/slices/slotsSlice";
 import { preparationSlots } from "./utilities/preparationSlots";
+import { getScaleTeams } from "./utilities/getScaleTeams";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
@@ -253,6 +254,9 @@ const Index: NextPage = ({ token }: any) => {
   const originalSlotsIntra = useSelector((state: RootState) => state.slots.original);
   const viewMode = useSelector((state: RootState) => state.calendar.unitType);
   const me = useSelector((state: RootState) => state.user.me);
+  const scaleUsers = useSelector((state: RootState) => state.slots.scaleTeam);
+
+  console.log("scaleUsers", scaleUsers);
 
   const unsubscribeHandler = async (event: any) => {
     console.log("unsubscribe ", event);
@@ -521,6 +525,31 @@ const Index: NextPage = ({ token }: any) => {
     },
   });
 
+  // Add state for loading and error handling
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch scaleUsers on mount
+  useEffect(() => {
+    const fetchScaleUsers = async () => {
+      try {
+        setLoading(true);
+        const users = await getScaleTeams(slotsIntra, token); // Pass slotsIntra and token
+        dispatch(setScaleTeams(users)); // Update Redux state
+      } catch (err) {
+        console.error("Failed to fetch scale users:", err);
+        setError("Failed to load scale users");
+        dispatch(setScaleTeams([])); // Set empty array on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slotsIntra && token) {
+      fetchScaleUsers();
+    }
+  }, [slotsIntra, token, dispatch]);
+
   useEffect(() => {
     if (eventItem)
       formik.setValues({
@@ -545,22 +574,22 @@ const Index: NextPage = ({ token }: any) => {
         <SubHeaderLeft>
           <Icon icon="Info" className="me-2" size="2x" />
           <span className="text-muted">
-          Attention ! L'agenda ne prend pas en compte <strong>les examens</strong>.
-          Pour vous inscrire aux examens, veuillez vous rendre sur l'intra !
-          <span style={{ marginLeft: '15px' }}>
-    <img 
-      src="https://i.pinimg.com/originals/34/c8/94/34c89435b2d4fdf7eda92070013058d5.gif" 
-      alt="Petit chat" 
-      style={{ 
-        width: '40px', 
-        height: '40px', 
-        borderRadius: '50%', 
-        transition: 'transform 0.3s ease-in-out' 
-      }}
-      onMouseOver={(e) => e.currentTarget.style.transform = 'scale(2)'}
-      onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-    />
-  </span>
+            Attention ! L'agenda ne prend pas en compte <strong>les examens</strong>.
+            Pour vous inscrire aux examens, veuillez vous rendre sur l'intra !
+            <span style={{ marginLeft: '15px' }}>
+              <img
+                src="https://i.pinimg.com/originals/34/c8/94/34c89435b2d4fdf7eda92070013058d5.gif"
+                alt="Petit chat"
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  transition: 'transform 0.3s ease-in-out'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(2)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              />
+            </span>
           </span>
         </SubHeaderLeft>
         {/* <SubHeaderRight>
@@ -582,57 +611,124 @@ const Index: NextPage = ({ token }: any) => {
       </SubHeader>
       <Page container="fluid">
         <div className="row mb-4 g-3">
-          {Object.keys(USERS).map((u) => (
-            <div key={USERS[u].username} className="col-auto">
-              <Popovers
-                trigger="hover"
-                desc={
-                  <>
-                    <div className="h6">{`${USERS[u].name} ${USERS[u].surname}`}</div>
-                    <div>
-                      <b>Event: </b>
-                      {events.length}
-                    </div>
-                    <div>
-                      <b>Approved: </b>
-                      {events.length}
-                    </div>
-                  </>
-                }
-              >
-                <div className="position-relative">
-                  <Avatar
-                    src={USERS[u].src}
-                    color={USERS[u].color}
-                    size={64}
-                    border={4}
-                    className="cursor-pointer"
-                    borderColor={
-                      employeeList[USERS[u].username] ? "info" : themeStatus
+          {loading ? (
+            
+              Object.keys(USERS).map((u) => (
+                <div key={USERS[u].username} className="col-auto">
+                  <Popovers
+                    trigger="hover"
+                    desc={
+                      <>
+                        <div className="h6">{`${USERS[u].name} ${USERS[u].surname}`}</div>
+                        <div>
+                          <b>Event: </b>
+                          {events.length}
+                        </div>
+                        <div>
+                          <b>Approved: </b>
+                          {events.length}
+                        </div>
+
+                        <div className="h4">{`${USERS[u].name} ${USERS[u].surname}`}</div>
+                        <div className="h6">{`Member:  ${events.length} level`}</div>
+                        <div>
+                          Piscine: february 2024
+                        </div>
+                        <div>
+                          Login: ilove42
+                        </div>
+                      </>
                     }
-                    onClick={() =>
-                      setEmployeeList({
-                        ...employeeList,
-                        [USERS[u].username]: !employeeList[USERS[u].username],
-                      })
-                    }
-                  />
-                  {!!events.filter(
-                    (i) =>
-                      i.user?.username === USERS[u].username &&
-                      i.start &&
-                      i.start < now &&
-                      i.end &&
-                      i.end > now,
-                  ).length && (
-                      <span className="position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2">
-                        <span className="visually-hidden">Online user</span>
-                      </span>
-                    )}
+                  >
+                    <div className="position-relative">
+                      <Avatar
+                        src={USERS[u].src}
+                        color={USERS[u].color}
+                        size={64}
+                        border={4}
+                        className="cursor-pointer"
+                        borderColor={
+                          employeeList[USERS[u].username] ? "info" : themeStatus
+                        }
+                        onClick={() =>
+                          setEmployeeList({
+                            ...employeeList,
+                            [USERS[u].username]: !employeeList[USERS[u].username],
+                          })
+                        }
+                      />
+                      {!!events.filter(
+                        (i) =>
+                          i.user?.username === USERS[u].username &&
+                          i.start &&
+                          i.start < now &&
+                          i.end &&
+                          i.end > now,
+                      ).length && (
+                          <span className="position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2">
+                            <span className="visually-hidden">Online user</span>
+                          </span>
+                        )}
+                    </div>
+                  </Popovers>
                 </div>
-              </Popovers>
-            </div>
-          ))}
+              ))
+            
+          ) : error ? (
+            <div className="text-danger">{error}</div>
+          ) : !scaleUsers || scaleUsers.length === 0 ? (
+            <div>No scale users found</div>
+          ) : (
+            scaleUsers.map((u: any) => (
+              <div key={u.login} className="col-auto">
+                <Popovers
+                  trigger="hover"
+                  desc={
+                    <>
+                      <div className="h4">{`${u.usual_full_name}`}</div>
+                      <div className="h6">{`${u.grade}: ${u.level} level`}</div>
+                      <div>
+                        Piscine: {u.pool_month} {u.pool_year}
+                      </div>
+                      <div>
+                        Login: {u.login}
+                      </div>
+                    </>
+                  }
+                >
+                  <div className="position-relative"
+                    onClick={() => {
+                      console.log("link");
+                      window.open("https://profile.intra.42.fr/users/" + u.login, "_blank")
+                    }
+                    }
+                  >
+                    <Avatar
+                      src={u.image}
+                      color={"info"}
+                      size={64}
+                      border={4}
+                      className="cursor-pointer"
+                      borderColor={"info"}
+
+                    />
+                    {/* {!!events.filter(
+                      (i) =>
+                        i.user?.username === USERS[u].username &&
+                        i.start &&
+                        i.start < now &&
+                        i.end &&
+                        i.end > now,
+                    ).length && (
+                        <span className="position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2">
+                          <span className="visually-hidden">Online user</span>
+                        </span>
+                      )} */}
+                  </div>
+                </Popovers>
+              </div>
+            )))
+          }
         </div>
         <div className="row h-100">
           <div className="col-xl-9">
@@ -760,42 +856,12 @@ const Index: NextPage = ({ token }: any) => {
             className="p-4"
           >
             {!eventAdding ? (
-              <div className="row g-4">
+              <div className="row g-4" style={{ backgroundColor: 'transparent' }}>
                 {/* Name */}
 
                 {eventItem?.scale_team?.id ? (
                   <div>
                     <h2>Evaluation of the project</h2>
-                    <br />
-                    <div className="col-12">
-                      <Card className="mb-0 bg-l10-info" shadow="sm">
-                        <CardHeader className="bg-l25-info">
-                          <CardLabel iconColor="dark">
-                            <CardTitle>
-                              {eventItem?.scale_team?.correcteds[0].login}
-                            </CardTitle>
-                            <p style={{ marginTop: 5 }}>
-                              {dayjs(eventItem?.end).format(
-                                "dddd, D MMMM YYYY",
-                              )}
-                            </p>
-                          </CardLabel>
-                          <Avatar
-                            src={
-                              "https://cdn.intra.42.fr/users/ffd6439cd9fc47271fed6267900344e4/small_abergman.jpg"
-                            }
-                            size={64}
-                            border={4}
-                            className="cursor-pointer"
-                            borderColor={true ? "info" : themeStatus}
-                          />
-                        </CardHeader>
-
-                        <CardBody>
-                          <p>{eventItem?.scale_team?.feedback}</p>
-                        </CardBody>
-                      </Card>
-                    </div>
                     <br />
                     <div className="col-12">
                       <Card
@@ -839,6 +905,37 @@ const Index: NextPage = ({ token }: any) => {
                         </CardBody>
                       </Card>
                     </div>
+                    <br />
+                    <div className="col-12">
+                      <Card className="mb-0 bg-l10-success" shadow="sm">
+                        <CardHeader className="bg-l25-success">
+                          <CardLabel iconColor="dark">
+                            <CardTitle>
+                              {eventItem?.scale_team?.correcteds[0].login}
+                            </CardTitle>
+                            <p style={{ marginTop: 5 }}>
+                              {dayjs(eventItem?.end).format(
+                                "dddd, D MMMM YYYY",
+                              )}
+                            </p>
+                          </CardLabel>
+                          <Avatar
+                            src={
+                              "https://cdn.intra.42.fr/users/ffd6439cd9fc47271fed6267900344e4/small_abergman.jpg"
+                            }
+                            size={64}
+                            border={4}
+                            className="cursor-pointer"
+                            borderColor={true ? "info" : themeStatus}
+                          />
+                        </CardHeader>
+
+                        <CardBody>
+                          <p>{eventItem?.scale_team?.feedback}</p>
+                        </CardBody>
+                      </Card>
+                    </div>
+
                   </div>
                 ) : (
                   <div>
@@ -870,19 +967,14 @@ const Index: NextPage = ({ token }: any) => {
                       </>
                     ) : (
                       <>
-                        <h2>Remove this slot</h2>
-                        <p>You can remove this slot 4 fiew...</p>
-                        <div
-                          style={{
-                            display: "flow",
-                            columnCount: 2,
-                          }}
-                        >
+                        <h2>Remove the slots</h2>
+                        <div>
                           {
                             eventItem.slots_data.map((item: any) => {
                               return (
-                                <div className="col" id={item.id}>
+                                <div className="col" id={item.id}  >
                                   <Button
+                                    style={{ marginTop: 10 }}
                                     color="danger"
                                     type="submit"
                                     onClick={() => unsubscribeHandler(item)}
