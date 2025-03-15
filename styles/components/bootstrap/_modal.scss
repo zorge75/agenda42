@@ -6,6 +6,14 @@
 	@include dark-mode {
 		background-color: $dark-modal-content-bg;
 	}
+
+	.description {
+		display: flex;
+
+		p {
+			width: fit-content
+		}
+	}
 }
 
 .modal {

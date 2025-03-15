@@ -66,6 +66,8 @@ import { getCorrectorImageUrl } from "../common/function/getCorrectorImageUrl";
 import { setEvals } from "../store/slices/evalsSlice";
 import { setEvents as setEventsRedux, setAllEvents } from '../store/slices/eventsSlice';
 import Spinner from "../components/bootstrap/Spinner";
+import { findOverlappingEvents } from "../common/function/overlapEvents";
+import OverlappingModal from "../components/OverlappangModal";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
@@ -586,16 +588,32 @@ const Index: NextPage = ({ token }: any) => {
     return deletedCount; // Return number of successful deletions
   };
 
-  // Example usage:
-  // await deleteEvents(eventList, token, originalSlotsIntra, dispatch, showNotification);
-
-  // Example usage:
-  // await deleteEvents(eventList, token, originalSlotsIntra, dispatch, showNotification);
-
-  // New Event
   const handleSelect = async ({ start, end }: { start: any; end: any }) => {
     const startFormated = dayjs(start).add(-1, "h").format();
     const endFormated = dayjs(end).add(-1, "h").format();
+
+    // const eventStart = new Date(start);
+    // const eventEnd = new Date(start);
+    // const reminderTime = new Date(start - 60 * 60 * 1000); // 60 minutes before
+
+    // const response = await fetch("/api/events", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     name: "Event test",
+    //     eventStart: eventStart.toISOString(),
+    //     eventEnd: eventEnd.toISOString(),
+    //     reminderTime: reminderTime.toISOString(),
+    //     // chatId: "1150194983228412055",
+    //   }),
+    // });
+
+    // if (response.ok) {
+    //   console.log("Event created and reminder scheduled!");
+
+    // } else {
+    //   console.log("Error creating event.");
+    // }
 
     const res = await fetch(
       "/api/make_slot?id=" +
@@ -747,6 +765,7 @@ const Index: NextPage = ({ token }: any) => {
     //	eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventItem]);
   // END:: Calendar
+
   return (
     <PageWrapper>
       <Head>
@@ -1171,6 +1190,7 @@ const Index: NextPage = ({ token }: any) => {
                       <>
                         <h2>Remove the slot</h2>
                         <div>
+                          <h4>Remove a part of the slot</h4>
                           {/* {
                             eventItem.slots_data.map((item: any) => {
                               return (
@@ -1187,6 +1207,7 @@ const Index: NextPage = ({ token }: any) => {
                               );
                             })
                           } */}
+                          <h4>Remove slot</h4>
                           <div className="col" >
                             <Button
                               style={{ marginTop: 10 }}
@@ -1320,6 +1341,7 @@ const Index: NextPage = ({ token }: any) => {
             )}
           </OffCanvasBody>
         </OffCanvas>
+        <OverlappingModal events={events} />
       </Page>
     </PageWrapper>
   );
