@@ -5,13 +5,11 @@ import { ThemeProvider } from 'react-jss';
 import { ToastContainer } from 'react-toastify';
 import { TourProvider } from '@reactour/tour';
 import { ReactNotifications } from 'react-notifications-component';
-import { appWithTranslation } from 'next-i18next';
 import { AuthContextProvider } from '../context/authContext';
 import { ThemeContextProvider } from '../context/themeContext';
 import useDarkMode from '../hooks/useDarkMode';
 import COLORS from '../common/data/enumColors';
 import { getOS } from '../helpers/helpers';
-import steps, { styles } from '../steps';
 import Portal from '../layout/Portal/Portal';
 import Wrapper from '../layout/Wrapper/Wrapper';
 import App from '../layout/App/App';
@@ -72,27 +70,21 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPro
 		<AuthContextProvider initialToken={token} me={me}>
 			<ThemeContextProvider>
 				<ThemeProvider theme={theme}>
-					<TourProvider
-						steps={steps}
-						styles={styles}
-						showNavigation={false}
-						showBadge={false}>
-						<App>
-							<Wrapper>
-								{/* eslint-disable-next-line react/jsx-props-no-spreading */}
-								<StoreProvider >
-									<Component {...pageProps} />
-								</StoreProvider>
-							</Wrapper>
-						</App>
-						<Portal id='portal-notification'>
-							<ReactNotifications />
-						</Portal>
-						<ToastContainer
-							closeButton={ToastCloseButton}
-							toastClassName='toast show'
-						/>
-					</TourProvider>
+					<App>
+						<Wrapper>
+							{/* eslint-disable-next-line react/jsx-props-no-spreading */}
+							<StoreProvider >
+								<Component {...pageProps} />
+							</StoreProvider>
+						</Wrapper>
+					</App>
+					<Portal id='portal-notification'>
+						<ReactNotifications />
+					</Portal>
+					<ToastContainer
+						closeButton={ToastCloseButton}
+						toastClassName='toast show'
+					/>
 				</ThemeProvider>
 			</ThemeContextProvider>
 		</AuthContextProvider>
@@ -105,7 +97,7 @@ const AppWithRedux = (props: AppPropsCustom, cookies: any) => (
 	</StoreProvider>
 );
 
-AppWithRedux.getServerSideProps = async (props: any) => {
+AppWithRedux.getInitialProps = async (props: any) => {
 	const delay = (ms: any) => new Promise(resolve => setTimeout(resolve, ms));
 
 	const cookies = props.ctx.req?.headers.cookie
@@ -211,4 +203,4 @@ AppWithRedux.getServerSideProps = async (props: any) => {
 	};
 };
 
-export default appWithTranslation(AppWithRedux /* , nextI18NextConfig */);
+export default AppWithRedux;

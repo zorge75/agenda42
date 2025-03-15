@@ -23,7 +23,7 @@ export const getScaleTeams = async (data: any, token: any) => {
 
         for (let i = 0; i < retries; i++) {
             try {
-                const response = await fetch(`https://aron.agenda42.fr/api/get_user?id=${userId}`, {
+                const response = await fetch(`/api/get_user?id=${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

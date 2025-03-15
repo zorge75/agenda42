@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dayjs from "dayjs";
 import classNames from "classnames";
 import Hanna from './../assets/img/hanna.gif';
@@ -378,7 +377,7 @@ const Index: NextPage = ({ token }: any) => {
 
     const fetchData = async () => {
       try {
-        const res = await fetch(`/api/all_events?id=${me.campus[0].id}`, {
+        const res = await fetch(`/api/all_events?id=${me?.campus[0].id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -388,7 +387,7 @@ const Index: NextPage = ({ token }: any) => {
           dispatch(setAllEvents(response));
           // Example: setState(response);
         } else {
-          throw new Error(response.message || "Request failed");
+          throw new Error(response?.message || "Request failed");
         }
       } catch (error) {
         if (isMounted) {
@@ -1230,7 +1229,6 @@ export async function getServerSideProps({ req, locale }: any) {
     console.log("No token, redirecting to:", authUrl);
     return {
       redirect: { destination: authUrl, permanent: false },
-      props: { ...(await serverSideTranslations(locale, ["common", "menu"])) },
     };
   }
 
@@ -1246,7 +1244,6 @@ export async function getServerSideProps({ req, locale }: any) {
     console.log("Token expired, redirecting to:", authUrl);
     return {
       redirect: { destination: authUrl, permanent: false },
-      props: { ...(await serverSideTranslations(locale, ["common", "menu"])) },
     };
   }
 
@@ -1260,14 +1257,12 @@ export async function getServerSideProps({ req, locale }: any) {
       props: {
         token,
         userData: response.data,
-        ...(await serverSideTranslations(locale, ["common", "menu"])),
       },
     };
   } catch (error: any) {
     console.error("API error:", error.response?.status, error.response?.data);
     return {
       redirect: { destination: authUrl, permanent: false },
-      props: { ...(await serverSideTranslations(locale, ["common", "menu"])) },
     };
   }
 }

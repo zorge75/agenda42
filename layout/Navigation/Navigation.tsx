@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useWindowSize } from 'react-use';
 import { Manager, Popper, Reference } from 'react-popper';
-import { useTranslation } from 'next-i18next';
 import Icon from '../../components/icon/Icon';
 import ThemeContext from '../../context/themeContext';
 import Collapse from '../../components/bootstrap/Collapse';

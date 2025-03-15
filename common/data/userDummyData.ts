@@ -7,7 +7,6 @@ import UserImage6 from '../../assets/img/wanna/wanna6.png';
 import UserImage7 from '../../assets/img/wanna/wanna7.png';
 import SERVICES, { IServiceProps } from './serviceDummyData';
 
-import User7Landing from '../../assets/img/wanna/landing1.png';
 import { TColor } from '../../type/color-type';
 
 export interface IUserProps {
@@ -121,7 +120,7 @@ const sam: IUserProps = {
 	src: UserImage7,
 	isOnline: false,
 	color: 'danger',
-	fullImage: User7Landing,
+	fullImage: "",
 	password: '@ABC123',
 };
 

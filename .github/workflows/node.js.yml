@@ -25,5 +25,5 @@ jobs:
           API_TOKEN: ${{ secrets.API_TOKEN }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           PORT: ${{ secrets.PORT }}
-          STATUS: ${{ secret.STATUS }}
+          STATUS: ${{ secrets.STATUS }}
       - run: pm2 startOrRestart pm2.config.js

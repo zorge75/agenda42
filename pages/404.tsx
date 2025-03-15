@@ -1,12 +1,10 @@
 import React from "react";
 import Head from "next/head";
 import { GetStaticProps } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import PageWrapper from "../layout/PageWrapper/PageWrapper";
 import { demoPagesMenu } from "../menu";
 import Page from "../layout/Page/Page";
 import Button from "../components/bootstrap/Button";
-import Humans from "../assets/img/scene4.png";
 
 const Page404 = () => {
   return (
@@ -44,7 +42,7 @@ const Page404 = () => {
           </div>
           <div className="col-12 d-flex align-items-baseline justify-content-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={Humans} alt="Humans" style={{ height: "50vh" }} />
+            <img src={""} alt="Humans" style={{ height: "50vh" }} />
           </div>
         </div>
       </Page>
@@ -52,12 +50,8 @@ const Page404 = () => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-  redirect: { destination: '/', permanent: false },
-  props: {
-    // @ts-ignore
-    ...(await serverSideTranslations(locale, ["common", "menu"])),
-  },
-});
+// export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+//   // redirect: { destination: '/', permanent: false },
+// });
 
 export default Page404;
