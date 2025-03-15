@@ -493,6 +493,105 @@ const Index: NextPage = ({ token }: any) => {
     setTimeoutForRefresh(false);
   }
 
+  const removeSlotHandler = async (events: any) => {
+    console.log("events", events);
+    let deletedCount = 0;
+    const maxRetries = 3;
+    const retryDelay = 1500;
+    const deletedEventIds = [];
+
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    for (const event of events) {
+      if (event.scale_team === 'event') {
+        continue;
+      }
+
+      let retries = 0;
+      let success = false;
+
+      while (retries < maxRetries && !success) {
+        try {
+          const res = await fetch("/api/proxy?id=" + event.id, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (res.ok) {
+            deletedEventIds.push(event.id);
+            deletedCount++;
+            success = true;
+            showNotification(
+              <span className="d-flex align-items-center">
+                <Icon icon="Info" size="lg" className="me-1" />
+                <span>Successfully</span>
+              </span>,
+              "Slot has been deleted",
+              "success"
+            );
+          } else if (res.status === 429) {
+            retries++;
+            if (retries < maxRetries) {
+              showNotification(
+                <span className="d-flex align-items-center">
+                  <Icon icon="Warning" size="lg" className="me-1" />
+                  <span>Rate Limit</span>
+                </span>,
+                `Too many requests, retrying (${retries}/${maxRetries}) after ${retryDelay / 1000}s`,
+                "warning"
+              );
+              await delay(retryDelay);
+            } else {
+              showNotification(
+                <span className="d-flex align-items-center">
+                  <Icon icon="Error" size="lg" className="me-1" />
+                  <span>Failed</span>
+                </span>,
+                "Max retries reached for slot deletion",
+                "danger"
+              );
+              break;
+            }
+          } else {
+            showNotification(
+              <span className="d-flex align-items-center">
+                <Icon icon="Error" size="lg" className="me-1" />
+                <span>Error</span>
+              </span>,
+              `Slot not removed: ${res.statusText}`,
+              "danger"
+            );
+            break;
+          }
+        } catch (error) {
+          showNotification(
+            <span className="d-flex align-items-center">
+              <Icon icon="Error" size="lg" className="me-1" />
+              <span>Network Error</span>
+            </span>,
+            `Failed to delete slot: ${error.message}`,
+            "danger"
+          );
+          break;
+        }
+      }
+    }
+
+    // After the loop, filter and dispatch once if any events were deleted
+    if (deletedEventIds.length > 0) {
+      const filtredSlots = originalSlotsIntra.filter((slot) => !deletedEventIds.includes(slot.id));
+      dispatch(setOriginalSlots(filtredSlots));
+      dispatch(setSlots(preparationSlots(filtredSlots)));
+    }
+
+    return deletedCount; // Return number of successful deletions
+  };
+
+  // Example usage:
+  // await deleteEvents(eventList, token, originalSlotsIntra, dispatch, showNotification);
+
+  // Example usage:
+  // await deleteEvents(eventList, token, originalSlotsIntra, dispatch, showNotification);
+
   // New Event
   const handleSelect = async ({ start, end }: { start: any; end: any }) => {
     const startFormated = dayjs(start).add(-1, "h").format();
@@ -1070,9 +1169,9 @@ const Index: NextPage = ({ token }: any) => {
                       </>
                     ) : (
                       <>
-                        <h2>Remove the slots</h2>
+                        <h2>Remove the slot</h2>
                         <div>
-                          {
+                          {/* {
                             eventItem.slots_data.map((item: any) => {
                               return (
                                 <div className="col" id={item.id}  >
@@ -1087,7 +1186,17 @@ const Index: NextPage = ({ token }: any) => {
                                 </div>
                               );
                             })
-                          }
+                          } */}
+                          <div className="col" >
+                            <Button
+                              style={{ marginTop: 10 }}
+                              color="danger"
+                              type="submit"
+                              onClick={() => removeSlotHandler(eventItem.slots_data)}
+                            >
+                              {dayjs(eventItem.slots_data[0].begin_at).format('H:mm')} - {dayjs(eventItem.slots_data[eventItem.slots_data.length - 1].end_at).format('H:mm')}
+                            </Button>
+                          </div>
                         </div>
                       </>
                     )}
