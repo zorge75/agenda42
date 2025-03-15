@@ -6,6 +6,16 @@ export const getScaleTeams = async (data: any, token: any) => {
 
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+    const getUserFromLocalStorage = (userId: string | number) => {
+        const cached = localStorage.getItem(`user_${userId}`);
+        return cached ? JSON.parse(cached) : null;
+    };
+
+    // Utility function to save user to localStorage
+    const saveUserToLocalStorage = (userId: string | number, userData: any) => {
+        localStorage.setItem(`user_${userId}`, JSON.stringify(userData));
+    };
+
     const fetchUserWithRetry = async (userId: number, retries = 3) => {
         if (userCache.has(userId)) {
             return userCache.get(userId); // Return cached result
@@ -41,17 +51,29 @@ export const getScaleTeams = async (data: any, token: any) => {
         }
     };
 
+
+
     for (const i of filtred) {
         if (i.scale_team?.correcteds) {
-            for (const a of i.scale_team.correcteds) {
-                const userData = await fetchUserWithRetry(a.id);
+            for (const a of (i.scale_team.correcteds || [])) {
+                // Check localStorage first
+                let userData = getUserFromLocalStorage(a.id);
+
+                if (!userData) {
+                    // If not in localStorage, fetch with retry
+                    userData = await fetchUserWithRetry(a.id);
+                    if (userData) {
+                        // Save to localStorage after fetching
+                        saveUserToLocalStorage(a.id, userData);
+                    }
+                }
+
                 if (userData) {
-                    console.log(a.login, userData);
                     arrayUsers.push({
                         login: a.login,
                         id: a.id,
                         url: a.url, // TODO: Add date of correction
-                        image: userData.image.versions.medium,
+                        image: userData.image.versions.small,
                         pool_month: userData.pool_month,
                         pool_year: userData.pool_year,
                         usual_full_name: userData.usual_full_name,
@@ -59,10 +81,18 @@ export const getScaleTeams = async (data: any, token: any) => {
                         level: userData.cursus_users.filter((i: any) => i.cursus_id === 21)[0].level,
                     });
                 }
-                await delay(250); // Base delay between requests
+
+                await delay(250); // Base delay between requests (even for cached data, if desired)
             }
         }
     }
 
-    return arrayUsers;
+    const uniqueScaleUsers = arrayUsers.reduce((acc: any[], u: any) => {
+        if (!acc.some((user: any) => user.id === u.id)) {
+            acc.push(u);
+        }
+        return acc;
+    }, []);
+
+    return uniqueScaleUsers;
 }

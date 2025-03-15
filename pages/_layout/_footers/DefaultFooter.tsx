@@ -2,6 +2,7 @@ import React from "react";
 import classNames from "classnames";
 import Footer from "../../../layout/Footer/Footer";
 import useDarkMode from "../../../hooks/useDarkMode";
+import packageJson from '../../../package.json';
 
 const DefaultFooter = () => {
   const { darkModeStatus } = useDarkMode();
@@ -22,7 +23,7 @@ const DefaultFooter = () => {
             </a>
           </div>
           <div className="col-auto">
-            <span className="fw-light">team@agenda42.fr | 2025</span>
+            <span className="fw-light">team@agenda42.fr | 2025 | version {packageJson.version}</span>
           </div>
         </div>
       </div>

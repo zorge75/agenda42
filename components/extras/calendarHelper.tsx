@@ -55,10 +55,10 @@ export const getTodayButtonLabel = (
   viewMode: "month" | "week" | "work_week" | "day" | "agenda",
 ) => {
   if (viewMode === Views.MONTH || viewMode === Views.AGENDA)
-    return "This month";
+    return "Month";
   if (viewMode === Views.WEEK || viewMode === Views.WORK_WEEK)
-    return "This week";
-  return "Today";
+    return "Week";
+  return "❤️";
 };
 
 export const getViews = () => {
@@ -84,7 +84,7 @@ export const CalendarTodayButton: FC<ICalendarTodayButtonProps> = ({
         color="info"
         isLight
         // @ts-ignore
-        onClick={() => setDate(dayjs(date).add(-1, unitType).format())}
+        onClick={() => setDate(dayjs(date).add(-1, unitType).toDate())}
         icon="ChevronLeft"
         aria-label="Prev"
       />
@@ -96,7 +96,7 @@ export const CalendarTodayButton: FC<ICalendarTodayButtonProps> = ({
         color="info"
         isLight
         // @ts-ignore
-        onClick={() => setDate(dayjs(date).add(1, unitType).format())}
+        onClick={() => setDate(dayjs(date).add(1, unitType).toDate())}
         icon="ChevronRight"
         aria-label="Next"
       />
@@ -128,7 +128,7 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
   };
 
   return (
-    <Dropdown>
+    <Dropdown direction="down">
       <DropdownToggle>
         <Button
           color="primary"
@@ -169,7 +169,7 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
             Week
           </Button>
         </DropdownItem>
-        {/* <DropdownItem>
+        <DropdownItem>
 					<Button
 						color='link'
 						icon='view_week'
@@ -177,8 +177,8 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
 						onClick={() => setViewMode(Views.WORK_WEEK)}>
 						Work Week
 					</Button>
-				</DropdownItem> */}
-        <DropdownItem>
+				</DropdownItem>
+        {/* <DropdownItem>
           <Button
             color="link"
             icon="calendar_view_day"
@@ -187,7 +187,7 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
           >
             Day
           </Button>
-        </DropdownItem>
+        </DropdownItem> */}
         <DropdownItem>
           <Button
             color="link"

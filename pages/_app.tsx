@@ -24,8 +24,8 @@ import { setEvals } from '../store/slices/evalsSlice';
 import { setSlots, setOriginalSlots, setScaleTeams } from '../store/slices/slotsSlice';
 import { setEvents } from '../store/slices/eventsSlice';
 import { current } from '@reduxjs/toolkit';
-import { preparationSlots } from './utilities/preparationSlots';
-import { getScaleTeams } from './utilities/getScaleTeams';
+import { preparationSlots } from '../common/function/preparationSlots';
+import { getScaleTeams } from '../common/function/getScaleTeams';
 
 interface AppPropsCustom extends AppProps {
 	token: string,
@@ -68,8 +68,6 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPro
 		light: COLORS.LIGHT.code,
 	};
 
-	console.log(process.env.STATUS)
-
 	return (
 		<AuthContextProvider initialToken={token} me={me}>
 			<ThemeContextProvider>
@@ -107,7 +105,7 @@ const AppWithRedux = (props: AppPropsCustom, cookies: any) => (
 	</StoreProvider>
 );
 
-AppWithRedux.getInitialProps = async (props: any) => {
+AppWithRedux.getServerSideProps = async (props: any) => {
 	const delay = (ms: any) => new Promise(resolve => setTimeout(resolve, ms));
 
 	const cookies = props.ctx.req?.headers.cookie

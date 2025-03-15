@@ -97,7 +97,8 @@ const Header: FC<IHeaderProps> = ({ children, hasLeftMobileMenu, hasRightMobileM
 				<div className='container-fluid'>
 					<div className='row'>
 						<div className='col'>
-							<Button
+							<h4 className="fw-bold">Agenda 42 <sup>beta</sup></h4>
+							{/* <Button
 								aria-label='Toggle Aside'
 								className='mobile-header-toggle'
 								size='lg'
@@ -124,7 +125,7 @@ const Header: FC<IHeaderProps> = ({ children, hasLeftMobileMenu, hasRightMobileM
 										setRightMenuStatus(false);
 									}}
 								/>
-							)}
+							)} */}
 						</div>
 						{hasRightMobileMenu && (
 							<div className='col-auto'>

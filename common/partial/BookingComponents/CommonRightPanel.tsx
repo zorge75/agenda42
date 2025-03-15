@@ -160,7 +160,7 @@ const CommonRightPanel: FC<ICommonRightPanel> = ({ setOpen, isOpen }) => {
 					</div>
 				</div>
 				<div className='d-flex justify-content-center mb-3'>
-					<Avatar src={user?.image.versions.medium} color={USERS.JOHN.color} shadow='default' />
+					<Avatar src={user?.image.versions.small} color={USERS.JOHN.color} shadow='default' />
 				</div>
 				<div className='d-flex flex-column align-items-center mb-5'>
 					<div className='h2 fw-bold'>{`${user?.first_name} ${user?.last_name}`}</div>

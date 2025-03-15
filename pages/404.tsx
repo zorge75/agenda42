@@ -53,6 +53,7 @@ const Page404 = () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  redirect: { destination: '/', permanent: false },
   props: {
     // @ts-ignore
     ...(await serverSideTranslations(locale, ["common", "menu"])),

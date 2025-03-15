@@ -2,12 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface EventsState {
     events: any | null; // Replace `any` with a proper type for your user data if available
+    all: any | null;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: EventsState = {
     events: null,
+    all: null,
     loading: false,
     error: null,
 };
@@ -18,6 +20,12 @@ const eventsSlice = createSlice({
     reducers: {
         setEvents(state, action: PayloadAction<any>) {
             state.events = action.payload;
+            state.loading = false;
+            state.error = null;
+        },
+        setAllEvents(state, action: PayloadAction<any>) {
+            state.events = state.events;
+            state.all = action.payload;
             state.loading = false;
             state.error = null;
         },
@@ -32,5 +40,5 @@ const eventsSlice = createSlice({
     },
 });
 
-export const { setEvents, setLoading, setError } = eventsSlice.actions;
+export const { setEvents, setAllEvents, setLoading, setError } = eventsSlice.actions;
 export default eventsSlice.reducer;

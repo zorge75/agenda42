@@ -78,7 +78,7 @@ $border-radius-child: #{$card-border-radius - $card-border-width};
 
 	display: flex;
 	min-height: $card-header-min-height;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: space-between;
 	border-bottom: $card-header-border-size solid var(--#{$prefix}card-border-color);
 	background-color: var(--#{$prefix}card-header-bg);

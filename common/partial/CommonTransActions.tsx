@@ -33,7 +33,7 @@ const CommonTransActions = () => {
 	const { themeStatus, darkModeStatus } = useDarkMode();
 
 	const ref = useRef<HTMLAnchorElement>(null);
-	const isHovering = useHoverDirty(ref);
+	const isHovering = useHoverDirty(ref as React.RefObject<Element>);
 	const [isLoading, setIsLoading] = useState(false);
 	const [demoStatus, setDemoStatus] = useState<TTransferActionStatus>('Processing');
 

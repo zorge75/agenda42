@@ -43,7 +43,7 @@ const CommonHeaderChat = () => {
 	useEffect(() => {
 		setMsgCount(0);
 	}, [state]);
-console.log(user);
+	
 	return (
 		<>
 			<div
@@ -61,15 +61,15 @@ console.log(user);
 					</div>
 				</div>
 				<div className='position-relative'>
-					<Avatar src={user.image.versions.small} size={48} color={USERS.CHLOE.color} />
+					<Avatar src={user?.image.versions.small} size={48} color={USERS.CHLOE.color} />
 					{/* {!!msgCount && (
 						<span className='position-absolute top-15 start-85 translate-middle badge rounded-pill bg-danger'>
 							{msgCount} <span className='visually-hidden'>unread messages</span>
 						</span>
 					)} */}
-					<span className='position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2'>
+					{/* <span className='position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2'>
 						<span className='visually-hidden'>Online user</span>
-					</span>
+					</span> */}
 				</div>
 			</div>
 			<OffCanvas

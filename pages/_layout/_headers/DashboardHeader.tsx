@@ -8,7 +8,7 @@ const DashboardHeader = () => {
 	return (
 		<Header>
 			<HeaderLeft>
-				<h4 className='fw-bold' style={{'margin': 0}}>Agenda 42</h4>
+				<h4 className='fw-bold' style={{ 'margin': 0 }}>Agenda 42 <sup>beta</sup></h4>
 				{/* <Search /> */}
 			</HeaderLeft>
 			<CommonHeaderRight afterChildren={<CommonHeaderChat />} />
