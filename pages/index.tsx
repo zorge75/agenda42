@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import dayjs from "dayjs";
 import classNames from "classnames";
 import Hanna from './../assets/img/hanna.gif';
+import Preview from './../assets/img/preview.png';
 import {
   Calendar,
   dayjsLocalizer,
@@ -651,6 +652,12 @@ const Index: NextPage = ({ token }: any) => {
     <PageWrapper>
       <Head>
         <title>{demoPagesMenu.dashboard.text}</title>
+        <meta property="og:title" content="Agenda42" />
+        <meta property="og:description" content="This is a description of my awesome app.Simplify your life with Agenda42! Manage all your events and evaluations in a single, easy-to-use calendar. Whether it’s scheduling appointments, tracking availability, or organizing tasks, Agenda42 keeps everything in one place for seamless planning and productivity." />
+        <meta property="og:image" content={Preview} />
+        <meta property="og:url" content="https://agenda42.fr" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       {/* <SubHeader>
         <SubHeaderLeft>
@@ -676,7 +683,7 @@ const Index: NextPage = ({ token }: any) => {
       <Page container="fluid">
         <div className="stories">
           <div className="row mb-4 g-3">
-            {loading ? (
+            {(loading || !scaleUsers || scaleUsers.length === 0) ? (
 
               Object.keys(USERS).map((u) => (
                 <div key={USERS[u].username} className="col-auto">
@@ -715,8 +722,6 @@ const Index: NextPage = ({ token }: any) => {
 
             ) : error ? (
               <div className="text-danger">{error}</div>
-            ) : !scaleUsers || scaleUsers.length === 0 ? (
-              <div>No scale users found</div>
             ) : (
               scaleUsers.map((u: any) => (
                 <div key={u.login} className="col-auto">
@@ -801,14 +806,14 @@ const Index: NextPage = ({ token }: any) => {
                   </CardTitle>
                   <CardSubTitle>{dayjs(date).fromNow()}</CardSubTitle>
                 </CardLabel>
-                <CardActions>
+                {/* <CardActions>
                   <CalendarTodayButton
                     unitType={Views.DAY}
                     date={date}
                     setDate={setDate}
                     viewMode={Views.DAY}
                   />
-                </CardActions>
+                </CardActions> */}
               </CardHeader>
               <CardBody isScrollable>
                 <Calendar

@@ -5,6 +5,7 @@ import PageWrapper from "../layout/PageWrapper/PageWrapper";
 import { demoPagesMenu } from "../menu";
 import Page from "../layout/Page/Page";
 import Button from "../components/bootstrap/Button";
+import Preview from './../assets/img/preview.png';
 
 const Page404 = () => {
   return (
@@ -14,7 +15,7 @@ const Page404 = () => {
       </Head>
       <Page>
         <div className="row d-flex align-items-center h-100">
-          <div className="col-12 d-flex flex-column justify-content-center align-items-center">
+          {/* <div className="col-12 d-flex flex-column justify-content-center align-items-center">
             <div
               className="text-primary fw-bold"
               style={{ fontSize: "calc(3rem + 3vw)" }}
@@ -27,22 +28,17 @@ const Page404 = () => {
             >
              Authentification is success
             </div>
-          </div>
+          </div> */}
           <div className="col-12 d-flex flex-column justify-content-center align-items-center">
             <Button
               className="px-5 py-3"
-              color="primary"
-              isLight
-              icon="HolidayVillage"
+              color="storybook"
+              icon="Login"
               tag="a"
               href="/"
             >
-              Go to agenda
+              Log in with a token of 42
             </Button>
-          </div>
-          <div className="col-12 d-flex align-items-baseline justify-content-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={""} alt="Humans" style={{ height: "50vh" }} />
           </div>
         </div>
       </Page>

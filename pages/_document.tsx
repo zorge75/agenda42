@@ -1,6 +1,5 @@
 import React from "react";
 import { Head, Html, Main, NextScript } from "next/document";
-import { GetStaticProps } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const Document = () => {
