@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useContext, useEffect, useRef } from 'react';
+import { GoogleTagManager } from '@next/third-parties/google';
 import ThemeContext from '../../context/themeContext';
 import { useFullscreen } from 'react-use';
 import useDarkMode from '../../hooks/useDarkMode';
@@ -69,6 +70,7 @@ const App: FC<IAppProps> = ({ children }) => {
 				overflow: fullScreenStatus ? 'scroll' : undefined,
 			}}>
 			{children}
+   <GoogleTagManager gtmId="G-Y9MQYJP6KR" />
 		</div>
 	);
 };
