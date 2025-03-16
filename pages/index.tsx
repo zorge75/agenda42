@@ -522,7 +522,7 @@ const Index: NextPage = ({ token }: any) => {
     console.log("events", events);
     let deletedCount = 0;
     const maxRetries = 3;
-    const retryDelay = 1500;
+    const retryDelay = 3000;
     const deletedEventIds = [];
 
     for (const event of events) {
@@ -862,7 +862,7 @@ const Index: NextPage = ({ token }: any) => {
             ) : error ? (
               <div className="text-danger">{error}</div>
             ) : (
-              scaleUsers.map((u: any) => (
+              [...scaleUsers].reverse().map((u: any) => (
                 <div key={u.login} className="col-auto">
                   <Popovers
                     trigger="hover"

@@ -23,7 +23,6 @@ import { setSlots, setOriginalSlots, setScaleTeams } from '../store/slices/slots
 import { setEvents } from '../store/slices/eventsSlice';
 import { current } from '@reduxjs/toolkit';
 import { preparationSlots } from '../common/function/preparationSlots';
-import { getScaleTeams } from '../common/function/getScaleTeams';
 
 interface AppPropsCustom extends AppProps {
 	token: string,
@@ -143,7 +142,11 @@ AppWithRedux.getInitialProps = async (props: any) => {
 
 	await delay(1000);
 
-	const slots = await fetch('https://api.intra.42.fr/v2/me/slots', {
+	const params = new URLSearchParams({
+		'page[size]': 100
+	});
+
+	const slots = await fetch(`https://api.intra.42.fr/v2/me/slots?${params}`, {
 		headers: {
 			Authorization: `Bearer ${cookies.token}`,
 		},

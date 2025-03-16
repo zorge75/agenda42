@@ -2,7 +2,9 @@ export const getScaleTeams = async (data: any, token: any) => {
     const arrayUsers: any[] = [];
     const userCache: Map<number, any> = new Map(); // Cache for user data
     let sortedData = Object.isFrozen(data) ? [...data] : data;
-    let filtred = sortedData.filter((i: any) => i.scale_team);
+    let filtred = sortedData.filter((i: any) => i.scale_team).sort((a: any, b: any) =>
+              new Date(b.begin_at).getTime() - new Date(a.begin_at).getTime()
+            ).slice(0, 9);
 
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

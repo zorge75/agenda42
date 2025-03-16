@@ -1,3 +1,8 @@
+# 1.2.2
+- Fixed loading profil of users. Create a segment for the previous 8 evaluations.
+- Fixed sorting of the list evaluations.
+- Fixed case if the slots avalible if big for the future like 4+ heures - the calendan don't download next evaluations for today.
+
 # 1.2.1
 - Fixed the bug with button Close from the modal overray events.
 - Remove freeze button after reloar events of calendar.
