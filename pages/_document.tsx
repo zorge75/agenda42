@@ -10,14 +10,14 @@ const Document = () => {
         <div id="portal-root" />
         <div id="portal-notification" />
         <NextScript />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y9MQYJP6KR"></script>
+        <script>
+           window.dataLayer = window.dataLayer || [];
+           function gtag(){dataLayer.push(arguments);}
+           gtag('js', new Date());
+           gtag('config', 'G-Y9MQYJP6KR');
+        </script>
       </body>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y9MQYJP6KR"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-Y9MQYJP6KR');
-</script>
     </Html>
   );
 };
