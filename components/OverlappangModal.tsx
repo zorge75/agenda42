@@ -78,7 +78,7 @@ const OverlappingModal = ({
                 <ModalFooter>
                     <Button
                         color="info"
-                        onClick={() => { }}
+                        onClick={() => setStatus(false)}
                     >
                         Close
                     </Button>

@@ -3,6 +3,7 @@ import classNames from "classnames";
 import Footer from "../../../layout/Footer/Footer";
 import useDarkMode from "../../../hooks/useDarkMode";
 import packageJson from '../../../package.json';
+import Tooltips from "../../../components/bootstrap/Tooltips";
 
 const DefaultFooter = () => {
   const { darkModeStatus } = useDarkMode();
@@ -22,9 +23,11 @@ const DefaultFooter = () => {
               <small className="fw-bold">École 42 Paris</small>
             </a>
           </div>
+            <Tooltips title='Send your suggestions, questions, and bug reports here.' placement='top'>
           <div className="col-auto">
-            <span className="fw-light">team@agenda42.fr | 2025 | version {packageJson.version}</span>
+              <span className="fw-light">team@agenda42.fr | 2025 | version {packageJson.version}</span>
           </div>
+            </Tooltips>
         </div>
       </div>
     </Footer>

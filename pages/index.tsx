@@ -370,7 +370,6 @@ const Index: NextPage = ({ token }: any) => {
   const setInfoEvent = () => setToggleInfoEventCanvas(!toggleInfoEventCanvas);
   const [eventAdding, setEventAdding] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [timeoutForRefresh, setTimeoutForRefresh] = useState(false);
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
   const [switchEvents, setSwitchEvents] = useState("my");
 
@@ -454,46 +453,70 @@ const Index: NextPage = ({ token }: any) => {
   const views = getViews();
 
   const refreshHandler = async () => {
-    setTimeoutForRefresh(true);
-    setRefresh(true);
-    const res = await fetch(
-      "/api/refresh_agenda?id=" + me.id,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    );
+    const maxRetries = 3; // Maximum number of retry attempts
+    let retryCount = 0;
 
-    const response = await res.json();
+    const attemptRefresh = async () => {
+      setRefresh(true);
 
-    if (res.ok) {
-      if (response.evaluations)
-        dispatch(setEvals(response.evaluations));
-      if (response.slots) {
-        dispatch(setOriginalSlots(response.slots));
-        dispatch(setSlots(preparationSlots(response.slots)));
+      try {
+        const res = await fetch(
+          "/api/refresh_agenda?id=" + me.id,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const response = await res.json();
+
+        if (res.ok) {
+          // Success case
+          if (response.evaluations)
+            dispatch(setEvals(response.evaluations));
+          if (response.slots) {
+            dispatch(setOriginalSlots(response.slots));
+            dispatch(setSlots(preparationSlots(response.slots)));
+          }
+          if (response.events)
+            dispatch(setEventsRedux(response.events));
+
+          showNotification(
+            <span className='d-flex align-items-center'>
+              <Icon
+                icon='Info'
+                size='lg'
+                className='me-1'
+              />
+              <span>Updated Successfully</span>
+            </span>,
+            'Agenda update',
+            'success'
+          );
+        } else if (res.status === 429 && retryCount < maxRetries) {
+          // Handle 429 error with retry
+          retryCount++;
+          const retryAfter = res.headers.get('Retry-After')
+            ? parseInt(res.headers.get('Retry-After')) * 1000
+            : 5000 * retryCount; // Default to 5s, 10s, 15s
+
+          console.log(`Rate limited. Retrying after ${retryAfter / 1000} seconds...`);
+          await delay(retryAfter);
+          return await attemptRefresh(); // Recursive retry
+        } else {
+          // Other errors or max retries reached
+          location?.reload();
+        }
+      } catch (error) {
+        console.error('Refresh failed:', error);
+        location?.reload();
       }
-      if (response.events)
-        dispatch(setEventsRedux(response.events));
 
-      showNotification(
-        <span className='d-flex align-items-center'>
-          <Icon
-            icon='Info'
-            size='lg'
-            className='me-1'
-          />
-          <span>Updated Successfully</span>
-        </span>,
-        'Agenda update. Button is disabler for 1 minute for safe trafic.',
-        'success'
-      );
-    } else {
-      location?.reload();
-    }
-    setRefresh(false);
-    await delay(60000);
-    setTimeoutForRefresh(false);
-  }
+      setRefresh(false);
+      await delay(3000);
+    };
+
+    await attemptRefresh();
+  };
 
   const removeSlotHandler = async (events: any) => {
     console.log("events", events);
@@ -501,8 +524,6 @@ const Index: NextPage = ({ token }: any) => {
     const maxRetries = 3;
     const retryDelay = 1500;
     const deletedEventIds = [];
-
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     for (const event of events) {
       if (event.scale_team === 'event') {
@@ -1007,11 +1028,9 @@ const Index: NextPage = ({ token }: any) => {
                     ?
                     <div className="spinner"> <Spinner color={'info'} inButton /></div>
                     :
-                    <Tooltips title='For saving calls to request to api.42.fr we block the update button for a minute.' placement='bottom'>
-                      <Button disabled={timeoutForRefresh} icon='Refresh' color='storybook' onClick={refreshHandler}>
-                        Refresh
-                      </Button>
-                    </Tooltips>
+                    <Button icon='Refresh' color='storybook' onClick={refreshHandler}>
+                      Refresh
+                    </Button>
                 }
                 <CardActions>
 
@@ -1173,31 +1192,39 @@ const Index: NextPage = ({ token }: any) => {
 
                         <div className="col">
                           <Button
-                            color="danger"
+                            color="primary"
                             type="submit"
                             onClick={() => unsubscribeHandler(eventItem)}
                           >
-                            Unsubscribe
+                            Open event in intra
                           </Button>
                           <br />
-                          <p style={{ marginTop: 15 }}>
-                            This button opening page of event in intra.42.fr
-                            in&nbsp;other tab and click to button "Unsubscribe"
-                          </p>
                         </div>
                       </>
                     ) : (
                       <>
                         <h2>Remove the slot</h2>
                         <div>
+
+                          <div className="col mb-5 mt-2" >
+                            <Button
+                              style={{ marginTop: 10, width: "100%" }}
+                              color="danger"
+                              type="submit"
+                              onClick={() => removeSlotHandler(eventItem.slots_data)}
+                            >
+                              {dayjs(eventItem.slots_data[0].begin_at).format('H:mm')} - {dayjs(eventItem.slots_data[eventItem.slots_data.length - 1].end_at).format('H:mm')}
+                            </Button>
+                          </div>
+
                           <h4>Remove a part of the slot</h4>
-                          {/* {
+                          {
                             eventItem.slots_data.map((item: any) => {
                               return (
                                 <div className="col" id={item.id}  >
                                   <Button
-                                    style={{ marginTop: 10 }}
-                                    color="danger"
+                                    style={{ marginTop: 10, width: "100%" }}
+                                    color="primary"
                                     type="submit"
                                     onClick={() => unsubscribeHandler(item)}
                                   >
@@ -1206,18 +1233,8 @@ const Index: NextPage = ({ token }: any) => {
                                 </div>
                               );
                             })
-                          } */}
-                          <h4>Remove slot</h4>
-                          <div className="col" >
-                            <Button
-                              style={{ marginTop: 10 }}
-                              color="danger"
-                              type="submit"
-                              onClick={() => removeSlotHandler(eventItem.slots_data)}
-                            >
-                              {dayjs(eventItem.slots_data[0].begin_at).format('H:mm')} - {dayjs(eventItem.slots_data[eventItem.slots_data.length - 1].end_at).format('H:mm')}
-                            </Button>
-                          </div>
+                          }
+
                         </div>
                       </>
                     )}
