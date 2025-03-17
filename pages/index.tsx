@@ -62,12 +62,13 @@ import showNotification from "../components/extras/showNotification";
 import { setOriginalSlots, setScaleTeams, setSlots } from "../store/slices/slotsSlice";
 import { preparationSlots } from "../common/function/preparationSlots";
 import { getScaleTeams } from "../common/function/getScaleTeams";
-import { getCorrectorImageUrl } from "../common/function/getCorrectorImageUrl";
+import { getCorrectorImageUrl, getCorrectorLocation } from "../common/function/getCorrectorImageUrl";
 import { setEvals } from "../store/slices/evalsSlice";
 import { setEvents as setEventsRedux, setAllEvents } from '../store/slices/eventsSlice';
 import Spinner from "../components/bootstrap/Spinner";
 import { findOverlappingEvents } from "../common/function/overlapEvents";
 import OverlappingModal from "../components/OverlappangModal";
+import Progress from "../components/bootstrap/Progress";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
@@ -372,6 +373,7 @@ const Index: NextPage = ({ token }: any) => {
   const [refresh, setRefresh] = useState(false);
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
   const [switchEvents, setSwitchEvents] = useState("my");
+  const [userLocation, setUserLocation] = useState("");
 
   useEffect(() => {
     let isMounted = true; // To prevent state updates after unmount
@@ -798,27 +800,6 @@ const Index: NextPage = ({ token }: any) => {
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      {/* <SubHeader>
-        <SubHeaderLeft>
-          
-        </SubHeaderLeft>
-        <SubHeaderRight>
-          <Popovers
-            desc={
-              <DatePicker
-                onChange={(item) => setDate(item)}
-                date={date}
-                color={process.env.NEXT_PUBLIC_PRIMARY_COLOR}
-              />
-            }
-            placement="bottom-end"
-            className="mw-100"
-            trigger="click"
-          >
-            <Button color="light">{calendarDateLabel}</Button>
-          </Popovers>
-        </SubHeaderRight>
-      </SubHeader> */}
       <Page container="fluid">
         <div className="stories">
           <div className="row mb-4 g-3">
@@ -831,7 +812,6 @@ const Index: NextPage = ({ token }: any) => {
                       src={USERS[u].src}
                       color={USERS[u].color}
                       size={64}
-                      // border={4}
                       className="cursor-pointer"
                       borderColor={
                         employeeList[USERS[u].username] ? "info" : themeStatus
@@ -889,23 +869,10 @@ const Index: NextPage = ({ token }: any) => {
                         src={u.image}
                         color={"info"}
                         size={64}
-                        // border={2}
                         className="cursor-pointer"
                         borderColor={"info"}
 
                       />
-                      {/* {!!events.filter(
-                      (i) =>
-                        i.user?.username === USERS[u].username &&
-                        i.start &&
-                        i.start < now &&
-                        i.end &&
-                        i.end > now,
-                    ).length && (
-                        <span className="position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2">
-                          <span className="visually-hidden">Online user</span>
-                        </span>
-                      )} */}
                     </div>
                   </Popovers>
 
@@ -1117,31 +1084,36 @@ const Index: NextPage = ({ token }: any) => {
                           <Avatar
                             src={getCorrectorImageUrl(eventItem?.scale_team?.corrector.id, scaleUsers, me)}
                             size={64}
-                            border={4}
                             className="cursor-pointer"
-                            borderColor={true ? "info" : themeStatus}
+                            borderColor={"info"}
                           />
                           <CardLabel iconColor="dark">
                             <CardTitle>
                               {eventItem?.scale_team?.corrector.login}
                             </CardTitle>
                             <p style={{ marginTop: 5 }}>
-                              {dayjs(eventItem?.end).format(
-                                "dddd, D MMMM YYYY",
+                              {dayjs(eventItem?.scale_team.begin_at).format(
+                                "dddd, D MMMM YYYY H:mm",
                               )}
                             </p>
                           </CardLabel>
                         </CardHeader>
+                        <div>
+                        </div>
 
                         <CardBody>
                           <p>
-                            Final mark:{" "}
-                            <b>{eventItem?.scale_team?.final_mark}</b>
+                            <Progress
+                              isStriped
+                              max={100}
+                              min={0}
+                              value={eventItem?.scale_team?.final_mark}
+                            />
                           </p>
-                          <p>
-                            Final mark:{" "}
-                            <b>{eventItem?.scale_team?.flag.name}</b>
-                          </p>
+                          <div style={{display: "flex",justifyContent: "space-between"}} >
+                            <p className="fw-bold fs-3">{eventItem?.scale_team?.flag.name} </p>
+                            <b className="fw-bold fs-3 mb-0"> {eventItem?.scale_team?.final_mark} %</b>
+                          </div>
                           <br />
                           <p>{eventItem?.scale_team?.comment}</p>
                         </CardBody>
@@ -1156,21 +1128,56 @@ const Index: NextPage = ({ token }: any) => {
                               {eventItem?.scale_team?.correcteds[0].login}
                             </CardTitle>
                             <p style={{ marginTop: 5 }}>
-                              {dayjs(eventItem?.end).format(
-                                "dddd, D MMMM YYYY",
+                              {dayjs(eventItem?.scale_team.updated_at).format(
+                                "dddd, D MMMM YYYY H:mm",
                               )}
                             </p>
+                            <div className="df">
+                              <Button
+                                style={{ marginRight: 15 }}
+                                color="success"
+                                type="submit"
+                                onClick={async () => {
+                                  window.open(`https://profile.intra.42.fr/users/${eventItem?.scale_team?.correcteds[0].id}`, '_blank')
+                                }
+                                }
+                              >
+                                Intra
+                              </Button>
+                              {
+                                getCorrectorLocation(eventItem?.scale_team?.correcteds[0].id, scaleUsers).lenght > 0
+                                  ? (
+                                    <Button
+                                      color="secondary"
+                                      type="submit"
+                                      onClick={async () => {
+                                        window.open(getCorrectorLocation(eventItem?.scale_team?.correcteds[0].id, scaleUsers), '_blank')
+                                      }
+                                      }
+                                    >
+                                      Show on Friends42
+                                    </Button>
+                                  )
+                                  : <Button
+                                    disabled
+                                    type="submit"
+                                    onClick={() => { }}
+                                  >
+                                    Unavailable
+                                  </Button>
+                              }
+                            </div>
                           </CardLabel>
                           <Avatar
                             src={getCorrectorImageUrl(eventItem?.scale_team?.correcteds[0].id, scaleUsers, me)}
                             size={64}
-                            border={4}
                             className="cursor-pointer"
-                            borderColor={true ? "info" : themeStatus}
+                            borderColor={"success"}
                           />
                         </CardHeader>
 
                         <CardBody>
+
                           <p>{eventItem?.scale_team?.feedback}</p>
                         </CardBody>
                       </Card>
@@ -1240,118 +1247,6 @@ const Index: NextPage = ({ token }: any) => {
                     )}
                   </div>
                 )}
-
-                {/* <div className='col-12'>
-								<FormGroup id='eventName' label='Name'>
-									<Select
-										ariaLabel='Service select'
-										placeholder='Please select...'
-										size='lg'
-										value={formik.values.eventName}
-										onChange={formik.handleChange}>
-										{Object.keys(SERVICES).map((s) => (
-											<Option key={SERVICES[s].name} value={SERVICES[s].name}>
-												{SERVICES[s].name}
-											</Option>
-										))}
-									</Select>
-								</FormGroup>
-							</div> */}
-                {/* Date */}
-                {/* <div className='col-12'>
-								<Card className='mb-0 bg-l10-info' shadow='sm'>
-									<CardHeader className='bg-l25-info'>
-										<CardLabel icon='DateRange' iconColor='info'>
-											<CardTitle className='text-info'>
-												Date Options
-											</CardTitle>
-										</CardLabel>
-									</CardHeader>
-									<CardBody>
-										<div className='row g-3'>
-											<div className='col-12'>
-												<FormGroup id='eventAllDay'>
-													<Checks
-														type='switch'
-														value='true'
-														label='All day event'
-														checked={formik.values.eventAllDay}
-														onChange={formik.handleChange}
-													/>
-												</FormGroup>
-											</div>
-											<div className='col-12'>
-												<FormGroup
-													id='eventStart'
-													label={
-														formik.values.eventAllDay
-															? 'Date'
-															: 'Start Date'
-													}>
-													<Input
-														type={
-															formik.values.eventAllDay
-																? 'date'
-																: 'datetime-local'
-														}
-														value={
-															formik.values.eventAllDay
-																? dayjs(
-																	formik.values.eventStart,
-																).format('YYYY-MM-DD')
-																: dayjs(
-																	formik.values.eventStart,
-																).format('YYYY-MM-DDTHH:mm')
-														}
-														onChange={formik.handleChange}
-													/>
-												</FormGroup>
-											</div>
-
-											{!formik.values.eventAllDay && (
-												<div className='col-12'>
-													<FormGroup id='eventEnd' label='End Date'>
-														<Input
-															type='datetime-local'
-															value={dayjs(
-																formik.values.eventEnd,
-															).format('YYYY-MM-DDTHH:mm')}
-															onChange={formik.handleChange}
-														/>
-													</FormGroup>
-												</div>
-											)}
-										</div>
-									</CardBody>
-								</Card>
-							</div> */}
-                {/* Employee */}
-                {/* <div className='col-12'>
-								<Card className='mb-0 bg-l10-dark' shadow='sm'>
-									<CardHeader className='bg-l25-dark'>
-										<CardLabel icon='Person Add' iconColor='dark'>
-											<CardTitle>Employee Options</CardTitle>
-										</CardLabel>
-									</CardHeader>
-									<CardBody>
-										<FormGroup id='eventEmployee' label='Employee'>
-											<Select
-												placeholder='Please select...'
-												value={formik.values.eventEmployee}
-												onChange={formik.handleChange}
-												ariaLabel='Employee select'>
-												{Object.keys(USERS).map((u) => (
-													<Option
-														key={USERS[u].id}
-														value={USERS[u].username}>
-														{`${USERS[u].name} ${USERS[u].surname}`}
-													</Option>
-												))}
-											</Select>
-										</FormGroup>
-									</CardBody>
-								</Card>
-							</div> */}
               </div>
             ) : (
               <div className="row g-4">{ }</div>

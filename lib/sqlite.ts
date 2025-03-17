@@ -7,7 +7,7 @@ const db = new Database(dbPath);
 console.log("Connected to SQLite database:", dbPath);
 
 try {
-    db.prepare(`
+  db.prepare(`
     CREATE TABLE IF NOT EXISTS events (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,

@@ -23,6 +23,7 @@ import { setSlots, setOriginalSlots, setScaleTeams } from '../store/slices/slots
 import { setEvents } from '../store/slices/eventsSlice';
 import { current } from '@reduxjs/toolkit';
 import { preparationSlots } from '../common/function/preparationSlots';
+import { getNextEvaluation } from '../common/function/getNextEvaluation';
 
 interface AppPropsCustom extends AppProps {
 	token: string,
@@ -42,8 +43,10 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events }: AppPro
 		if (evals)
 			dispatch(setEvals(evals));
 		if (slots) {
+			const preparedSlots = preparationSlots(slots);
+			getNextEvaluation(preparedSlots);
 			dispatch(setOriginalSlots(slots));
-			dispatch(setSlots(preparationSlots(slots)));
+			dispatch(setSlots(preparedSlots));
 		}
 		if (events)
 			dispatch(setEvents(events));
@@ -143,7 +146,7 @@ AppWithRedux.getInitialProps = async (props: any) => {
 	await delay(1000);
 
 	const params = new URLSearchParams({
-		'page[size]': 100
+		'page[size]': 100,
 	});
 
 	const slots = await fetch(`https://api.intra.42.fr/v2/me/slots?${params}`, {
