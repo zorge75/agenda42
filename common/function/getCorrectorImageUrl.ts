@@ -13,11 +13,14 @@ export const getCorrectorImageUrl = (id: any, users: any, me: any) => {
 export const getCorrectorLocation = (id: any, users: any) => {
     let location = null;
     users.map((i: any) => {
-        console.log("i.id == id", i.id, id)
-        if (i.id == id)
-            location = `https://friends.42paris.fr/?cluster=paul-f4&p=${i.location}`; // i.location
+        if (i.id == id && i.location) {
+            const claster = i.location.split("-")[0];
+            const etage = i.location.split("-")[1].slice(0, 2);
+            location = `https://friends.42paris.fr/?cluster=${claster}-${etage}&p=${i.location}`; // i.location
+        }
     });
     if (!location)
         location = "";
+    console.log("i.id == id", location)
     return (location);
 }

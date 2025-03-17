@@ -182,7 +182,11 @@ AppWithRedux.getInitialProps = async (props: any) => {
 	const eventsJson = await events.json();
 	// await delay(1000);
 
-	// const exams = await fetch('https://api.intra.42.fr/', {
+	// const paramsLocation = new URLSearchParams({
+	// 	'filter': 'active',
+	// });
+
+	// const exams = await fetch(`https://api.intra.42.fr/v2/users/${116174}/locations?${paramsLocation}`, {
 	// 	headers: {
 	// 		Authorization: `Bearer ${cookies.token}`, // From .env.local
 	// 	}
@@ -197,7 +201,7 @@ AppWithRedux.getInitialProps = async (props: any) => {
 
 	// const examsJson = await exams.json();
 
-	// console.log(examsJson);
+	// console.log("# ",examsJson[0]);
 
 	return {
 		cookies,

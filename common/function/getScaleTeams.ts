@@ -61,7 +61,7 @@ export const getScaleTeams = async (data: any, token: any) => {
                 // Check localStorage first
                 let userData = getUserFromLocalStorage(a.id);
 
-                if (!userData) {
+                if (userData) { // TODO: make lication without images
                     // If not in localStorage, fetch with retry
                     userData = await fetchUserWithRetry(a.id);
                     if (userData) {
@@ -78,6 +78,7 @@ export const getScaleTeams = async (data: any, token: any) => {
                         image: userData.image.versions.small,
                         pool_month: userData.pool_month,
                         pool_year: userData.pool_year,
+                        location: userData.location,
                         usual_full_name: userData.usual_full_name,
                         grade: userData.cursus_users.filter((i: any) => i.cursus_id === 21)[0].grade,
                         level: userData.cursus_users.filter((i: any) => i.cursus_id === 21)[0].level,

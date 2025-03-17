@@ -1093,7 +1093,7 @@ const Index: NextPage = ({ token }: any) => {
                             </CardTitle>
                             <p style={{ marginTop: 5 }}>
                               {dayjs(eventItem?.scale_team.begin_at).format(
-                                "dddd, D MMMM YYYY H:mm",
+                                "dddd, D MMMM H:mm",
                               )}
                             </p>
                           </CardLabel>
@@ -1129,7 +1129,7 @@ const Index: NextPage = ({ token }: any) => {
                             </CardTitle>
                             <p style={{ marginTop: 5 }}>
                               {dayjs(eventItem?.scale_team.updated_at).format(
-                                "dddd, D MMMM YYYY H:mm",
+                                "dddd, D MMMM H:mm",
                               )}
                             </p>
                             <div className="df">
@@ -1145,10 +1145,11 @@ const Index: NextPage = ({ token }: any) => {
                                 Intra
                               </Button>
                               {
-                                getCorrectorLocation(eventItem?.scale_team?.correcteds[0].id, scaleUsers).lenght > 0
+                                getCorrectorLocation(eventItem?.scale_team?.correcteds[0].id, scaleUsers)
                                   ? (
                                     <Button
-                                      color="secondary"
+                                      style={{ filter: "drop-shadow(0 5px 1.5rem #e33d94"}}
+                                      color="storybook"
                                       type="submit"
                                       onClick={async () => {
                                         window.open(getCorrectorLocation(eventItem?.scale_team?.correcteds[0].id, scaleUsers), '_blank')

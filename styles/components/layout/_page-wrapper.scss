@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 //
 //  Page Wrapper
 //
@@ -10,6 +12,10 @@
 	.stories {
 		display: flex;
 		justify-content: space-between;
+
+		@include media-breakpoint-down(map.get($header, mobile-breakpoint)) {
+			display: none;
+		}
 	}
 
 	.message_exam {
@@ -43,6 +49,6 @@
 		display: flex;
 		align-items: center;
 
-		
+
 	}
 }

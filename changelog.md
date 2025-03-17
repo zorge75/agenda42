@@ -1,3 +1,11 @@
+# 1.3.1
+- Fixed the bug with link for Friends 42
+
+# 1.3.0
+- Added link to Frends42.
+- Change the Cards in the evaluation.
+- Add data base for notivications.
+
 # 1.2.2
 - Fixed loading profil of users. Create a segment for the previous 8 evaluations.
 - Fixed sorting of the list evaluations.
