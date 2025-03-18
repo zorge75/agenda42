@@ -81,15 +81,16 @@ const Popovers: FC<IPopoversProps> = ({
 	const [popoverOpen, setPopoverOpen] = useState(false);
 	const dropdownRef = useRef(null);
 
-	const closeMenu = useCallback(() => {
-		if (typeof children !== 'string' && !children.props?.color && children?.props?.onClick) {
+	const closeMenu = useCallback((e) => {
+		if (typeof children !== 'string' && !children.props?.color && children?.props?.onClick && children?.ref) {
 			children.props.onClick();
-			console.log("children.props", children.props);
 		}
 		setPopoverOpen(false);
+		e?.stopImmediatePropagation();
+		e?.stopPropagation();
 	}, []);
 
-	useEventOutside(dropdownRef, "click", closeMenu);
+	useEventOutside(dropdownRef, "click", e => closeMenu(e));
 
 	const ON_CLICK = () => {
 		if (trigger === 'click') setPopoverOpen(!popoverOpen);

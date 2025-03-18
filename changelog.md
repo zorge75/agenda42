@@ -1,7 +1,11 @@
+# 1.4.3
+- Fixed bug with ecents from Popovers component
+
 # 1.4.2
 - Fixed bug eith DataPicker before calendar, avter select day he don't close popover
 - Optimisation for conponent CorrectorLocation
 - Fixed View in 404 component
+
 # 1.4.1
 - Fixed styles
 - Fixed bug for group progect for defanse
