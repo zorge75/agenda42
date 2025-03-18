@@ -101,7 +101,7 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
                                         >
                                             Intra
                                         </Button>
-                                        <CorrectorLocation id={profile.id} token={token} />
+                                        <CorrectorLocation id={profile.id} token={token} user={null} />
                                     </div>
                                 </CardLabel>
                                 <Avatar

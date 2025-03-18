@@ -56,7 +56,7 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                                     >
                                         Intra
                                     </Button>
-                                    <CorrectorLocation id={userData.id} token={token} />
+                                    <CorrectorLocation token={null} user={userData} id={userData.id}/>
                                 </div>
                             </CardLabel>
                             <Avatar
@@ -86,9 +86,9 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                                     <p className="fw-bold fs-3">{`${eventItem?.scale_team?.flag.name}`} </p>
                                     {
                                         // !getCalcGiveup(eventItem?.scale_team) ? <>
-                                            <b className="fw-bold fs-3 mb-0"> {eventItem?.scale_team?.final_mark}%</b>
+                                        <b className="fw-bold fs-3 mb-0"> {eventItem?.scale_team?.final_mark}%</b>
                                         // </>
-                                            // : <p className="fw-bold fs-3 "> Give up</p>
+                                        // : <p className="fw-bold fs-3 "> Give up</p>
                                     }
                                 </div>
                                 <br />

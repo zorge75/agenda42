@@ -7,6 +7,7 @@ import Page from "../layout/Page/Page";
 import Button from "../components/bootstrap/Button";
 import Preview from './../assets/img/preview.png';
 import { useRouter } from "next/navigation";
+import Spinner from "../components/bootstrap/Spinner";
 
 const Page404 = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ const Page404 = () => {
 
     return () => clearTimeout(timer);
   }, [router]);
-  
+
   return (
     <PageWrapper>
       <Head>
@@ -26,30 +27,10 @@ const Page404 = () => {
       </Head>
       <Page>
         <div className="row d-flex align-items-center h-100">
-          {/* <div className="col-12 d-flex flex-column justify-content-center align-items-center">
-            <div
-              className="text-primary fw-bold"
-              style={{ fontSize: "calc(3rem + 3vw)" }}
-            >
-              200
-            </div>
-            <div
-              className="text-dark fw-bold"
-              style={{ fontSize: "calc(1.5rem + 1.5vw)" }}
-            >
-             Authentification is success
-            </div>
-          </div> */}
           <div className="col-12 d-flex flex-column justify-content-center align-items-center">
-            <Button
-              className="px-5 py-3"
-              color="storybook"
-              icon="Login"
-              tag="a"
-              href="/"
-            >
-              Log in with a token of 42...
-            </Button>
+            <Spinner color={true ? 'info' : 'info'} > // TODO: use theme color
+              Loading...
+            </Spinner>
           </div>
         </div>
       </Page>

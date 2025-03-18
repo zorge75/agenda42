@@ -693,7 +693,7 @@ const Index: NextPage = ({ token }: any) => {
           <div className="row mb-4 g-3">
             {(loading || !scaleUsers || scaleUsers.length === 0) ? (
 
-              Object.keys(USERS).map((u) => (
+              Object.keys(USERS).slice(0, 6).map((u) => (
                 <div key={USERS[u].username} className="col-auto">
                   <div className="position-relative">
                     <Avatar
@@ -730,7 +730,7 @@ const Index: NextPage = ({ token }: any) => {
             ) : error ? (
               <div className="text-danger">{error}</div>
             ) : (
-              [...scaleUsers].slice(0, 8).reverse().map((u: any) => (
+              [...scaleUsers].slice(0, 6).reverse().map((u: any) => (
                 <div key={u.login} className="col-auto">
                   <Popovers
                     trigger="hover"
@@ -821,7 +821,8 @@ const Index: NextPage = ({ token }: any) => {
                   view={Views.DAY}
                   date={date}
                   step={15}
-                  scrollToTime={dayjs().add(-2, 'h').toISOString()}
+                  min={dayjs().add(-1, 'h').toISOString()}
+                  scrollToTime={dayjs().add(-1, 'h').toISOString()}
                   defaultDate={new Date()}
                   onSelectEvent={(event) => {
                     setInfoEvent();
@@ -966,7 +967,7 @@ const Index: NextPage = ({ token }: any) => {
                   <div>
                     {
                       (eventItem?.type === "defances")
-                          ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
+                        ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
                         : (eventItem.name != "Available")
                           ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
                           : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />

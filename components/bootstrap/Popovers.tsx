@@ -1,8 +1,9 @@
-import React, { cloneElement, FC, HTMLAttributes, ReactElement, ReactNode, useState } from 'react';
+import React, { cloneElement, FC, HTMLAttributes, ReactElement, ReactNode, useCallback, useRef, useState } from 'react';
 import { usePopper } from 'react-popper';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Portal from '../../layout/Portal/Portal';
+import useEventOutside from '../../hooks/useEventOutside';
 
 type Direction =
 	| 'auto'
@@ -78,6 +79,17 @@ const Popovers: FC<IPopoversProps> = ({
 	});
 
 	const [popoverOpen, setPopoverOpen] = useState(false);
+	const dropdownRef = useRef(null);
+
+	const closeMenu = useCallback(() => {
+		if (typeof children !== 'string' && !children.props?.color && children?.props?.onClick) {
+			children.props.onClick();
+			console.log("children.props", children.props);
+		}
+		setPopoverOpen(false);
+	}, []);
+
+	useEventOutside(dropdownRef, "click", closeMenu);
 
 	const ON_CLICK = () => {
 		if (trigger === 'click') setPopoverOpen(!popoverOpen);
@@ -107,7 +119,7 @@ const Popovers: FC<IPopoversProps> = ({
 	};
 
 	return (
-		<>
+		<div ref={dropdownRef}>
 			{cloneElement(
 				typeof children === 'string' ? (
 					// eslint-disable-next-line react/jsx-props-no-spreading
@@ -141,7 +153,7 @@ const Popovers: FC<IPopoversProps> = ({
 					</div>
 				</Portal>
 			)}
-		</>
+		</div>
 	);
 };
 Popovers.propTypes = {
@@ -229,8 +241,12 @@ Popovers.defaultProps = {
 		name: 'example',
 		enabled: false,
 		phase: 'read',
-		fn: () => {},
+		fn: () => { },
 	},
 };
 
 export default Popovers;
+function useCollback(arg0: () => void) {
+	throw new Error('Function not implemented.');
+}
+

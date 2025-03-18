@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchUserWithRetry } from "../../common/function/getScaleTeams";
 import Button from "../bootstrap/Button";
-import Spinner from "../bootstrap/Spinner";
 
-export const CorrectorLocation = ({ id, token }: { id: any; token: any }) => {
+export const CorrectorLocation = ({ id, token = null, user = null }: { id: any; token: any; user: any }) => {
     const [userData, setUserData] = useState<any>(null);
 
     useEffect(() => {
@@ -11,12 +10,15 @@ export const CorrectorLocation = ({ id, token }: { id: any; token: any }) => {
             const data = await fetchUserWithRetry(id, 3, token, false);
             setUserData(data);
         };
-        fetchData();
+        if (!user)
+            fetchData();
+        else
+            setUserData(user);
     }, [id, token]);
 
     const getLinkForFriends42 = (i: any) => {
         const claster = i.location.split("-")[0];
-        const etage = i.location.split("-")[1].slice(0, 2);
+        const etage = i.location.split("-")[1].slice(0, claster == 'made' ? 3 : 2);
         return `https://friends.42paris.fr/?cluster=${claster}-${etage}&p=${i.location}`;
     };
 

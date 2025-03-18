@@ -139,7 +139,7 @@ const Slot = ({ eventItem, token, originalSlotsIntra }: any) => {
     };
 
     const justForFuture = (date: any) => {
-        const nowMinusOneHour = dayjs().subtract(1, 'hour');
+        const nowMinusOneHour = dayjs().subtract(-30, 'minutes');
         return !dayjs(date).isAfter(nowMinusOneHour);
     }
 
