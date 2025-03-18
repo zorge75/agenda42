@@ -47,7 +47,7 @@ const CommonHeaderChat = () => {
 	return (
 		<>
 			<div
-				className='col d-flex align-items-center cursor-pointer'
+				className='col d-flex align-items-center cursor-pointer justify-content-end'
 				// onClick={() => setState(!state)}
 				role='presentation'>
 				<div className='me-3'>

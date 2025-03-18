@@ -25,7 +25,7 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
         const etage = i.location.split("-")[1].slice(0, 2);
         return `https://friends.42paris.fr/?cluster=${claster}-${etage}&p=${i.location}`;
     };
-
+    console.log(">", eventItem);
     return (
         <div>
             <h2>Evaluation {eventItem.name}</h2>
@@ -34,40 +34,38 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                 <Card className="mb-0 bg-l10-success" shadow="sm">
 
                     {
-                        userData && eventItem?.scale_team?.correcteds.map((profile, i) => (
-                            <CardHeader className="bg-l25-success">
-                                <CardLabel iconColor="dark">
-                                    <CardTitle>
-                                        {userData.usual_full_name || profile.login}
-                                    </CardTitle>
-                                    <p style={{ marginTop: 5 }}>
-                                        {i == 0 ? dayjs(eventItem?.scale_team.updated_at).format(
-                                            "dddd, D MMMM H:mm",
-                                        ) : null}
-                                    </p>
-                                    <div className="df">
-                                        <Button
-                                            style={{ marginRight: 15 }}
-                                            color="success"
-                                            type="submit"
-                                            onClick={async () => {
-                                                window.open(`https://profile.intra.42.fr/users/${userData.id}`, '_blank')
-                                            }
-                                            }
-                                        >
-                                            Intra
-                                        </Button>
-                                        <CorrectorLocation id={userData.id} token={token} />
-                                    </div>
-                                </CardLabel>
-                                <Avatar
-                                    src={userData.image.versions.small}
-                                    size={64}
-                                    className="cursor-pointer"
-                                    borderColor={"success"}
-                                />
-                            </CardHeader>
-                        ))
+                        userData && <CardHeader className="bg-l25-success">
+                            <CardLabel iconColor="dark">
+                                <CardTitle>
+                                    {userData.usual_full_name || "^^"}
+                                </CardTitle>
+                                <p style={{ marginTop: 5 }}>
+                                    {dayjs(eventItem?.scale_team.updated_at).format(
+                                        "dddd, D MMMM H:mm",
+                                    )}
+                                </p>
+                                <div className="df">
+                                    <Button
+                                        style={{ marginRight: 15 }}
+                                        color="success"
+                                        type="submit"
+                                        onClick={async () => {
+                                            window.open(`https://profile.intra.42.fr/users/${userData.id}`, '_blank')
+                                        }
+                                        }
+                                    >
+                                        Intra
+                                    </Button>
+                                    <CorrectorLocation id={userData.id} token={token} />
+                                </div>
+                            </CardLabel>
+                            <Avatar
+                                src={userData.image.versions.small}
+                                size={64}
+                                className="cursor-pointer"
+                                borderColor={"success"}
+                            />
+                        </CardHeader>
                     }
 
                     {
@@ -87,10 +85,10 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                                 <div style={{ display: "flex", justifyContent: "space-between" }} >
                                     <p className="fw-bold fs-3">{`${eventItem?.scale_team?.flag.name}`} </p>
                                     {
-                                        !getCalcGiveup(eventItem?.scale_team) ? <>
+                                        // !getCalcGiveup(eventItem?.scale_team) ? <>
                                             <b className="fw-bold fs-3 mb-0"> {eventItem?.scale_team?.final_mark}%</b>
-                                        </>
-                                            : <p className="fw-bold fs-3 "> Give up</p>
+                                        // </>
+                                            // : <p className="fw-bold fs-3 "> Give up</p>
                                     }
                                 </div>
                                 <br />
@@ -100,7 +98,7 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                     }
                 </Card>
             </div> : null}
-            <br/>
+            <br />
             <div className="col-12">
                 {
                     eventItem?.scale_team.corrector === 'invisible'
@@ -111,25 +109,27 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                                 shadow="sm"
                                 style={{ textAlign: "end" }}
                             >
-                                <CardHeader className="bg-l25-info">
-                                    <Avatar
-                                        src={getCorrectorImageUrl(eventItem?.scale_team?.corrector.id, scaleUsers, me)}
-                                        size={64}
-                                        className="cursor-pointer"
-                                        borderColor={"info"}
-                                    />
-                                    <CardLabel iconColor="dark">
-                                        <CardTitle>
-
-                                            {getCorrectorName(eventItem?.scale_team?.corrector.id, scaleUsers, me) || eventItem?.scale_team?.corrector.login}
-                                        </CardTitle>
-                                        <p style={{ marginTop: 5 }}>
-                                            {dayjs(eventItem?.scale_team.begin_at).format(
-                                                "dddd, D MMMM H:mm",
-                                            )}
-                                        </p>
-                                    </CardLabel>
-                                </CardHeader>
+                                {userData && eventItem?.scale_team?.correcteds.map((profile, i) => (
+                                    <CardHeader className="bg-l25-info">
+                                        <Avatar
+                                            src={profile.id == me.id ? getCorrectorImageUrl(profile.id, scaleUsers, me) : "https://cdn.intra.42.fr/users/430b2acd1bcfedf5475654d235003086/norminet.jpeg"}
+                                            size={64}
+                                            className="cursor-pointer"
+                                            borderColor={"info"}
+                                        />
+                                        <CardLabel iconColor="dark">
+                                            <CardTitle>
+                                                {getCorrectorName(profile.id, scaleUsers, {}) || profile.login}
+                                            </CardTitle>
+                                            <p style={{ marginTop: 5 }}>
+                                                {dayjs(eventItem?.scale_team.begin_at).format(
+                                                    "dddd, D MMMM H:mm",
+                                                )}
+                                            </p>
+                                        </CardLabel>
+                                    </CardHeader>
+                                ))
+                                }
                                 <div>
                                 </div>
 
@@ -145,7 +145,7 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                 }
             </div>
             <br />
-            
+
 
         </div>
     );

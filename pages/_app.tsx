@@ -32,11 +32,10 @@ interface AppPropsCustom extends AppProps {
 	slots: any,
 	asCorected: any,
 	defances: any,
-	projects: any | null,
 	defancesHistory: any,
 }
 
-const MyApp = ({ Component, pageProps, token, me, evals, slots, events, defances, projects, defancesHistory }: AppPropsCustom) => {
+const MyApp = ({ Component, pageProps, token, me, evals, slots, events, defances, defancesHistory }: AppPropsCustom) => {
 	getOS();
 	const dispatch = useDispatch();
 
@@ -189,23 +188,6 @@ AppWithRedux.getInitialProps = async (props: any) => {
 	}
 
 	const eventsJson = await events.json();
-
-	// await delay(1000);
-
-	// const projects = await fetch(`https://api.intra.42.fr/v2/me/projects/?${params}`, {
-	// 	headers: {
-	// 		Authorization: `Bearer ${cookies.token}`,
-	// 	}
-	// });
-
-	// if (!projects.ok) {
-	// 	console.error(`Evaluations fetch failed with status: ${projects.status}`);
-	// 	const text = await projects.text();
-	// 	console.error('Response body:', text);
-	// 	return { cookies, me: meJson, evals: evaluationsJson, slots: slotsJson };
-	// }
-
-	// const projectsJson = await projects.json();
 
 	await delay(1000);
 
@@ -6669,7 +6651,6 @@ AppWithRedux.getInitialProps = async (props: any) => {
 		evals: evaluationsJson,
 		defances: defancesJson,
 		defancesHistory: defancesHistoryJson,
-		// projects: projectsJson,
 		token: cookies.token,
 	};
 };

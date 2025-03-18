@@ -5,7 +5,7 @@ export const getCorrectorImageUrl = (id: any, users: any, me: any) => {
             image = i.image;
     });
     if (!image)
-        image = me.image.versions.small;
+        image = me.image?.versions.small;
     return (image);
 };
 

@@ -4,7 +4,7 @@
 //  Page Wrapper
 //
 .page-wrapper {
-	width: auto;
+	// width: auto;
 	display: flex;
 	flex: 1 0 auto;
 	flex-direction: column;
@@ -24,6 +24,22 @@
 			max-width: 290px;
 			margin: auto 15px auto 0;
 			text-align: end;
+		}
+
+		@media (max-width: 767px) {
+			img {
+				display: none;
+			}
+
+			p {
+				margin: 0;
+			}
+		}
+
+		@media (min-width: 768px) {
+			img {
+				display: block;
+			}
 		}
 
 		img {

@@ -1,3 +1,7 @@
+# 1.4.1
+- Fixed styles
+- Fixed bug for group progect for defanse
+
 # 1.4.0
 - Refactoring events and modals
 
