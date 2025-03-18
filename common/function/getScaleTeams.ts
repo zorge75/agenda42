@@ -15,15 +15,11 @@ export const fetchUserWithRetry = async (userId: number, retries: any, token: an
                 },
             });
 
-            if (response.status === 429) {
+            if (response.status === 429 || !response.ok) {
                 const waitTime = Math.pow(2, i) * 1000; // Exponential backoff: 1s, 2s, 4s
                 console.log(`Rate limited for user ${userId}, waiting ${waitTime}ms`);
                 await delay(waitTime);
                 continue;
-            }
-
-            if (!response.ok) {
-                throw new Error(`Fetch failed with status: ${response.status}`);
             }
 
             const userData = await response.json();

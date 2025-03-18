@@ -113,14 +113,13 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
                             </CardHeader>
                         ))
                     }
-
                     {
                         eventItem?.scale_team.comment && eventItem?.scale_team.feedback
                             ?
                             <CardBody>
                                 <p>{eventItem?.scale_team?.feedback}</p>
                             </CardBody>
-                            : null
+                            : "Waiting feedback."
                     }
                 </Card>
             </div>
