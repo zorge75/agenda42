@@ -1,6 +1,23 @@
+interface Event {
+    start: Date;
+    end: Date;
+}
+
+function isOverlappingAndFutureOrToday(event1: Event, event2: Event): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const isFutureOrToday = event1.start >= today || event2.start >= today;
+
+    return (
+        event1.start < event2.end &&
+        event2.start < event1.end &&
+        isFutureOrToday
+    );
+}
 
 function doEventsOverlap(event1: any, event2: any): boolean {
-    return event1.start < event2.end && event2.start < event1.end;
+    return isOverlappingAndFutureOrToday(event1, event2);
 }
 
 export function findOverlappingEvents(events: any): any[][] {

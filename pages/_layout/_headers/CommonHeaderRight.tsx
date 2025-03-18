@@ -46,7 +46,6 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 	const { mounted } = useMounted();
 
 	const { setIsOpen } = useTour();
-
 	return (
 		<HeaderRight>
 			<div className='row g-3'>

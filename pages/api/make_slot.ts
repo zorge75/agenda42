@@ -9,8 +9,6 @@ export default async function handler(req: any, res: any) {
     : {};
   const tokenFromCookie = cookieObj["token"];
 
-  console.log("end", end);
-
   try {
     const response = await axios.post(
       "https://api.intra.42.fr/v2/slots",

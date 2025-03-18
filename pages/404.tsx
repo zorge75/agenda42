@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Head from "next/head";
 import { GetStaticProps } from "next";
 import PageWrapper from "../layout/PageWrapper/PageWrapper";
@@ -6,8 +6,19 @@ import { demoPagesMenu } from "../menu";
 import Page from "../layout/Page/Page";
 import Button from "../components/bootstrap/Button";
 import Preview from './../assets/img/preview.png';
+import { useRouter } from "next/navigation";
 
 const Page404 = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push('/');
+    });
+
+    return () => clearTimeout(timer);
+  }, [router]);
+  
   return (
     <PageWrapper>
       <Head>
@@ -37,7 +48,7 @@ const Page404 = () => {
               tag="a"
               href="/"
             >
-              Log in with a token of 42
+              Log in with a token of 42...
             </Button>
           </div>
         </div>

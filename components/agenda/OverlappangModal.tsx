@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import Icon from './icon/Icon';
-import Input from './bootstrap/forms/Input';
-import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from './bootstrap/Modal';
-import { componentPagesMenu } from '../menu';
-import Button from './bootstrap/Button';
-import { findOverlappingEvents } from '../common/function/overlapEvents';
-import Card, { CardActions, CardBody, CardHeader, CardLabel, CardTitle } from './bootstrap/Card';
+import Icon from '../icon/Icon';
+import Input from '../bootstrap/forms/Input';
+import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
+import { componentPagesMenu } from '../../menu';
+import Button from '../bootstrap/Button';
+import { findOverlappingEvents } from '../../common/function/overlapEvents';
+import Card, { CardActions, CardBody, CardHeader, CardLabel, CardTitle } from '../bootstrap/Card';
 import dayjs from 'dayjs';
+import showNotification from '../extras/showNotification';
 
 const OverlappingModal = ({
     events
@@ -21,10 +22,9 @@ const OverlappingModal = ({
             setStatus(true);
     }, []);
 
-    console.log(overlappingEvents);
-
-    if (!overlappingEvents.length)
+    if (!overlappingEvents.length) {
         return (null);
+    }
 
     return (
         <div className="overlapping">
@@ -66,7 +66,7 @@ const OverlappingModal = ({
                                             <div className='col-lg-6'>
                                                 <div className='h4 mb-3'>End event</div>
                                                 <span className='display-6 fw-bold text-success'>{dayjs(event.end).format('H:mm')}</span>
-                                                
+
                                             </div>
                                         </div>
                                     </CardBody>

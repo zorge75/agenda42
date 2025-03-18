@@ -1,3 +1,6 @@
+# 1.4.0
+- Refactoring events and modals
+
 # 1.3.1
 - Fixed the bug with link for Friends 42
 

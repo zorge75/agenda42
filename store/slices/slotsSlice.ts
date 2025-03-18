@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface UserState {
     slots: any | null; // Replace `any` with a proper type for your user data if available
     original: any | null;
+    defances: any | null;
+    defancesHistory: any | null;
     scaleTeam: any | null;
     loading: boolean;
     error: string | null;
@@ -10,6 +12,8 @@ interface UserState {
 
 const initialState: UserState = {
     slots: null,
+    defances: null,
+    defancesHistory: null,
     original: null,
     scaleTeam: [],
     loading: false,
@@ -34,6 +38,12 @@ const slotsSlice = createSlice({
         setScaleTeams(state, action: PayloadAction<any>) {
             state.scaleTeam = action.payload;
         },
+        setDefances(state, action: PayloadAction<any>) {
+            state.defances = action.payload;
+        },
+        setDefancesHistory(state, action: PayloadAction<any>) {
+            state.defancesHistory = action.payload;
+        },
         setLoading(state) {
             state.loading = true;
             state.error = null;
@@ -45,5 +55,5 @@ const slotsSlice = createSlice({
     },
 });
 
-export const { setSlots, setOriginalSlots, setScaleTeams, setLoading, setError } = slotsSlice.actions;
+export const { setSlots, setOriginalSlots, setScaleTeams, setDefances, setDefancesHistory, setLoading, setError } = slotsSlice.actions;
 export default slotsSlice.reducer;

@@ -62,13 +62,14 @@ import showNotification from "../components/extras/showNotification";
 import { setOriginalSlots, setScaleTeams, setSlots } from "../store/slices/slotsSlice";
 import { preparationSlots } from "../common/function/preparationSlots";
 import { getScaleTeams } from "../common/function/getScaleTeams";
-import { getCorrectorImageUrl, getCorrectorLocation } from "../common/function/getCorrectorImageUrl";
 import { setEvals } from "../store/slices/evalsSlice";
 import { setEvents as setEventsRedux, setAllEvents } from '../store/slices/eventsSlice';
 import Spinner from "../components/bootstrap/Spinner";
-import { findOverlappingEvents } from "../common/function/overlapEvents";
-import OverlappingModal from "../components/OverlappangModal";
-import Progress from "../components/bootstrap/Progress";
+import OverlappingModal from "../components/agenda/OverlappangModal";
+import Evaluation from "../components/agenda/Evaluation";
+import Event from "../components/agenda/Event";
+import Slot from "../components/agenda/Slot";
+import Defanse from "../components/agenda/Defanse";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
@@ -244,7 +245,6 @@ const MyEventDay = (data: { event: IEvent }) => {
 const Index: NextPage = ({ token }: any) => {
   const { darkModeStatus, themeStatus } = useDarkMode();
   const dispatch = useDispatch();
-  const [localRemoved, setLocalRemoved] = useState([]);
   const eventsIntra = useSelector((state: RootState) => state.events.events);
   const allEvents = useSelector((state: RootState) => state.events.all);
   const slotsIntra = useSelector((state: RootState) => state.slots.slots);
@@ -252,48 +252,8 @@ const Index: NextPage = ({ token }: any) => {
   const viewMode = useSelector((state: RootState) => state.calendar.unitType);
   const me = useSelector((state: RootState) => state.user.me);
   const scaleUsers = useSelector((state: RootState) => state.slots.scaleTeam);
-
-  const unsubscribeHandler = async (event: any) => {
-    if (event.scale_team !== 'event') {
-      const res = await fetch("/api/proxy?id=" + event.id, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.ok) {
-        const filtredSlots = originalSlotsIntra.filter((i: any) => i.id != event.id);
-        dispatch(setOriginalSlots(filtredSlots));
-        dispatch(setSlots(preparationSlots(filtredSlots)));
-        showNotification(
-          <span className='d-flex align-items-center'>
-            <Icon
-              icon='Info'
-              size='lg'
-              className='me-1'
-            />
-            <span>Successfully</span>
-          </span>,
-          'Slot has been deleted',
-          'success'
-        );
-      } else {
-        showNotification(
-          <span className='d-flex align-items-center'>
-            <Icon
-              icon='Error'
-              size='lg'
-              className='me-1'
-            />
-            <span>Error</span>
-          </span>,
-          "Slot not removed",
-          'danger'
-        );
-      }
-    } else {
-      // router.push(`https://profile.intra.42.fr/events/${event.id}`);
-      window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
-    }
-  };
+  const defances = useSelector((state: RootState) => state.slots.defances);
+  const defancesHistory = useSelector((state: RootState) => state.slots.defancesHistory);
 
   // BEGIN :: Calendar
   // Active employee
@@ -308,7 +268,7 @@ const Index: NextPage = ({ token }: any) => {
   const [eventsActive, setEventsActive] = useState(eventList);
 
   useEffect(() => {
-    if (eventsIntra && slotsIntra) {
+    if (eventsIntra && slotsIntra && defances && defancesHistory) {
       const eventList = eventsIntra.map((event: any) => ({
         id: event.id,
         name: event.name ?? event.id,
@@ -329,7 +289,7 @@ const Index: NextPage = ({ token }: any) => {
         id: slot.id,
         name:
           slot.scale_team == "invisible" || slot.scale_team?.id
-            ? ""
+            ? `📥 ${slot.scale_team.correcteds[0].login}`
             : "Available",
         start: dayjs(slot["begin_at"]).toDate(),
         end: dayjs(slot["end_at"]).toDate(),
@@ -338,7 +298,7 @@ const Index: NextPage = ({ token }: any) => {
             ? "danger"
             : "success",
         user: null,
-        description: "description",
+        description: null,
         kind: "kind",
         location: "event.location",
         max_people: "event.max_people",
@@ -348,10 +308,33 @@ const Index: NextPage = ({ token }: any) => {
         scale_team: slot.scale_team,
         slots_data: slot?.slots_data,
       }));
-      setEvents([...eventList, ...slotsList]);
-      setEventsActive([...eventList, ...slotsList]);
+
+      const defancesList = [...defancesHistory, ...defances].map((slot: any) => ({
+        id: slot.id,
+        name: `📥 ${slot.team?.project_gitlab_path?.split('/').pop()}`,
+        start: dayjs(slot["begin_at"]).toDate(),
+        end: dayjs(slot["begin_at"]).add(slot.scale.duration, 's').toDate(),
+        color:
+          slot.scale_team == "invisible" || slot.scale_team?.id
+            ? "danger"
+            : "dark",
+        user: null,
+        description: null,
+        kind: "kind",
+        location: "event.location",
+        max_people: "event.max_people",
+        nbr_subscribers: "event.nbr_subscribers",
+        prohibition_of_cancellation: "event.prohibition_of_cancellation",
+        themes: "event.themes",
+        scale_team: slot,
+        slots_data: null,
+        type: "defances"
+      }));
+
+      setEvents([...eventList, ...slotsList, ...defancesList]);
+      setEventsActive([...eventList, ...slotsList, ...defancesList]);
     }
-  }, [eventsIntra, slotsIntra]);
+  }, [eventsIntra, slotsIntra, defances, defancesHistory]);
 
   const initialEventItem: IEvent = {
     start: undefined,
@@ -360,20 +343,15 @@ const Index: NextPage = ({ token }: any) => {
     id: undefined,
     user: undefined,
   };
-  // Selected Event
+
   const [eventItem, setEventItem] = useState<IEvent>(initialEventItem);
-  // Calendar View Mode
-  // const [viewMode, setViewMode] = useState<TView>(Views.MONTH);
-  // Calendar Date
   const [date, setDate] = useState(new Date());
-  // Item edit panel status
   const [toggleInfoEventCanvas, setToggleInfoEventCanvas] = useState(false);
   const setInfoEvent = () => setToggleInfoEventCanvas(!toggleInfoEventCanvas);
   const [eventAdding, setEventAdding] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
   const [switchEvents, setSwitchEvents] = useState("my");
-  const [userLocation, setUserLocation] = useState("");
 
   useEffect(() => {
     let isMounted = true; // To prevent state updates after unmount
@@ -430,13 +408,13 @@ const Index: NextPage = ({ token }: any) => {
         ...events,
         ...eventList,
       ]);
-      // dispatch(setUnitType(Views.WORK_WEEK));
+      dispatch(setUnitType(Views.WORK_WEEK));
     }
     else {
       setEventsActive([
         ...events
       ]);
-      // dispatch(setUnitType(Views.WEEK));
+      dispatch(setUnitType(Views.WEEK));
     }
   }, [allEvents, switchEvents]);
 
@@ -520,96 +498,6 @@ const Index: NextPage = ({ token }: any) => {
     await attemptRefresh();
   };
 
-  const removeSlotHandler = async (events: any) => {
-    console.log("events", events);
-    let deletedCount = 0;
-    const maxRetries = 3;
-    const retryDelay = 3000;
-    const deletedEventIds = [];
-
-    for (const event of events) {
-      if (event.scale_team === 'event') {
-        continue;
-      }
-
-      let retries = 0;
-      let success = false;
-
-      while (retries < maxRetries && !success) {
-        try {
-          const res = await fetch("/api/proxy?id=" + event.id, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-
-          if (res.ok) {
-            deletedEventIds.push(event.id);
-            deletedCount++;
-            success = true;
-            showNotification(
-              <span className="d-flex align-items-center">
-                <Icon icon="Info" size="lg" className="me-1" />
-                <span>Successfully</span>
-              </span>,
-              "Slot has been deleted",
-              "success"
-            );
-          } else if (res.status === 429) {
-            retries++;
-            if (retries < maxRetries) {
-              showNotification(
-                <span className="d-flex align-items-center">
-                  <Icon icon="Warning" size="lg" className="me-1" />
-                  <span>Rate Limit</span>
-                </span>,
-                `Too many requests, retrying (${retries}/${maxRetries}) after ${retryDelay / 1000}s`,
-                "warning"
-              );
-              await delay(retryDelay);
-            } else {
-              showNotification(
-                <span className="d-flex align-items-center">
-                  <Icon icon="Error" size="lg" className="me-1" />
-                  <span>Failed</span>
-                </span>,
-                "Max retries reached for slot deletion",
-                "danger"
-              );
-              break;
-            }
-          } else {
-            showNotification(
-              <span className="d-flex align-items-center">
-                <Icon icon="Error" size="lg" className="me-1" />
-                <span>Error</span>
-              </span>,
-              `Slot not removed: ${res.statusText}`,
-              "danger"
-            );
-            break;
-          }
-        } catch (error) {
-          showNotification(
-            <span className="d-flex align-items-center">
-              <Icon icon="Error" size="lg" className="me-1" />
-              <span>Network Error</span>
-            </span>,
-            `Failed to delete slot: ${error.message}`,
-            "danger"
-          );
-          break;
-        }
-      }
-    }
-
-    // After the loop, filter and dispatch once if any events were deleted
-    if (deletedEventIds.length > 0) {
-      const filtredSlots = originalSlotsIntra.filter((slot) => !deletedEventIds.includes(slot.id));
-      dispatch(setOriginalSlots(filtredSlots));
-      dispatch(setSlots(preparationSlots(filtredSlots)));
-    }
-
-    return deletedCount; // Return number of successful deletions
-  };
 
   const handleSelect = async ({ start, end }: { start: any; end: any }) => {
     const startFormated = dayjs(start).add(-1, "h").format();
@@ -842,7 +730,7 @@ const Index: NextPage = ({ token }: any) => {
             ) : error ? (
               <div className="text-danger">{error}</div>
             ) : (
-              [...scaleUsers].reverse().map((u: any) => (
+              [...scaleUsers].slice(0, 8).reverse().map((u: any) => (
                 <div key={u.login} className="col-auto">
                   <Popovers
                     trigger="hover"
@@ -932,6 +820,7 @@ const Index: NextPage = ({ token }: any) => {
                   views={views}
                   view={Views.DAY}
                   date={date}
+                  step={15}
                   scrollToTime={dayjs().add(-2, 'h').toISOString()}
                   defaultDate={new Date()}
                   onSelectEvent={(event) => {
@@ -1016,6 +905,7 @@ const Index: NextPage = ({ token }: any) => {
                   views={views}
                   view={viewMode}
                   date={date}
+                  step={15}
                   onNavigate={(_date) => setDate(_date)}
                   scrollToTime={dayjs().add(-1, 'h').toISOString()}
                   defaultDate={new Date()}
@@ -1070,182 +960,17 @@ const Index: NextPage = ({ token }: any) => {
               <div className="row g-4" style={{ backgroundColor: 'transparent' }}>
                 {/* Name */}
 
-                {eventItem?.scale_team?.id ? (
-                  <div>
-                    <h2>Evaluation of the project</h2>
-                    <br />
-                    <div className="col-12">
-                      <Card
-                        className="mb-0 bg-l10-info"
-                        shadow="sm"
-                        style={{ textAlign: "end" }}
-                      >
-                        <CardHeader className="bg-l25-info">
-                          <Avatar
-                            src={getCorrectorImageUrl(eventItem?.scale_team?.corrector.id, scaleUsers, me)}
-                            size={64}
-                            className="cursor-pointer"
-                            borderColor={"info"}
-                          />
-                          <CardLabel iconColor="dark">
-                            <CardTitle>
-                              {eventItem?.scale_team?.corrector.login}
-                            </CardTitle>
-                            <p style={{ marginTop: 5 }}>
-                              {dayjs(eventItem?.scale_team.begin_at).format(
-                                "dddd, D MMMM H:mm",
-                              )}
-                            </p>
-                          </CardLabel>
-                        </CardHeader>
-                        <div>
-                        </div>
-
-                        <CardBody>
-                          <p>
-                            <Progress
-                              isStriped
-                              max={100}
-                              min={0}
-                              value={eventItem?.scale_team?.final_mark}
-                            />
-                          </p>
-                          <div style={{display: "flex",justifyContent: "space-between"}} >
-                            <p className="fw-bold fs-3">{eventItem?.scale_team?.flag.name} </p>
-                            <b className="fw-bold fs-3 mb-0"> {eventItem?.scale_team?.final_mark} %</b>
-                          </div>
-                          <br />
-                          <p>{eventItem?.scale_team?.comment}</p>
-                        </CardBody>
-                      </Card>
-                    </div>
-                    <br />
-                    <div className="col-12">
-                      <Card className="mb-0 bg-l10-success" shadow="sm">
-                        <CardHeader className="bg-l25-success">
-                          <CardLabel iconColor="dark">
-                            <CardTitle>
-                              {eventItem?.scale_team?.correcteds[0].login}
-                            </CardTitle>
-                            <p style={{ marginTop: 5 }}>
-                              {dayjs(eventItem?.scale_team.updated_at).format(
-                                "dddd, D MMMM H:mm",
-                              )}
-                            </p>
-                            <div className="df">
-                              <Button
-                                style={{ marginRight: 15 }}
-                                color="success"
-                                type="submit"
-                                onClick={async () => {
-                                  window.open(`https://profile.intra.42.fr/users/${eventItem?.scale_team?.correcteds[0].id}`, '_blank')
-                                }
-                                }
-                              >
-                                Intra
-                              </Button>
-                              {
-                                getCorrectorLocation(eventItem?.scale_team?.correcteds[0].id, scaleUsers)
-                                  ? (
-                                    <Button
-                                      style={{ filter: "drop-shadow(0 5px 1.5rem #e33d94"}}
-                                      color="storybook"
-                                      type="submit"
-                                      onClick={async () => {
-                                        window.open(getCorrectorLocation(eventItem?.scale_team?.correcteds[0].id, scaleUsers), '_blank')
-                                      }
-                                      }
-                                    >
-                                      Show on Friends42
-                                    </Button>
-                                  )
-                                  : <Button
-                                    disabled
-                                    type="submit"
-                                    onClick={() => { }}
-                                  >
-                                    Unavailable
-                                  </Button>
-                              }
-                            </div>
-                          </CardLabel>
-                          <Avatar
-                            src={getCorrectorImageUrl(eventItem?.scale_team?.correcteds[0].id, scaleUsers, me)}
-                            size={64}
-                            className="cursor-pointer"
-                            borderColor={"success"}
-                          />
-                        </CardHeader>
-
-                        <CardBody>
-
-                          <p>{eventItem?.scale_team?.feedback}</p>
-                        </CardBody>
-                      </Card>
-                    </div>
-
-                  </div>
+                {(eventItem?.scale_team?.id && !(eventItem?.type === "defances")) ? (
+                  <Evaluation token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
                 ) : (
                   <div>
-                    {eventItem.name != "Available" ? (
-                      <>
-                        <h2>{eventItem.name}</h2>
-                        <p>{eventItem.description}</p>
-                        <p>{eventItem.kind}</p>
-                        <p>{eventItem.location}</p>
-                        <p> {eventItem.max_people}</p>
-                        <p> {eventItem.nbr_subscribers}</p>
-                        <p> {eventItem.prohibition_of_cancellation}</p>
-                        <p> {eventItem.themes}</p>
-
-                        <div className="col">
-                          <Button
-                            color="primary"
-                            type="submit"
-                            onClick={() => unsubscribeHandler(eventItem)}
-                          >
-                            Open event in intra
-                          </Button>
-                          <br />
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <h2>Remove the slot</h2>
-                        <div>
-
-                          <div className="col mb-5 mt-2" >
-                            <Button
-                              style={{ marginTop: 10, width: "100%" }}
-                              color="danger"
-                              type="submit"
-                              onClick={() => removeSlotHandler(eventItem.slots_data)}
-                            >
-                              {dayjs(eventItem.slots_data[0].begin_at).format('H:mm')} - {dayjs(eventItem.slots_data[eventItem.slots_data.length - 1].end_at).format('H:mm')}
-                            </Button>
-                          </div>
-
-                          <h4>Remove a part of the slot</h4>
-                          {
-                            eventItem.slots_data.map((item: any) => {
-                              return (
-                                <div className="col" id={item.id}  >
-                                  <Button
-                                    style={{ marginTop: 10, width: "100%" }}
-                                    color="primary"
-                                    type="submit"
-                                    onClick={() => unsubscribeHandler(item)}
-                                  >
-                                    {dayjs(item.begin_at).format('H:mm')} - {dayjs(item.end_at).format('H:mm')}
-                                  </Button>
-                                </div>
-                              );
-                            })
-                          }
-
-                        </div>
-                      </>
-                    )}
+                    {
+                      (eventItem?.type === "defances")
+                          ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
+                        : (eventItem.name != "Available")
+                          ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
+                          : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
+                    }
                   </div>
                 )}
               </div>

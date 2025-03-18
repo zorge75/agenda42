@@ -1,12 +1,48 @@
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const fetchUserWithRetry = async (userId: number, retries: any, token: any, lazyMode: boolean) => {
+    const userCache: Map<number, any> = new Map(); // Cache for user data
+
+    if (lazyMode && userCache.has(userId)) {
+        return userCache.get(userId); // Return cached result
+    }
+
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(`/api/get_user?id=${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 429) {
+                const waitTime = Math.pow(2, i) * 1000; // Exponential backoff: 1s, 2s, 4s
+                console.log(`Rate limited for user ${userId}, waiting ${waitTime}ms`);
+                await delay(waitTime);
+                continue;
+            }
+
+            if (!response.ok) {
+                throw new Error(`Fetch failed with status: ${response.status}`);
+            }
+
+            const userData = await response.json();
+            userCache.set(userId, userData);
+            return userData;
+        } catch (error) {
+            console.error(`Error fetching user ${userId}:`, error);
+            if (i === retries - 1) throw error; // Last retry failed
+            await delay(1000); // Wait before next retry
+        }
+    }
+};
+
 export const getScaleTeams = async (data: any, token: any) => {
     const arrayUsers: any[] = [];
-    const userCache: Map<number, any> = new Map(); // Cache for user data
     let sortedData = Object.isFrozen(data) ? [...data] : data;
     let filtred = sortedData.filter((i: any) => i.scale_team).sort((a: any, b: any) =>
-              new Date(b.begin_at).getTime() - new Date(a.begin_at).getTime()
-            ).slice(0, 9);
-
-    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        new Date(b.begin_at).getTime() - new Date(a.begin_at).getTime()
+    );
 
     const getUserFromLocalStorage = (userId: string | number) => {
         const cached = localStorage.getItem(`user_${userId}`);
@@ -18,52 +54,15 @@ export const getScaleTeams = async (data: any, token: any) => {
         localStorage.setItem(`user_${userId}`, JSON.stringify(userData));
     };
 
-    const fetchUserWithRetry = async (userId: number, retries = 3) => {
-        if (userCache.has(userId)) {
-            return userCache.get(userId); // Return cached result
-        }
-
-        for (let i = 0; i < retries; i++) {
-            try {
-                const response = await fetch(`/api/get_user?id=${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (response.status === 429) {
-                    const waitTime = Math.pow(2, i) * 1000; // Exponential backoff: 1s, 2s, 4s
-                    console.log(`Rate limited for user ${userId}, waiting ${waitTime}ms`);
-                    await delay(waitTime);
-                    continue;
-                }
-
-                if (!response.ok) {
-                    throw new Error(`Fetch failed with status: ${response.status}`);
-                }
-
-                const userData = await response.json();
-                userCache.set(userId, userData);
-                return userData;
-            } catch (error) {
-                console.error(`Error fetching user ${userId}:`, error);
-                if (i === retries - 1) throw error; // Last retry failed
-                await delay(1000); // Wait before next retry
-            }
-        }
-    };
-
-
-
     for (const i of filtred) {
         if (i.scale_team?.correcteds) {
             for (const a of (i.scale_team.correcteds || [])) {
                 // Check localStorage first
                 let userData = getUserFromLocalStorage(a.id);
 
-                if (userData) { // TODO: make lication without images
+                if (!userData) {
                     // If not in localStorage, fetch with retry
-                    userData = await fetchUserWithRetry(a.id);
+                    userData = await fetchUserWithRetry(a.id, 3, token, true);
                     if (userData) {
                         // Save to localStorage after fetching
                         saveUserToLocalStorage(a.id, userData);
