@@ -1,14 +1,16 @@
 import dayjs from "dayjs";
 import Button from "../bootstrap/Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setOriginalSlots, setSlots } from "../../store/slices/slotsSlice";
 import { preparationSlots } from "../../common/function/preparationSlots";
 import showNotification from "../extras/showNotification";
 import Icon from "../icon/Icon";
+import { RootState } from "../../store";
 
 const Slot = ({ eventItem, token, originalSlotsIntra }: any) => {
     const dispatch = useDispatch();
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    const slotRemoveMod = useSelector((state: RootState) => state.settings.slotRemoveMod);
 
     const unsubscribeHandler = async (event: any) => {
         const res = await fetch("/api/proxy?id=" + event.id, {
@@ -161,24 +163,28 @@ const Slot = ({ eventItem, token, originalSlotsIntra }: any) => {
                     </Button>
                 </div>
 
-                <h4>Remove a part of the slot</h4>
-                {
-                    eventItem.slots_data.map((item: any) => {
-                        return (
-                            <div className="col" id={item.id}  >
-                                <Button
-                                    style={{ marginTop: 10, width: "100%" }}
-                                    color="secondary"
-                                    type="submit"
-                                    disabled={justForFuture(eventItem.slots_data[0].begin_at)}
-                                    onClick={() => unsubscribeHandler(item)}
-                                >
-                                    {dayjs(item.begin_at).format('H:mm')} - {dayjs(item.end_at).format('H:mm')}
-                                </Button>
-                            </div>
-                        );
-                    })
-                }
+
+                {slotRemoveMod ? <>
+                    <h4>Remove a part of the slot</h4>
+                    {
+                        eventItem.slots_data.map((item: any) => {
+                            return (
+                                <div className="col" id={item.id}  >
+                                    <Button
+                                        style={{ marginTop: 10, width: "100%" }}
+                                        color="secondary"
+                                        type="submit"
+                                        disabled={justForFuture(eventItem.slots_data[0].begin_at)}
+                                        onClick={() => unsubscribeHandler(item)}
+                                    >
+                                        {dayjs(item.begin_at).format('H:mm')} - {dayjs(item.end_at).format('H:mm')}
+                                    </Button>
+                                </div>
+                            );
+                        })
+                    }
+                </> : null}
+                
                 <p className="mt-5">The buttons is disabled if the event starts more than 1 hour ago from now.</p>
             </div>
         </>
