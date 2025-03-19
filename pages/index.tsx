@@ -285,29 +285,33 @@ const Index: NextPage = ({ token }: any) => {
         themes: event.themes,
         scale_team: "event",
       }));
-      const slotsList = slotsIntra.map((slot: any) => ({
-        id: slot.id,
-        name:
-          slot.scale_team == "invisible" || slot.scale_team?.id
-            ? `📥 ${slot.scale_team?.correcteds[0].login}`
-            : "Available",
-        start: dayjs(slot["begin_at"]).toDate(),
-        end: dayjs(slot["end_at"]).toDate(),
-        color:
-          slot.scale_team == "invisible" || slot.scale_team?.id
-            ? "danger"
-            : "success",
-        user: null,
-        description: null,
-        kind: "kind",
-        location: "event.location",
-        max_people: "event.max_people",
-        nbr_subscribers: "event.nbr_subscribers",
-        prohibition_of_cancellation: "event.prohibition_of_cancellation",
-        themes: "event.themes",
-        scale_team: slot.scale_team,
-        slots_data: slot?.slots_data,
-      }));
+      const slotsList = slotsIntra.map((slot: any) => {
+        console.log(" slot.scale_team?.correcteds", slot.scale_team?.correcteds)
+
+        return ({
+          id: slot.id,
+          name:
+            slot.scale_team == "invisible" && slot.scale_team?.correcteds
+              ? `📥 ${slot.scale_team?.correcteds[0].login}`
+              : "Available",
+          start: dayjs(slot["begin_at"]).toDate(),
+          end: dayjs(slot["end_at"]).toDate(),
+          color:
+            slot.scale_team == "invisible" || slot.scale_team?.id
+              ? "danger"
+              : "success",
+          user: null,
+          description: null,
+          kind: "kind",
+          location: "event.location",
+          max_people: "event.max_people",
+          nbr_subscribers: "event.nbr_subscribers",
+          prohibition_of_cancellation: "event.prohibition_of_cancellation",
+          themes: "event.themes",
+          scale_team: slot.scale_team,
+          slots_data: slot?.slots_data,
+        })
+      });
 
       const defancesList = [...defancesHistory, ...defances].map((slot: any) => ({
         id: slot.id,

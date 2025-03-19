@@ -1,3 +1,6 @@
+# 1.5.2
+- Fix bug with next correction in Agenda
+
 # 1.5.1
 - Fix bug with slot 15 mins and slots + 480 mins
 - Add button Today
