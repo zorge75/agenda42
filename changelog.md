@@ -1,3 +1,7 @@
+# 1.6.0
+- Add link for project in ingra for component Defance
+- Add min parament for first Calendar
+
 # 1.5.3
 - Fix bug with next correction in Agenda
 

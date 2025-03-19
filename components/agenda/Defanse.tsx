@@ -56,7 +56,7 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                                     >
                                         Intra
                                     </Button>
-                                    <CorrectorLocation token={null} user={userData} id={userData.id}/>
+                                    <CorrectorLocation token={null} user={userData} id={userData.id} />
                                 </div>
                             </CardLabel>
                             <Avatar
@@ -117,6 +117,7 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                                             className="cursor-pointer"
                                             borderColor={"info"}
                                         />
+
                                         <CardLabel iconColor="dark">
                                             <CardTitle>
                                                 {getCorrectorName(profile.id, scaleUsers, {}) || profile.login}
@@ -126,6 +127,16 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                                                     "dddd, D MMMM H:mm",
                                                 )}
                                             </p>
+                                            <Button
+                                                color="info"
+                                                type="submit"
+                                                onClick={async () => {
+                                                    window.open(`https://projects.intra.42.fr/${eventItem.scale_team.team.project_id}/mine`, '_blank')
+                                                }
+                                                }
+                                            >
+                                                Open project in intra
+                                            </Button>
                                         </CardLabel>
                                     </CardHeader>
                                 ))

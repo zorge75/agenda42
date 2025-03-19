@@ -71,6 +71,7 @@ import Event from "../components/agenda/Event";
 import Slot from "../components/agenda/Slot";
 import Defanse from "../components/agenda/Defanse";
 import { setSlotsMod } from "../store/slices/settingsReducer";
+import { roundToNearest15 } from "../common/function/roundToNearest15";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
@@ -847,8 +848,8 @@ const Index: NextPage = ({ token }: any) => {
                   view={Views.DAY}
                   date={date}
                   step={15}
-                  // min={dayjs().add(-1, 'h').toISOString()}
-                  scrollToTime={dayjs().add(-1, 'h').toISOString()}
+                  min={roundToNearest15(date)}
+                  scrollToTime={dayjs().add(-2, 'h').toISOString()}
                   defaultDate={new Date()}
                   onSelectEvent={(event) => {
                     setInfoEvent();

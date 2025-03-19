@@ -1,6 +1,6 @@
 {
   "name": "agenda42",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "private": true,
   "scripts": {
     "dev": "npx env-cmd -f \".env.local\" next dev",
