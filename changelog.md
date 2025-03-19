@@ -1,3 +1,6 @@
+# 1.5.3
+- Fix bug with next correction in Agenda
+
 # 1.5.2
 - Fix bug with next correction in Agenda
 

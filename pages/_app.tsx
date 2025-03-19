@@ -111,7 +111,7 @@ const fetchWithRetry = async (
 	url: string,
 	options: RequestInit,
 	retries = 10,
-	baseDelay = 1000
+	baseDelay = 500
 ): Promise<any> => {
 	for (let attempt = 0; attempt < retries; attempt++) {
 		console.log(`Attempting fetch: ${url}, attempt ${attempt + 1}/${retries}`);
@@ -214,7 +214,7 @@ AppWithRedux.getInitialProps = async ({ Component, ctx }: any) => {
 				.catch((err) => { console.error('Evaluations fetch failed:', err); throw err; }),
 			fetchWithRetry(`https://api.intra.42.fr/v2/me/slots?${new URLSearchParams({ 'page[size]': '100' })}`, { headers })
 				.catch((err) => { console.error('Slots fetch failed:', err); throw err; }),
-			fetchWithRetry('https://api.intra.42.fr/v2/me/scale_teams', { headers }) // Could optimize by reusing evaluations
+			fetchWithRetry('https://api.intra.42.fr/v2/me/scale_teams?filter[future]=false', { headers }) // Could optimize by reusing evaluations
 				.catch((err) => { console.error('Defances fetch failed:', err); throw err; }),
 			fetchWithRetry(`https://api.intra.42.fr/v2/users/${meJson.id}/events?sort=-begin_at`, { headers })
 				.catch((err) => { console.error('Events fetch failed:', err); throw err; }),

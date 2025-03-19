@@ -309,9 +309,11 @@ const Index: NextPage = ({ token }: any) => {
         return ({
           id: slot.id,
           name:
-            slot.scale_team == "invisible" && slot.scale_team?.correcteds
-              ? `📥 ${slot.scale_team?.correcteds[0].login}`
-              : "Available",
+            slot.scale_team == "invisible"
+              ? `📤 Invisible`
+              : slot.scale_team?.correcteds
+                ? `📤 ${slot.scale_team?.correcteds[0].login}`
+                : "Available",
           start: dayjs(slot["begin_at"]).toDate(),
           end: dayjs(slot["end_at"]).toDate(),
           color:

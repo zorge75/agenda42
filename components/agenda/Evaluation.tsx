@@ -71,7 +71,7 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
                                     : <p>Wait feedback</p>
                             }
                         </Card>
-                        : "You will evaluate"
+                        : <h4>You will evaluate</h4>
                 }
             </div>
             <br />
@@ -128,7 +128,7 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
                             <CardBody>
                                 <p>{eventItem?.scale_team?.feedback}</p>
                             </CardBody>
-                            : "Waiting feedback."
+                            : <h3 className="mt-3" style={{ textAlign: 'center'}}>Waiting feedback...</h3>
                     }
                 </Card>
             </div>
