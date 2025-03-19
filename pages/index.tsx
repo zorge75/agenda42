@@ -70,6 +70,7 @@ import Evaluation from "../components/agenda/Evaluation";
 import Event from "../components/agenda/Event";
 import Slot from "../components/agenda/Slot";
 import Defanse from "../components/agenda/Defanse";
+import { setSlotsMod } from "../store/slices/settingsReducer";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
@@ -254,6 +255,23 @@ const Index: NextPage = ({ token }: any) => {
   const scaleUsers = useSelector((state: RootState) => state.slots.scaleTeam);
   const defances = useSelector((state: RootState) => state.slots.defances);
   const defancesHistory = useSelector((state: RootState) => state.slots.defancesHistory);
+  const [counter, setSounter] = useState(0);
+
+  const clickHandler = () => {
+    setSounter(counter + 1);
+    if (counter == 42) {
+      console.log("active");
+      dispatch(setSlotsMod(true));
+      showNotification(
+        <span className="d-flex align-items-center">
+          <Icon icon="Info" size="lg" className="me-1" />
+          <span>Successfully</span>
+        </span>,
+        "CATMOD est active",
+        "warning"
+      );
+    }
+  }
 
   // BEGIN :: Calendar
   // Active employee
@@ -781,6 +799,7 @@ const Index: NextPage = ({ token }: any) => {
             <p>Attention ! L'agenda ne prend pas en compte <strong>les examens</strong>.
               Pour vous inscrire aux examens, veuillez vous rendre sur l'intra !</p>
             <img
+              onClick={clickHandler}
               src={Hanna}
               alt="Petit chat"
               style={{
@@ -826,7 +845,7 @@ const Index: NextPage = ({ token }: any) => {
                   view={Views.DAY}
                   date={date}
                   step={15}
-                  min={dayjs().add(-1, 'h').toISOString()}
+                  // min={dayjs().add(-1, 'h').toISOString()}
                   scrollToTime={dayjs().add(-1, 'h').toISOString()}
                   defaultDate={new Date()}
                   onSelectEvent={(event) => {
