@@ -44,6 +44,20 @@ const slotsSlice = createSlice({
         setDefancesHistory(state, action: PayloadAction<any>) {
             state.defancesHistory = action.payload;
         },
+        updateUser(state, action) {
+            console.log("action", action)
+            const cursusUser = action.payload.cursus_users?.find((i) => i.cursus_id === 21);
+
+            if (!cursusUser) return;
+
+            const { grade, level } = cursusUser;
+            const user = state.scaleTeam.find((u) => u.id === action.payload.id);
+
+            if (user) {
+                user.grade = grade;
+                user.level = level;
+            }
+        },
         setLoading(state) {
             state.loading = true;
             state.error = null;
@@ -55,5 +69,5 @@ const slotsSlice = createSlice({
     },
 });
 
-export const { setSlots, setOriginalSlots, setScaleTeams, setDefances, setDefancesHistory, setLoading, setError } = slotsSlice.actions;
+export const { setSlots, setOriginalSlots, setScaleTeams, setDefances, updateUser, setDefancesHistory, setLoading, setError } = slotsSlice.actions;
 export default slotsSlice.reducer;

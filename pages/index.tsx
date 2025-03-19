@@ -639,14 +639,16 @@ const Index: NextPage = ({ token }: any) => {
   // Fetch scaleUsers on mount
   useEffect(() => {
     const fetchScaleUsers = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const users = await getScaleTeams(slotsIntra, token); // Pass slotsIntra and token
-        dispatch(setScaleTeams(users)); // Update Redux state
+        await delay(1000);
+        const users = await getScaleTeams(slotsIntra, token);
+        console.log("Users fetched, dispatching:", users.length);
+        dispatch(setScaleTeams(users));
       } catch (err) {
         console.error("Failed to fetch scale users:", err);
-        setError("Failed to load scale users");
-        dispatch(setScaleTeams([])); // Set empty array on error
+        setError("Failed to load scale users. Please try again later.");
+        dispatch(setScaleTeams([]));
       } finally {
         setLoading(false);
       }
@@ -737,13 +739,7 @@ const Index: NextPage = ({ token }: any) => {
                     desc={
                       <>
                         <div className="h4">{`${u.usual_full_name}`}</div>
-                        <div className="h6">{`${u.grade}: ${u.level} level`}</div>
-                        <div>
-                          Piscine: {u.pool_month} {u.pool_year}
-                        </div>
-                        <div>
-                          Login: {u.login}
-                        </div>
+                        <div className="h6">{`${u.pool_month} ${u.pool_year}`}</div>
                       </>
                     }
                   >

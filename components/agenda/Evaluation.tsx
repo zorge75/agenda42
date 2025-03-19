@@ -4,8 +4,9 @@ import Avatar from "../Avatar";
 import Button from "../bootstrap/Button";
 import Card, { CardHeader, CardLabel, CardTitle, CardBody } from "../bootstrap/Card";
 import Progress from "../bootstrap/Progress";
-import { getCorrectorImageUrl, getCorrectorName } from "../../common/function/getCorrectorImageUrl";
+import { getCorrectorImageUrl, getCorrectorName, getLevel, getRentre } from "../../common/function/getCorrectorImageUrl";
 import { CorrectorLocation } from "./CorrectorLocation";
+import Badge from "../bootstrap/Badge";
 
 const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
     return (
@@ -84,6 +85,14 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
                                     <CardTitle>
                                         {getCorrectorName(profile.id, scaleUsers, me) || profile.login}
                                     </CardTitle>
+                                    <p>
+                                        <Badge style={{ marginRight: 10 }} color='primary'>
+                                            {getRentre(profile.id, scaleUsers)}
+                                        </Badge>
+                                        <Badge color='info'>
+                                            {getLevel(profile.id, scaleUsers)}
+                                        </Badge>
+                                    </p>
                                     <p style={{ marginTop: 5 }}>
                                         {i == 0 ? dayjs(eventItem?.scale_team.updated_at).format(
                                             "dddd, D MMMM H:mm",

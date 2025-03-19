@@ -1,3 +1,6 @@
+# 1.5.0
+- Refactoring fitch users
+
 # 1.4.3
 - Fixed bug with ecents from Popovers component
 

@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { fetchUserWithRetry } from "../../common/function/getScaleTeams";
 import Button from "../bootstrap/Button";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../../store/slices/slotsSlice";
 
 export const CorrectorLocation = ({ id, token = null, user = null }: { id: any; token: any; user: any }) => {
     const [userData, setUserData] = useState<any>(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
             const data = await fetchUserWithRetry(id, 3, token, false);
+            console.log(data)
             setUserData(data);
+            dispatch(updateUser({ id: data.id, cursus_users: data?.cursus_users }));
         };
         if (!user)
             fetchData();
@@ -22,12 +27,20 @@ export const CorrectorLocation = ({ id, token = null, user = null }: { id: any; 
         return `https://friends.42paris.fr/?cluster=${claster}-${etage}&p=${i.location}`;
     };
 
+    const btnStyle = {
+        transition: 'filter 0.3s ease',
+        filter: 'none',
+        ':hover': {
+            filter: 'drop-shadow(0 5px 1.5rem #e33d94)',
+        },
+    };
+
     return (
         <>
             {
                 userData?.location ? (
                     <Button
-                        style={{ filter: "drop-shadow(0 5px 1.5rem #e33d94)" }}
+                        style={btnStyle}
                         color="storybook"
                         type="submit"
                         onClick={() => {
