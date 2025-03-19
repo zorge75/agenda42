@@ -163,8 +163,6 @@ export const getScaleTeams = async (data: any, token: any) => {
             for (const a of (i.scale_team.correcteds || [])) {
                 let userData = cachedUsers.get(a.id) || fetchedUsers.find((u: any) => u.id === a.id);
                 if (userData) {
-                    console.log("arrayUsers", arrayUsers);
-                    console.log("userData", userData);
                     arrayUsers.push({
                         login: a.login,
                         id: a.id,

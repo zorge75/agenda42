@@ -1,5 +1,11 @@
+# 1.5.1
+- Fix bug with slot 15 mins and slots + 480 mins
+- Add button Today
+- Fix link for mailto
+
 # 1.5.0
 - Refactoring fitch users
+- Refactoring fetch all first state
 
 # 1.4.3
 - Fixed bug with ecents from Popovers component

@@ -502,6 +502,11 @@ const Index: NextPage = ({ token }: any) => {
   const handleSelect = async ({ start, end }: { start: any; end: any }) => {
     const startFormated = dayjs(start).add(-1, "h").format();
     const endFormated = dayjs(end).add(-1, "h").format();
+    const diffInMinutes = dayjs(endFormated).diff(dayjs(startFormated), 'minute');
+
+    if (diffInMinutes <= 30 || diffInMinutes > 480) {
+      return null;
+    }
 
     // const eventStart = new Date(start);
     // const eventEnd = new Date(start);
@@ -695,7 +700,7 @@ const Index: NextPage = ({ token }: any) => {
           <div className="row mb-4 g-3">
             {(loading || !scaleUsers || scaleUsers.length === 0) ? (
 
-              Object.keys(USERS).slice(0, 6).map((u) => (
+              Object.keys(USERS).slice(0, 3).map((u) => (
                 <div key={USERS[u].username} className="col-auto">
                   <div className="position-relative">
                     <Avatar
@@ -732,7 +737,7 @@ const Index: NextPage = ({ token }: any) => {
             ) : error ? (
               <div className="text-danger">{error}</div>
             ) : (
-              [...scaleUsers].slice(0, 6).reverse().map((u: any) => (
+              [...scaleUsers].slice(0, 9).reverse().map((u: any) => (
                 <div key={u.login} className="col-auto">
                   <Popovers
                     trigger="hover"

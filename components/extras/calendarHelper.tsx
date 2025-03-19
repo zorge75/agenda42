@@ -89,8 +89,11 @@ export const CalendarTodayButton: FC<ICalendarTodayButtonProps> = ({
         aria-label="Prev"
       />
       {/* @ts-ignore */}
-      <Button color="info" isLight disabled>
-        {getTodayButtonLabel(viewMode)}
+      <Button color="info" isLight
+        disabled={dayjs(date).isSame(dayjs(), 'day')}
+        onClick={() => setDate(dayjs(new Date()).toDate())}
+      >
+        Today
       </Button>
       <Button
         color="info"
@@ -170,14 +173,14 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
           </Button>
         </DropdownItem>
         <DropdownItem>
-					<Button
-						color='link'
-						icon='view_week'
-						isActive={viewMode === Views.WORK_WEEK}
-						onClick={() => setViewMode(Views.WORK_WEEK)}>
-						Work Week
-					</Button>
-				</DropdownItem>
+          <Button
+            color='link'
+            icon='view_week'
+            isActive={viewMode === Views.WORK_WEEK}
+            onClick={() => setViewMode(Views.WORK_WEEK)}>
+            Work Week
+          </Button>
+        </DropdownItem>
         {/* <DropdownItem>
           <Button
             color="link"

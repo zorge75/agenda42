@@ -12,9 +12,9 @@ const DefaultFooter = () => {
   return (
     <Footer>
       <div className="container-fluid">
-        
+
         <div className="row">
-          <RandomCats/>
+          <RandomCats />
           <div className="col">
             <a
               href="https://42.fr/"
@@ -26,11 +26,15 @@ const DefaultFooter = () => {
               <small className="fw-bold">École 42 Paris</small>
             </a>
           </div>
-          <Tooltips title='Send your suggestions, questions, and bug reports here.' placement='top'>
-            <div className="col-auto">
-              <span className="fw-light">team@agenda42.fr | 2025 | version {packageJson.version}</span>
-            </div>
-          </Tooltips>
+          <div className="col-auto">
+            <span className="fw-light">
+              <Tooltips title='Send your suggestions, questions, and bug reports here.'
+                placement='top'>
+                <a style={{ textDecoration: 'inherit', color: 'inherit' }}
+                  href="mailto:team@agenda42.fr">team@agenda42.fr</a>
+              </Tooltips>
+              &nbsp;| 2025 | version {packageJson.version}</span>
+          </div>
         </div>
       </div>
     </Footer>
