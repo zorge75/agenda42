@@ -1,3 +1,6 @@
+# 1.6.2
+- Auth redirect
+
 # 1.6.1
 - Fix Github Action .yml
 
