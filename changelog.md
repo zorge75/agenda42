@@ -1,3 +1,6 @@
+# 1.6.1
+- Fix Github Action .yml
+
 # 1.6.0
 - Add link for project in ingra for component Defance
 - Add min parament for first Calendar

@@ -19,6 +19,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm install --legacy-peer-deps
+      - run: kill -9 $(lsof -t -i:3000)
       - run: npm run build
       - run: kill -9 $(lsof -t -i:3000)
         env:
