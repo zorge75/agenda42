@@ -762,7 +762,7 @@ const Index: NextPage = ({ token }: any) => {
             ) : error ? (
               <div className="text-danger">{error}</div>
             ) : (
-              [...scaleUsers].slice(0, 9).reverse().map((u: any) => (
+              [...scaleUsers].slice(0, 8).reverse().map((u: any) => (
                 <div key={u.login} className="col-auto">
                   <Popovers
                     trigger="hover"
