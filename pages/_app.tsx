@@ -111,7 +111,7 @@ const fetchWithRetry = async (
 	url: string,
 	options: RequestInit,
 	retries = 10,
-	baseDelay = 500
+	baseDelay = 1000
 ): Promise<any> => {
 	for (let attempt = 0; attempt < retries; attempt++) {
 		console.log(`Attempting fetch: ${url}, attempt ${attempt + 1}/${retries}`);
