@@ -19,13 +19,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm install --legacy-peer-deps
-      - run: kill -9 $(lsof -t -i:3000)
       - run: npm run build
-      - run: kill -9 $(lsof -t -i:3000)
         env:
           API_URI: ${{ secrets.API_URI }}
           API_TOKEN: ${{ secrets.API_TOKEN }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           PORT: ${{ secrets.PORT }}
           STATUS: ${{ secrets.STATUS }}
+      - run: kill -9 $(lsof -t -i:3000)
       - run: pm2 startOrRestart pm2.config.js
