@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Head from "next/head";
 import PageWrapper from "../layout/PageWrapper/PageWrapper";
 import { demoPagesMenu } from "../menu";
@@ -35,9 +35,5 @@ const Page404 = () => {
     </PageWrapper>
   );
 };
-
-// export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-//   redirect: { destination: '/', permanent: false },
-// });
 
 export default Page404;
