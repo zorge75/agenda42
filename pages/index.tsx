@@ -849,7 +849,7 @@ const Index: NextPage = ({ token }: any) => {
                   date={date}
                   step={15}
                   min={roundToNearest15(date)}
-                  scrollToTime={dayjs().add(-2, 'h').toISOString()}
+                  scrollToTime={dayjs(date).add(-2, 'h').toISOString()}
                   defaultDate={new Date()}
                   onSelectEvent={(event) => {
                     setInfoEvent();
