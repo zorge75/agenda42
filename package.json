@@ -1,9 +1,9 @@
 {
   "name": "agenda42",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "private": true,
   "scripts": {
-    "dev": "kill -9 $(lsof -t -i:3002) && npx env-cmd -f \".env.local\" next dev",
+    "dev": "npx env-cmd -f \".env.local\" next dev",
     "build": "next build",
     "export": "next build && next export",
     "start": "next start -p 3000",
@@ -44,6 +44,7 @@
     "react-dom": "18.2.0",
     "react-input-mask": "^2.0.4",
     "react-jss": "^10.10.0",
+    "react-markdown": "^10.1.0",
     "react-notifications-component": "^4.0.1",
     "react-number-format": "^5.3.1",
     "react-popper": "^2.3.0",
