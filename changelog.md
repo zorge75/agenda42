@@ -1,6 +1,12 @@
+# 1.7.0
+- Added fix for redirection after autentification
+- Added component for Event
+- Removed Sentry from development
+- 
+
 # 1.6.3
 - Add Sentry
-- 
+ 
 # 1.6.2
 - Auth redirect
 
