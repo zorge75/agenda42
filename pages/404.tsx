@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Head from "next/head";
 import PageWrapper from "../layout/PageWrapper/PageWrapper";
 import { demoPagesMenu } from "../menu";
 import Page from "../layout/Page/Page";
 import Spinner from "../components/bootstrap/Spinner";
 import { GetStaticProps } from "next/types";
+import { useRouter } from "next/router";
 
 const Page404 = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push('/');
+    });
+
+    return () => clearTimeout(timer);
+  }, [router]);
+  
   return (
     <PageWrapper>
       <Head>
@@ -25,8 +36,8 @@ const Page404 = () => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-  redirect: { destination: '/', permanent: false },
-});
+// export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+//   redirect: { destination: '/', permanent: false },
+// });
 
 export default Page404;
