@@ -1,3 +1,5 @@
+# 1.6.3
+- Add Sentry
 # 1.6.2
 - Auth redirect
 

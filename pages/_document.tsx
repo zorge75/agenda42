@@ -1,6 +1,5 @@
 import React from "react";
 import { Head, Html, Main, NextScript } from "next/document";
-import { GoogleAnalytics } from "@next/third-parties/google";
 
 const Document = () => {
   return (
@@ -12,7 +11,6 @@ const Document = () => {
         <div id="portal-notification" />
         <NextScript />
       </body>
-      <GoogleAnalytics gaId="G-Y9MQYJP6KR" />
     </Html>
   );
 };
