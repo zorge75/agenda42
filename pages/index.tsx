@@ -72,6 +72,7 @@ import Slot from "../components/agenda/Slot";
 import Defanse from "../components/agenda/Defanse";
 import { setSlotsMod } from "../store/slices/settingsReducer";
 import { roundToNearest15 } from "../common/function/roundToNearest15";
+import { getCorrectorImageUrl } from "../common/function/getCorrectorImageUrl";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
@@ -125,47 +126,6 @@ interface IEvent extends IEvents {
   users?: IUserProps[];
   color?: TColor;
 }
-
-const MyEvent = (data: { event: IEvent }) => {
-  const { darkModeStatus } = useDarkMode();
-
-  const { event } = data;
-  return (
-    <div className="row g-2">
-      <div className="col text-truncate">
-        {event?.icon && <Icon icon={event?.icon} size="lg" className="me-2" />}
-        {event?.name}
-      </div>
-      {event?.user?.src && (
-        <div className="col-auto">
-          <div className="row g-1 align-items-baseline">
-            <div className="col-auto">
-              <Avatar src={event?.user?.src} size={18} />
-            </div>
-            <small
-              className={classNames("col-auto text-truncate", {
-                "text-dark": !darkModeStatus,
-                "text-white": darkModeStatus,
-              })}
-            >
-              {event?.user?.name}
-            </small>
-          </div>
-        </div>
-      )}
-      {event?.users && (
-        <div className="col-auto">
-          <AvatarGroup size={18}>
-            {event.users.map((user) => (
-              // eslint-disable-next-line react/jsx-props-no-spreading
-              <Avatar key={user.src} {...user} />
-            ))}
-          </AvatarGroup>
-        </div>
-      )}
-    </div>
-  );
-};
 
 const MyWeekEvent = (data: { event: IEvent }) => {
   const { darkModeStatus } = useDarkMode();
@@ -758,11 +718,10 @@ const Index: NextPage = ({ token }: any) => {
                   </div>
                 </div>
               ))
-
             ) : error ? (
               <div className="text-danger">{error}</div>
             ) : (
-              [...scaleUsers].slice(0, 9).reverse().map((u: any) => (
+              [...scaleUsers].slice(0, 6).reverse().map((u: any) => (
                 <div key={u.login} className="col-auto">
                   <Popovers
                     trigger="hover"
@@ -945,7 +904,6 @@ const Index: NextPage = ({ token }: any) => {
                   // onView={handleViewMode}
                   // onDrillDown={handleViewMode}
                   components={{
-                    event: MyEvent, // used by each view (Month, Day, Week)
                     week: {
                       event: MyWeekEvent,
                     },

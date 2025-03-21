@@ -199,7 +199,7 @@ AppWithRedux.getInitialProps = async (appContext) => {
 
 	try {
 		// Sequential fetching with delay
-		const delayBetweenRequests = 500; // 2 seconds between each request
+		const delayBetweenRequests = 250; // 2 seconds between each request
 		let meJson = await fetchWithThrottle("https://api.intra.42.fr/v2/me", { headers, method: "GET" }, 3, delayBetweenRequests);
 
 		const endpoints = [
