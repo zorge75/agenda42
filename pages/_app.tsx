@@ -21,6 +21,7 @@ import { setSlots, setOriginalSlots, setDefances, setDefancesHistory } from '../
 import { setEvents } from '../store/slices/eventsSlice';
 import { preparationSlots } from '../common/function/preparationSlots';
 import { getNextEvaluation } from '../common/function/getNextEvaluation';
+import { SessionProvider, getSession } from "next-auth/react";
 
 interface AppPropsCustom extends AppProps {
 	token: string,
@@ -75,7 +76,7 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events, defances
 	};
 
 	return (
-		<AuthContextProvider initialToken={token} me={me}>
+		<SessionProvider session={pageProps.session}>
 			<ThemeContextProvider>
 				<ThemeProvider theme={theme}>
 					<App>
@@ -95,7 +96,7 @@ const MyApp = ({ Component, pageProps, token, me, evals, slots, events, defances
 					/>
 				</ThemeProvider>
 			</ThemeContextProvider>
-		</AuthContextProvider>
+		</SessionProvider>
 	);
 };
 
@@ -159,27 +160,50 @@ const fetchWithRetry = async (
 	throw new Error(`Unexpected exit from retry loop for ${url}`); // Should never reach here
 };
 
-// Placeholder for token refresh (replace with actual implementation)
-const refreshToken = async (cookies: Record<string, string>): Promise<string | null> => {
-	console.warn('Token refresh not implemented. Returning null.');
-	// Example: const res = await fetch('https://api.intra.42.fr/oauth/token', { ... });
-	// return res.ok ? await res.json().access_token : null;
-	return null;
-};
+async function refreshToken(cookies, res) {
+	const refreshToken = cookies['refresh_token'];
+	if (!refreshToken) {
+		console.error('No refresh_token found in cookies');
+		return null;
+	}
+	const response = await fetch('https://api.intra.42.fr/oauth/token', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		body: new URLSearchParams({
+			grant_type: 'refresh_token',
+			refresh_token: refreshToken,
+			client_id: process.env.CLIENT_ID,
+			client_secret: process.env.API_TOKEN,
+		}).toString(),
+	});
+	const refreshedTokens = await response.json();
+	if (!response.ok) {
+		console.error('Refresh token error:', refreshedTokens);
+		return null;
+	}
+	if (res) {
+		res.setHeader('Set-Cookie', [
+			`token=${refreshedTokens.access_token}; Path=/; HttpOnly; SameSite=Strict`,
+			`refresh_token=${refreshedTokens.refresh_token || refreshToken}; Path=/; HttpOnly; SameSite=Strict`,
+			`expires_at=${Date.now() + (refreshedTokens.expires_in * 1000)}; Path=/; HttpOnly; SameSite=Strict`,
+		]);
+	}
+	return refreshedTokens.access_token;
+}
 
-AppWithRedux.getInitialProps = async ({ Component, ctx }: any) => {
-	console.log('Starting getInitialProps');
-
+AppWithRedux.getInitialProps = async ({ Component, ctx }) => {
+	
 	const cookies = ctx.req?.headers.cookie
 		? Object.fromEntries(
-			ctx.req.headers.cookie.split('; ').map((cookie: string) => {
+			ctx.req.headers.cookie.split('; ').map((cookie) => {
 				const [key, value] = cookie.split('=');
 				return [key, value];
 			})
 		)
 		: {};
+	console.log('Starting getInitialProps', cookies);
 
-	let token = cookies.token;
+	let token = cookies['next-auth.session-token'] || cookies['token']; // Fallback to 'token' if set in signIn event
 	if (!token) {
 		console.error('No token found in cookies');
 		return { cookies };
@@ -195,9 +219,13 @@ AppWithRedux.getInitialProps = async ({ Component, ctx }: any) => {
 		} catch (error) {
 			if (error.message === 'Unauthorized') {
 				console.log('Token expired, attempting refresh');
-				const newToken = await refreshToken(cookies);
+				const newToken = await refreshToken(cookies, ctx.res); // Pass ctx.res
 				if (!newToken) {
 					console.error('Token refresh failed');
+					if (ctx.res) {
+						ctx.res.writeHead(302, { Location: '/login' });
+						ctx.res.end();
+					}
 					return { cookies };
 				}
 				token = newToken;
@@ -214,7 +242,7 @@ AppWithRedux.getInitialProps = async ({ Component, ctx }: any) => {
 				.catch((err) => { console.error('Evaluations fetch failed:', err); throw err; }),
 			fetchWithRetry(`https://api.intra.42.fr/v2/me/slots?${new URLSearchParams({ 'page[size]': '100' })}`, { headers })
 				.catch((err) => { console.error('Slots fetch failed:', err); throw err; }),
-			fetchWithRetry('https://api.intra.42.fr/v2/me/scale_teams?filter[future]=false', { headers }) // Could optimize by reusing evaluations
+			fetchWithRetry('https://api.intra.42.fr/v2/me/scale_teams?filter[future]=false', { headers })
 				.catch((err) => { console.error('Defances fetch failed:', err); throw err; }),
 			fetchWithRetry(`https://api.intra.42.fr/v2/users/${meJson.id}/events?sort=-begin_at`, { headers })
 				.catch((err) => { console.error('Events fetch failed:', err); throw err; }),
@@ -244,7 +272,6 @@ AppWithRedux.getInitialProps = async ({ Component, ctx }: any) => {
 	} catch (error) {
 		console.error('getInitialProps failed:', error);
 		if (error.message === 'Unauthorized' && ctx.res) {
-			// Optional: Redirect to login page
 			console.warn('Redirecting to login due to persistent unauthorized error');
 			ctx.res.writeHead(302, { Location: '/login' });
 			ctx.res.end();
