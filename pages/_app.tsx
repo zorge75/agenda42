@@ -105,59 +105,63 @@ const AppWithRedux = (props: AppPropsCustom, cookies: any) => (
 	</StoreProvider>
 );
 
+
+
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const fetchWithRetry = async (
-	url: string,
-	options: RequestInit,
-	retries = 10,
-	baseDelay = 750
-): Promise<any> => {
-	for (let attempt = 0; attempt < retries; attempt++) {
-		console.log(`Attempting fetch: ${url}, attempt ${attempt + 1}/${retries}`);
+async function fetchWithThrottle(url: string, options: any, retries = 3, delayMs = 2000): Promise<any> {
+	for (let i = 0; i < retries; i++) {
 		try {
-			const response = await fetch(url, options);
+			// Direct URL instead of proxy
+			const response = await fetch(url, {
+				method: options.method || "GET",
+				headers: {
+					...options.headers,
+					"Content-Type": "application/json",
+				},
+				body: options.body ? JSON.stringify(options.body) : undefined,
+			});
 
-			if (response.status === 401) {
-				console.error(`401 Unauthorized for ${url}: Token expired`);
-				throw new Error('Unauthorized'); // Exit immediately, no retries
-			}
+			console.log(`Fetch ${url}: Status ${response.status}`);
+			// Log rate limit headers
+			console.log("Rate-Limit Headers:", {
+				limit: response.headers.get("X-RateLimit-Limit"),
+				remaining: response.headers.get("X-RateLimit-Remaining"),
+				reset: response.headers.get("X-RateLimit-Reset"),
+			});
 
-			if (response.status === 429) {
-				const retryAfter = response.headers.get('Retry-After');
-				let waitTime: number;
+			const contentType = response.headers.get("content-type") || "";
+			let data;
 
-				if (retryAfter) {
-					waitTime = Math.min(parseInt(retryAfter, 10) * 1000, 10000); // Cap at 10s
-				} else {
-					const backoff = baseDelay * Math.pow(2, attempt);
-					const jitter = Math.random() * 50;
-					waitTime = Math.min(backoff + jitter, 5000); // Cap at 5s
-				}
-
-				console.warn(`429 Too Many Requests for ${url} - Waiting ${waitTime}ms before retry ${attempt + 1}/${retries}`);
-				await delay(waitTime);
-				continue;
+			if (contentType.includes("application/json")) {
+				data = await response.json();
+			} else {
+				data = await response.text();
+				console.log(`Non-JSON response from ${url}:`, data);
 			}
 
 			if (!response.ok) {
-				const text = await response.text();
-				console.error(`Fetch failed for ${url} with status: ${response.status}, body: ${text}`);
-				throw new Error(`Fetch failed with status ${response.status}`);
+				if (response.status === 429) {
+					const resetTime = response.headers.get("X-RateLimit-Reset");
+					const waitTime = resetTime ? (parseInt(resetTime) * 1000 - Date.now()) : delayMs;
+					console.log(`Rate limit hit for ${url}, waiting ${waitTime}ms...`);
+					await new Promise((res) => setTimeout(res, waitTime));
+					continue;
+				}
+				throw new Error(data.error || `Fetch failed: ${response.statusText}`);
 			}
 
-			console.log(`Fetch succeeded for ${url}`);
-			return await response.json();
+			return data;
 		} catch (error) {
-			if (error.message === 'Unauthorized' || attempt === retries - 1) {
-				console.error(`Exiting fetch for ${url}: ${error.message}`);
-				throw error; // Exit on Unauthorized or max retries
+			if (i < retries - 1) {
+				console.log(`Retrying ${url} (${i + 1}/${retries})`);
+				await new Promise((res) => setTimeout(res, delayMs));
+				continue;
 			}
-			console.log(`Retrying ${url} due to error: ${error.message}`);
+			throw error;
 		}
 	}
-	throw new Error(`Unexpected exit from retry loop for ${url}`); // Should never reach here
-};
+}
 
 // Placeholder for token refresh (replace with actual implementation)
 const refreshToken = async (cookies: Record<string, string>): Promise<string | null> => {
@@ -167,8 +171,13 @@ const refreshToken = async (cookies: Record<string, string>): Promise<string | n
 	return null;
 };
 
-AppWithRedux.getInitialProps = async ({ Component, ctx }: any) => {
-	console.log('Starting getInitialProps');
+AppWithRedux.getInitialProps = async (appContext) => {
+	const { Component, ctx } = appContext;
+	console.log("Running on:", ctx.req ? "server" : "client");
+	const { req, res, pathname } = ctx;
+
+	// Log or inspect the current path
+	console.log('Current pathname:', pathname);
 
 	const cookies = ctx.req?.headers.cookie
 		? Object.fromEntries(
@@ -178,6 +187,7 @@ AppWithRedux.getInitialProps = async ({ Component, ctx }: any) => {
 			})
 		)
 		: {};
+	console.log("Cookies:", cookies);
 
 	let token = cookies.token;
 	if (!token) {
@@ -188,58 +198,44 @@ AppWithRedux.getInitialProps = async ({ Component, ctx }: any) => {
 	let headers = { Authorization: `Bearer ${token}` };
 
 	try {
-		// Fetch /me first (required for dependent fetches)
-		let meJson;
-		try {
-			meJson = await fetchWithRetry('https://api.intra.42.fr/v2/me', { headers });
-		} catch (error) {
-			if (error.message === 'Unauthorized') {
-				console.log('Token expired, attempting refresh');
-				const newToken = await refreshToken(cookies);
-				if (!newToken) {
-					console.error('Token refresh failed');
-					return { cookies };
-				}
-				token = newToken;
-				headers = { Authorization: `Bearer ${token}` };
-				meJson = await fetchWithRetry('https://api.intra.42.fr/v2/me', { headers });
-			} else {
-				throw error; // Rethrow other errors
+		// Sequential fetching with delay
+		const delayBetweenRequests = 500; // 2 seconds between each request
+		let meJson = await fetchWithThrottle("https://api.intra.42.fr/v2/me", { headers, method: "GET" }, 3, delayBetweenRequests);
+
+		const endpoints = [
+			{ url: "https://api.intra.42.fr/v2/me/scale_teams", key: "evals" },
+			{ url: `https://api.intra.42.fr/v2/me/slots?${new URLSearchParams({ "page[size]": "100" })}`, key: "slots" },
+			{ url: "https://api.intra.42.fr/v2/me/scale_teams?filter[future]=false", key: "defances" },
+			{ url: `https://api.intra.42.fr/v2/users/${meJson.id}/events?sort=-begin_at`, key: "events" },
+			{ url: `https://api.intra.42.fr/v2/users/${meJson.id}/scale_teams/as_corrected`, key: "defancesHistory" },
+		];
+
+		const results: any = {};
+		for (const { url, key } of endpoints) {
+			try {
+				results[key] = await fetchWithThrottle(url, { headers, method: "GET" }, 3, delayBetweenRequests);
+				await new Promise((res) => setTimeout(res, delayBetweenRequests)); // Delay between requests
+			} catch (err) {
+				console.error(`${key} fetch failed:`, err);
+				results[key] = null; // Fallback to null on error
 			}
 		}
 
-		// Concurrent fetches for independent endpoints
-		const fetchPromises = [
-			fetchWithRetry('https://api.intra.42.fr/v2/me/scale_teams', { headers })
-				.catch((err) => { console.error('Evaluations fetch failed:', err); throw err; }),
-			fetchWithRetry(`https://api.intra.42.fr/v2/me/slots?${new URLSearchParams({ 'page[size]': '100' })}`, { headers })
-				.catch((err) => { console.error('Slots fetch failed:', err); throw err; }),
-			fetchWithRetry('https://api.intra.42.fr/v2/me/scale_teams?filter[future]=false', { headers }) // Could optimize by reusing evaluations
-				.catch((err) => { console.error('Defances fetch failed:', err); throw err; }),
-			fetchWithRetry(`https://api.intra.42.fr/v2/users/${meJson.id}/events?sort=-begin_at`, { headers })
-				.catch((err) => { console.error('Events fetch failed:', err); throw err; }),
-			fetchWithRetry(`https://api.intra.42.fr/v2/users/${meJson.id}/scale_teams/as_corrected`, { headers })
-				.catch((err) => { console.error('Defances history fetch failed:', err); throw err; }),
-		];
+		console.log("All fetches completed successfully");
 
-		const [
-			evaluationsResponse,
-			slotsResponse,
-			defancesResponse,
-			eventsResponse,
-			defancesHistoryResponse,
-		] = await Promise.all(fetchPromises);
+		let pageProps = {};
+		if (Component.getInitialProps) {
+			pageProps = await Component.getInitialProps(ctx);
+		}
 
-		console.log('All fetches completed successfully');
 		return {
 			cookies,
 			me: meJson,
-			slots: slotsResponse,
-			events: eventsResponse,
-			evals: evaluationsResponse,
-			defances: defancesResponse,
-			defancesHistory: defancesHistoryResponse,
-			token,
+			evals: results.evals,
+			slots: results.slots,
+			events: results.events,
+			defances: results.defances,
+			defancesHistory: results.defancesHistory,
 		};
 	} catch (error) {
 		console.error('getInitialProps failed:', error);
