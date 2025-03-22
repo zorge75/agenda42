@@ -1,10 +1,4 @@
-import UserImage from '../../assets/img/wanna/wanna1.png';
-import UserImage2 from '../../assets/img/wanna/wanna2.png';
-import UserImage3 from '../../assets/img/wanna/wanna3.png';
-import UserImage4 from '../../assets/img/wanna/wanna4.png';
-import UserImage5 from '../../assets/img/wanna/wanna5.png';
-import UserImage6 from '../../assets/img/wanna/wanna6.png';
-import UserImage7 from '../../assets/img/wanna/wanna7.png';
+import Blur from './../../assets/img/blur.jpg';
 import SERVICES, { IServiceProps } from './serviceDummyData';
 
 import { TColor } from '../../type/color-type';
@@ -32,7 +26,7 @@ const john: IUserProps = {
 	surname: 'Doe',
 	position: 'CEO, Founder',
 	email: 'john@omtanke.studio',
-	src: UserImage,
+	src: Blur,
 	isOnline: true,
 	isReply: true,
 	color: 'primary',
@@ -47,7 +41,7 @@ const grace: IUserProps = {
 	surname: 'Buckland',
 	position: 'Staff',
 	email: 'grace@omtanke.studio',
-	src: UserImage2,
+	src: Blur,
 	isOnline: true,
 	color: 'warning',
 	services: [SERVICES.SNOWBOARDING, SERVICES.ICE_SKATING, SERVICES.KITE_SURFING],
@@ -61,7 +55,7 @@ const jane: IUserProps = {
 	surname: 'Lee',
 	position: 'Staff',
 	email: 'jane@omtanke.studio',
-	src: UserImage3,
+	src: Blur,
 	isOnline: true,
 	color: 'secondary',
 	services: [SERVICES.YOGA, SERVICES.HANDBALL, SERVICES.CRICKET],
@@ -75,7 +69,7 @@ const ryan: IUserProps = {
 	surname: 'McGrath',
 	position: 'Worker',
 	email: 'ryan@omtanke.studio',
-	src: UserImage4,
+	src: Blur,
 	isOnline: false,
 	color: 'info',
 	services: [SERVICES.HIKING, SERVICES.FOOTBALL, SERVICES.HANDBALL],
@@ -89,7 +83,7 @@ const ella: IUserProps = {
 	surname: 'Oliver',
 	position: 'Worker',
 	email: 'ella@omtanke.studio',
-	src: UserImage5,
+	src: Blur,
 	isOnline: false,
 	color: 'success',
 	services: [SERVICES.ICE_SKATING, SERVICES.TENNIS, SERVICES.SNOWBOARDING, SERVICES.YOGA],
@@ -103,7 +97,7 @@ const chloe: IUserProps = {
 	surname: 'Walker',
 	position: 'Staff',
 	email: 'chloe@omtanke.studio',
-	src: UserImage6,
+	src: Blur,
 	isOnline: true,
 	color: 'warning',
 	services: [SERVICES.VOLLEYBALL, SERVICES.CRICKET],
@@ -117,7 +111,7 @@ const sam: IUserProps = {
 	surname: 'Roberts',
 	position: 'Worker',
 	email: 'sam@omtanke.studio',
-	src: UserImage7,
+	src: Blur,
 	isOnline: false,
 	color: 'danger',
 	fullImage: "",

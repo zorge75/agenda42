@@ -80,7 +80,7 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
 
                     {
                         eventItem?.scale_team?.correcteds.map((profile, i) => (
-                            <CardHeader className="bg-l25-success">
+                            <CardHeader className="bg-l25-success colomn_rest">
                                 <CardLabel iconColor="dark">
                                     <CardTitle>
                                         {getCorrectorName(profile.id, scaleUsers, me) || profile.login}

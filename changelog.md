@@ -2,7 +2,7 @@
 - Added fix for redirection after autentification
 - Added component for Event
 - Removed Sentry from development
-- 
+- Added Discord notifications
 
 # 1.6.3
 - Add Sentry
