@@ -239,339 +239,340 @@ AppWithRedux.getInitialProps = async (appContext) => {
 			pageProps = await Component.getInitialProps(ctx);
 		}
 
-		results.slots = [
-			...results.slots,
-			{
-				"id": 785,
-				"begin_at": "2025-03-22T21:15:00.000Z",
-				"end_at": "2025-03-22T21:45:00.000Z",
-				"scale_team": {
-					"id": 7814334,
-					"scale_id": 34880,
-					"comment": null,
-					"created_at": "2025-02-23T14:30:29.683Z",
-					"updated_at": "2025-02-23T15:50:21.342Z",
-					"feedback": null,
-					"final_mark": null,
-					"flag": {
-						"id": 1,
-						"name": "Ok",
-						"positive": true,
-						"icon": "check-4",
-						"created_at": "2015-09-14T23:06:52.000Z",
-						"updated_at": "2015-09-14T23:06:52.000Z"
-					},
-					"begin_at": "2025-02-23T15:45:00.000Z",
-					"correcteds": [
-						{
-							"id": 189251,
-							"login": "achaisne",
-							"url": "https://api.intra.42.fr/v2/users/achaisne"
+		if (process.env.NODE_ENV !== 'production')
+			results.slots = [
+				...results.slots,
+				{
+					"id": 785,
+					"begin_at": "2025-03-22T21:15:00.000Z",
+					"end_at": "2025-03-22T21:45:00.000Z",
+					"scale_team": {
+						"id": 7814334,
+						"scale_id": 34880,
+						"comment": null,
+						"created_at": "2025-02-23T14:30:29.683Z",
+						"updated_at": "2025-02-23T15:50:21.342Z",
+						"feedback": null,
+						"final_mark": null,
+						"flag": {
+							"id": 1,
+							"name": "Ok",
+							"positive": true,
+							"icon": "check-4",
+							"created_at": "2015-09-14T23:06:52.000Z",
+							"updated_at": "2015-09-14T23:06:52.000Z"
 						},
-						{
-							"id": 202885,
-							"login": "mcogne--",
-							"url": "https://api.intra.42.fr/v2/users/mcogne--"
-						}
-					],
-					"corrector": {
-						"id": 177543,
-						"login": "abergman",
-						"url": "https://api.intra.42.fr/v2/users/abergman"
-					},
-					"truant": {
-						"id": 177543,
-						"login": "abergman",
-						"url": "https://api.intra.42.fr/v2/users/abergman"
-					},
-					"filled_at": null,
-					"questions_with_answers": []
-				},
-				"user": {
-					"id": 177543,
-					"email": "abergman@student.42.fr",
-					"login": "abergman",
-					"first_name": "Aron",
-					"last_name": "Bergman",
-					"usual_full_name": "Aron Bergman",
-					"usual_first_name": null,
-					"url": "https://api.intra.42.fr/v2/users/abergman",
-					"phone": "hidden",
-					"displayname": "Aron Bergman",
-					"kind": "student",
-					"image": {
-						"link": "https://cdn.intra.42.fr/users/932073df2570926fdc1f927cb45f0dd5/abergman.jpg",
-						"versions": {
-							"large": "https://cdn.intra.42.fr/users/607ec2f60fdbda424b64808d611cf17d/large_abergman.jpg",
-							"medium": "https://cdn.intra.42.fr/users/b451991403a62211e5d780221daaabc7/medium_abergman.jpg",
-							"small": "https://cdn.intra.42.fr/users/ffd6439cd9fc47271fed6267900344e4/small_abergman.jpg",
-							"micro": "https://cdn.intra.42.fr/users/612a1d0886c143ee8c656e269cb86b83/micro_abergman.jpg"
-						}
-					},
-					"staff?": false,
-					"correction_point": 7,
-					"pool_month": "february",
-					"pool_year": "2024",
-					"location": "paul-f4Ar6s1",
-					"wallet": 140,
-					"anonymize_date": "2028-03-22T00:00:00.000+01:00",
-					"data_erasure_date": "2028-03-22T00:00:00.000+01:00",
-					"created_at": "2024-02-01T11:31:50.891Z",
-					"updated_at": "2025-03-22T14:19:20.420Z",
-					"alumnized_at": null,
-					"alumni?": false,
-					"active?": true
-				},
-				"slots_data": [
-					{
-						"id": 110429054,
 						"begin_at": "2025-02-23T15:45:00.000Z",
-						"end_at": "2025-02-23T16:00:00.000Z",
-						"scale_team": {
-							"id": 7814334,
-							"scale_id": 34880,
-							"comment": null,
-							"created_at": "2025-02-23T14:30:29.683Z",
-							"updated_at": "2025-02-23T15:50:21.342Z",
-							"feedback": null,
-							"final_mark": null,
-							"flag": {
-								"id": 1,
-								"name": "Ok",
-								"positive": true,
-								"icon": "check-4",
-								"created_at": "2015-09-14T23:06:52.000Z",
-								"updated_at": "2015-09-14T23:06:52.000Z"
+						"correcteds": [
+							{
+								"id": 189251,
+								"login": "achaisne",
+								"url": "https://api.intra.42.fr/v2/users/achaisne"
 							},
-							"begin_at": "2025-02-23T15:45:00.000Z",
-							"correcteds": [
-								{
-									"id": 189251,
-									"login": "achaisne",
-									"url": "https://api.intra.42.fr/v2/users/achaisne"
-								},
-								{
-									"id": 202885,
-									"login": "mcogne--",
-									"url": "https://api.intra.42.fr/v2/users/mcogne--"
-								}
-							],
-							"corrector": {
-								"id": 177543,
-								"login": "abergman",
-								"url": "https://api.intra.42.fr/v2/users/abergman"
-							},
-							"truant": {
-								"id": 177543,
-								"login": "abergman",
-								"url": "https://api.intra.42.fr/v2/users/abergman"
-							},
-							"filled_at": null,
-							"questions_with_answers": []
-						},
-						"user": {
+							{
+								"id": 202885,
+								"login": "mcogne--",
+								"url": "https://api.intra.42.fr/v2/users/mcogne--"
+							}
+						],
+						"corrector": {
 							"id": 177543,
-							"email": "abergman@student.42.fr",
 							"login": "abergman",
-							"first_name": "Aron",
-							"last_name": "Bergman",
-							"usual_full_name": "Aron Bergman",
-							"usual_first_name": null,
-							"url": "https://api.intra.42.fr/v2/users/abergman",
-							"phone": "hidden",
-							"displayname": "Aron Bergman",
-							"kind": "student",
-							"image": {
-								"link": "https://cdn.intra.42.fr/users/932073df2570926fdc1f927cb45f0dd5/abergman.jpg",
-								"versions": {
-									"large": "https://cdn.intra.42.fr/users/607ec2f60fdbda424b64808d611cf17d/large_abergman.jpg",
-									"medium": "https://cdn.intra.42.fr/users/b451991403a62211e5d780221daaabc7/medium_abergman.jpg",
-									"small": "https://cdn.intra.42.fr/users/ffd6439cd9fc47271fed6267900344e4/small_abergman.jpg",
-									"micro": "https://cdn.intra.42.fr/users/612a1d0886c143ee8c656e269cb86b83/micro_abergman.jpg"
-								}
-							},
-							"staff?": false,
-							"correction_point": 7,
-							"pool_month": "february",
-							"pool_year": "2024",
-							"location": "paul-f4Ar6s1",
-							"wallet": 140,
-							"anonymize_date": "2028-03-22T00:00:00.000+01:00",
-							"data_erasure_date": "2028-03-22T00:00:00.000+01:00",
-							"created_at": "2024-02-01T11:31:50.891Z",
-							"updated_at": "2025-03-22T14:19:20.420Z",
-							"alumnized_at": null,
-							"alumni?": false,
-							"active?": true
-						}
+							"url": "https://api.intra.42.fr/v2/users/abergman"
+						},
+						"truant": {
+							"id": 177543,
+							"login": "abergman",
+							"url": "https://api.intra.42.fr/v2/users/abergman"
+						},
+						"filled_at": null,
+						"questions_with_answers": []
 					},
-					{
-						"id": 110429059,
-						"begin_at": "2025-02-23T16:00:00.000Z",
-						"end_at": "2025-02-23T16:15:00.000Z",
-						"scale_team": {
-							"id": 7814334,
-							"scale_id": 34880,
-							"comment": null,
-							"created_at": "2025-02-23T14:30:29.683Z",
-							"updated_at": "2025-02-23T15:50:21.342Z",
-							"feedback": null,
-							"final_mark": null,
-							"flag": {
-								"id": 1,
-								"name": "Ok",
-								"positive": true,
-								"icon": "check-4",
-								"created_at": "2015-09-14T23:06:52.000Z",
-								"updated_at": "2015-09-14T23:06:52.000Z"
-							},
-							"begin_at": "2025-02-23T15:45:00.000Z",
-							"correcteds": [
-								{
-									"id": 189251,
-									"login": "achaisne",
-									"url": "https://api.intra.42.fr/v2/users/achaisne"
-								},
-								{
-									"id": 202885,
-									"login": "mcogne--",
-									"url": "https://api.intra.42.fr/v2/users/mcogne--"
-								}
-							],
-							"corrector": {
-								"id": 177543,
-								"login": "abergman",
-								"url": "https://api.intra.42.fr/v2/users/abergman"
-							},
-							"truant": {
-								"id": 177543,
-								"login": "abergman",
-								"url": "https://api.intra.42.fr/v2/users/abergman"
-							},
-							"filled_at": null,
-							"questions_with_answers": []
+					"user": {
+						"id": 177543,
+						"email": "abergman@student.42.fr",
+						"login": "abergman",
+						"first_name": "Aron",
+						"last_name": "Bergman",
+						"usual_full_name": "Aron Bergman",
+						"usual_first_name": null,
+						"url": "https://api.intra.42.fr/v2/users/abergman",
+						"phone": "hidden",
+						"displayname": "Aron Bergman",
+						"kind": "student",
+						"image": {
+							"link": "https://cdn.intra.42.fr/users/932073df2570926fdc1f927cb45f0dd5/abergman.jpg",
+							"versions": {
+								"large": "https://cdn.intra.42.fr/users/607ec2f60fdbda424b64808d611cf17d/large_abergman.jpg",
+								"medium": "https://cdn.intra.42.fr/users/b451991403a62211e5d780221daaabc7/medium_abergman.jpg",
+								"small": "https://cdn.intra.42.fr/users/ffd6439cd9fc47271fed6267900344e4/small_abergman.jpg",
+								"micro": "https://cdn.intra.42.fr/users/612a1d0886c143ee8c656e269cb86b83/micro_abergman.jpg"
+							}
 						},
-						"user": {
-							"id": 177543,
-							"email": "abergman@student.42.fr",
-							"login": "abergman",
-							"first_name": "Aron",
-							"last_name": "Bergman",
-							"usual_full_name": "Aron Bergman",
-							"usual_first_name": null,
-							"url": "https://api.intra.42.fr/v2/users/abergman",
-							"phone": "hidden",
-							"displayname": "Aron Bergman",
-							"kind": "student",
-							"image": {
-								"link": "https://cdn.intra.42.fr/users/932073df2570926fdc1f927cb45f0dd5/abergman.jpg",
-								"versions": {
-									"large": "https://cdn.intra.42.fr/users/607ec2f60fdbda424b64808d611cf17d/large_abergman.jpg",
-									"medium": "https://cdn.intra.42.fr/users/b451991403a62211e5d780221daaabc7/medium_abergman.jpg",
-									"small": "https://cdn.intra.42.fr/users/ffd6439cd9fc47271fed6267900344e4/small_abergman.jpg",
-									"micro": "https://cdn.intra.42.fr/users/612a1d0886c143ee8c656e269cb86b83/micro_abergman.jpg"
-								}
-							},
-							"staff?": false,
-							"correction_point": 7,
-							"pool_month": "february",
-							"pool_year": "2024",
-							"location": "paul-f4Ar6s1",
-							"wallet": 140,
-							"anonymize_date": "2028-03-22T00:00:00.000+01:00",
-							"data_erasure_date": "2028-03-22T00:00:00.000+01:00",
-							"created_at": "2024-02-01T11:31:50.891Z",
-							"updated_at": "2025-03-22T14:19:20.420Z",
-							"alumnized_at": null,
-							"alumni?": false,
-							"active?": true
-						}
+						"staff?": false,
+						"correction_point": 7,
+						"pool_month": "february",
+						"pool_year": "2024",
+						"location": "paul-f4Ar6s1",
+						"wallet": 140,
+						"anonymize_date": "2028-03-22T00:00:00.000+01:00",
+						"data_erasure_date": "2028-03-22T00:00:00.000+01:00",
+						"created_at": "2024-02-01T11:31:50.891Z",
+						"updated_at": "2025-03-22T14:19:20.420Z",
+						"alumnized_at": null,
+						"alumni?": false,
+						"active?": true
 					},
-					{
-						"id": 110429056,
-						"begin_at": "2025-02-23T16:15:00.000Z",
-						"end_at": "2025-02-23T16:30:00.000Z",
-						"scale_team": {
-							"id": 7814334,
-							"scale_id": 34880,
-							"comment": null,
-							"created_at": "2025-02-23T14:30:29.683Z",
-							"updated_at": "2025-02-23T15:50:21.342Z",
-							"feedback": null,
-							"final_mark": null,
-							"flag": {
-								"id": 1,
-								"name": "Ok",
-								"positive": true,
-								"icon": "check-4",
-								"created_at": "2015-09-14T23:06:52.000Z",
-								"updated_at": "2015-09-14T23:06:52.000Z"
-							},
+					"slots_data": [
+						{
+							"id": 110429054,
 							"begin_at": "2025-02-23T15:45:00.000Z",
-							"correcteds": [
-								{
-									"id": 189251,
-									"login": "achaisne",
-									"url": "https://api.intra.42.fr/v2/users/achaisne"
+							"end_at": "2025-02-23T16:00:00.000Z",
+							"scale_team": {
+								"id": 7814334,
+								"scale_id": 34880,
+								"comment": null,
+								"created_at": "2025-02-23T14:30:29.683Z",
+								"updated_at": "2025-02-23T15:50:21.342Z",
+								"feedback": null,
+								"final_mark": null,
+								"flag": {
+									"id": 1,
+									"name": "Ok",
+									"positive": true,
+									"icon": "check-4",
+									"created_at": "2015-09-14T23:06:52.000Z",
+									"updated_at": "2015-09-14T23:06:52.000Z"
 								},
-								{
-									"id": 202885,
-									"login": "mcogne--",
-									"url": "https://api.intra.42.fr/v2/users/mcogne--"
-								}
-							],
-							"corrector": {
-								"id": 177543,
-								"login": "abergman",
-								"url": "https://api.intra.42.fr/v2/users/abergman"
+								"begin_at": "2025-02-23T15:45:00.000Z",
+								"correcteds": [
+									{
+										"id": 189251,
+										"login": "achaisne",
+										"url": "https://api.intra.42.fr/v2/users/achaisne"
+									},
+									{
+										"id": 202885,
+										"login": "mcogne--",
+										"url": "https://api.intra.42.fr/v2/users/mcogne--"
+									}
+								],
+								"corrector": {
+									"id": 177543,
+									"login": "abergman",
+									"url": "https://api.intra.42.fr/v2/users/abergman"
+								},
+								"truant": {
+									"id": 177543,
+									"login": "abergman",
+									"url": "https://api.intra.42.fr/v2/users/abergman"
+								},
+								"filled_at": null,
+								"questions_with_answers": []
 							},
-							"truant": {
+							"user": {
 								"id": 177543,
+								"email": "abergman@student.42.fr",
 								"login": "abergman",
-								"url": "https://api.intra.42.fr/v2/users/abergman"
-							},
-							"filled_at": null,
-							"questions_with_answers": []
+								"first_name": "Aron",
+								"last_name": "Bergman",
+								"usual_full_name": "Aron Bergman",
+								"usual_first_name": null,
+								"url": "https://api.intra.42.fr/v2/users/abergman",
+								"phone": "hidden",
+								"displayname": "Aron Bergman",
+								"kind": "student",
+								"image": {
+									"link": "https://cdn.intra.42.fr/users/932073df2570926fdc1f927cb45f0dd5/abergman.jpg",
+									"versions": {
+										"large": "https://cdn.intra.42.fr/users/607ec2f60fdbda424b64808d611cf17d/large_abergman.jpg",
+										"medium": "https://cdn.intra.42.fr/users/b451991403a62211e5d780221daaabc7/medium_abergman.jpg",
+										"small": "https://cdn.intra.42.fr/users/ffd6439cd9fc47271fed6267900344e4/small_abergman.jpg",
+										"micro": "https://cdn.intra.42.fr/users/612a1d0886c143ee8c656e269cb86b83/micro_abergman.jpg"
+									}
+								},
+								"staff?": false,
+								"correction_point": 7,
+								"pool_month": "february",
+								"pool_year": "2024",
+								"location": "paul-f4Ar6s1",
+								"wallet": 140,
+								"anonymize_date": "2028-03-22T00:00:00.000+01:00",
+								"data_erasure_date": "2028-03-22T00:00:00.000+01:00",
+								"created_at": "2024-02-01T11:31:50.891Z",
+								"updated_at": "2025-03-22T14:19:20.420Z",
+								"alumnized_at": null,
+								"alumni?": false,
+								"active?": true
+							}
 						},
-						"user": {
-							"id": 177543,
-							"email": "abergman@student.42.fr",
-							"login": "abergman",
-							"first_name": "Aron",
-							"last_name": "Bergman",
-							"usual_full_name": "Aron Bergman",
-							"usual_first_name": null,
-							"url": "https://api.intra.42.fr/v2/users/abergman",
-							"phone": "hidden",
-							"displayname": "Aron Bergman",
-							"kind": "student",
-							"image": {
-								"link": "https://cdn.intra.42.fr/users/932073df2570926fdc1f927cb45f0dd5/abergman.jpg",
-								"versions": {
-									"large": "https://cdn.intra.42.fr/users/607ec2f60fdbda424b64808d611cf17d/large_abergman.jpg",
-									"medium": "https://cdn.intra.42.fr/users/b451991403a62211e5d780221daaabc7/medium_abergman.jpg",
-									"small": "https://cdn.intra.42.fr/users/ffd6439cd9fc47271fed6267900344e4/small_abergman.jpg",
-									"micro": "https://cdn.intra.42.fr/users/612a1d0886c143ee8c656e269cb86b83/micro_abergman.jpg"
-								}
+						{
+							"id": 110429059,
+							"begin_at": "2025-02-23T16:00:00.000Z",
+							"end_at": "2025-02-23T16:15:00.000Z",
+							"scale_team": {
+								"id": 7814334,
+								"scale_id": 34880,
+								"comment": null,
+								"created_at": "2025-02-23T14:30:29.683Z",
+								"updated_at": "2025-02-23T15:50:21.342Z",
+								"feedback": null,
+								"final_mark": null,
+								"flag": {
+									"id": 1,
+									"name": "Ok",
+									"positive": true,
+									"icon": "check-4",
+									"created_at": "2015-09-14T23:06:52.000Z",
+									"updated_at": "2015-09-14T23:06:52.000Z"
+								},
+								"begin_at": "2025-02-23T15:45:00.000Z",
+								"correcteds": [
+									{
+										"id": 189251,
+										"login": "achaisne",
+										"url": "https://api.intra.42.fr/v2/users/achaisne"
+									},
+									{
+										"id": 202885,
+										"login": "mcogne--",
+										"url": "https://api.intra.42.fr/v2/users/mcogne--"
+									}
+								],
+								"corrector": {
+									"id": 177543,
+									"login": "abergman",
+									"url": "https://api.intra.42.fr/v2/users/abergman"
+								},
+								"truant": {
+									"id": 177543,
+									"login": "abergman",
+									"url": "https://api.intra.42.fr/v2/users/abergman"
+								},
+								"filled_at": null,
+								"questions_with_answers": []
 							},
-							"staff?": false,
-							"correction_point": 7,
-							"pool_month": "february",
-							"pool_year": "2024",
-							"location": "paul-f4Ar6s1",
-							"wallet": 140,
-							"anonymize_date": "2028-03-22T00:00:00.000+01:00",
-							"data_erasure_date": "2028-03-22T00:00:00.000+01:00",
-							"created_at": "2024-02-01T11:31:50.891Z",
-							"updated_at": "2025-03-22T14:19:20.420Z",
-							"alumnized_at": null,
-							"alumni?": false,
-							"active?": true
+							"user": {
+								"id": 177543,
+								"email": "abergman@student.42.fr",
+								"login": "abergman",
+								"first_name": "Aron",
+								"last_name": "Bergman",
+								"usual_full_name": "Aron Bergman",
+								"usual_first_name": null,
+								"url": "https://api.intra.42.fr/v2/users/abergman",
+								"phone": "hidden",
+								"displayname": "Aron Bergman",
+								"kind": "student",
+								"image": {
+									"link": "https://cdn.intra.42.fr/users/932073df2570926fdc1f927cb45f0dd5/abergman.jpg",
+									"versions": {
+										"large": "https://cdn.intra.42.fr/users/607ec2f60fdbda424b64808d611cf17d/large_abergman.jpg",
+										"medium": "https://cdn.intra.42.fr/users/b451991403a62211e5d780221daaabc7/medium_abergman.jpg",
+										"small": "https://cdn.intra.42.fr/users/ffd6439cd9fc47271fed6267900344e4/small_abergman.jpg",
+										"micro": "https://cdn.intra.42.fr/users/612a1d0886c143ee8c656e269cb86b83/micro_abergman.jpg"
+									}
+								},
+								"staff?": false,
+								"correction_point": 7,
+								"pool_month": "february",
+								"pool_year": "2024",
+								"location": "paul-f4Ar6s1",
+								"wallet": 140,
+								"anonymize_date": "2028-03-22T00:00:00.000+01:00",
+								"data_erasure_date": "2028-03-22T00:00:00.000+01:00",
+								"created_at": "2024-02-01T11:31:50.891Z",
+								"updated_at": "2025-03-22T14:19:20.420Z",
+								"alumnized_at": null,
+								"alumni?": false,
+								"active?": true
+							}
+						},
+						{
+							"id": 110429056,
+							"begin_at": "2025-02-23T16:15:00.000Z",
+							"end_at": "2025-02-23T16:30:00.000Z",
+							"scale_team": {
+								"id": 7814334,
+								"scale_id": 34880,
+								"comment": null,
+								"created_at": "2025-02-23T14:30:29.683Z",
+								"updated_at": "2025-02-23T15:50:21.342Z",
+								"feedback": null,
+								"final_mark": null,
+								"flag": {
+									"id": 1,
+									"name": "Ok",
+									"positive": true,
+									"icon": "check-4",
+									"created_at": "2015-09-14T23:06:52.000Z",
+									"updated_at": "2015-09-14T23:06:52.000Z"
+								},
+								"begin_at": "2025-02-23T15:45:00.000Z",
+								"correcteds": [
+									{
+										"id": 189251,
+										"login": "achaisne",
+										"url": "https://api.intra.42.fr/v2/users/achaisne"
+									},
+									{
+										"id": 202885,
+										"login": "mcogne--",
+										"url": "https://api.intra.42.fr/v2/users/mcogne--"
+									}
+								],
+								"corrector": {
+									"id": 177543,
+									"login": "abergman",
+									"url": "https://api.intra.42.fr/v2/users/abergman"
+								},
+								"truant": {
+									"id": 177543,
+									"login": "abergman",
+									"url": "https://api.intra.42.fr/v2/users/abergman"
+								},
+								"filled_at": null,
+								"questions_with_answers": []
+							},
+							"user": {
+								"id": 177543,
+								"email": "abergman@student.42.fr",
+								"login": "abergman",
+								"first_name": "Aron",
+								"last_name": "Bergman",
+								"usual_full_name": "Aron Bergman",
+								"usual_first_name": null,
+								"url": "https://api.intra.42.fr/v2/users/abergman",
+								"phone": "hidden",
+								"displayname": "Aron Bergman",
+								"kind": "student",
+								"image": {
+									"link": "https://cdn.intra.42.fr/users/932073df2570926fdc1f927cb45f0dd5/abergman.jpg",
+									"versions": {
+										"large": "https://cdn.intra.42.fr/users/607ec2f60fdbda424b64808d611cf17d/large_abergman.jpg",
+										"medium": "https://cdn.intra.42.fr/users/b451991403a62211e5d780221daaabc7/medium_abergman.jpg",
+										"small": "https://cdn.intra.42.fr/users/ffd6439cd9fc47271fed6267900344e4/small_abergman.jpg",
+										"micro": "https://cdn.intra.42.fr/users/612a1d0886c143ee8c656e269cb86b83/micro_abergman.jpg"
+									}
+								},
+								"staff?": false,
+								"correction_point": 7,
+								"pool_month": "february",
+								"pool_year": "2024",
+								"location": "paul-f4Ar6s1",
+								"wallet": 140,
+								"anonymize_date": "2028-03-22T00:00:00.000+01:00",
+								"data_erasure_date": "2028-03-22T00:00:00.000+01:00",
+								"created_at": "2024-02-01T11:31:50.891Z",
+								"updated_at": "2025-03-22T14:19:20.420Z",
+								"alumnized_at": null,
+								"alumni?": false,
+								"active?": true
+							}
 						}
-					}
-				]
-			}
-		]
+					]
+				}
+			]
 
 		return {
 			cookies,

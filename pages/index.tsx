@@ -745,35 +745,6 @@ const Index: NextPage = ({ token }: any) => {
 
               Object.keys(USERS).slice(0, 1).map((u) => (
                 <div key={USERS[u].username} className="col-auto">
-                  <div className="position-relative">
-                    <Avatar
-                      src={USERS[u].src}
-                      color={USERS[u].color}
-                      size={64}
-                      className="cursor-pointer"
-                      borderColor={
-                        employeeList[USERS[u].username] ? "info" : themeStatus
-                      }
-                      onClick={() =>
-                        setEmployeeList({
-                          ...employeeList,
-                          [USERS[u].username]: !employeeList[USERS[u].username],
-                        })
-                      }
-                    />
-                    {!!events.filter(
-                      (i) =>
-                        i.user?.username === USERS[u].username &&
-                        i.start &&
-                        i.start < now &&
-                        i.end &&
-                        i.end > now,
-                    ).length && (
-                        <span className="position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2">
-                          <span className="visually-hidden">Online user</span>
-                        </span>
-                      )}
-                  </div>
                 </div>
               ))
             ) : error ? (
