@@ -1,4 +1,5 @@
 interface IValues {
+    discordId: string | number | readonly string[] | undefined;
 	firstName: string;
 	lastName: string;
 	displayName: string;

@@ -13,6 +13,7 @@ function convertToMdLinks(text: any) {
         return `[${domain}](${match})`;
     });
 }
+
 const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
     const unsubscribeHandler = async (event: any) => {
         window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
@@ -30,7 +31,7 @@ const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
 
                 <Card borderColor={"light"} borderSize="2" className="mt-4 mb-5" >
                     <CardBody>
-                        <div className='row align-items-end'>
+                        <div className='row align-items-end event_row'>
                             <div className='col-lg-6'>
                                 <div className='h4 mb-3'>{dayjs(eventItem.start).format('DD MMMM')}</div>
                                 <span className='display-6 fw-bold text-dark'>{dayjs(eventItem.start).format('H:mm')}</span>

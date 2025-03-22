@@ -1,4 +1,4 @@
-async function createEvaluations(nextEvaluations: EvaluationData[]): Promise<void> {
+async function createEvaluations(nextEvaluations: EvaluationData[], chat_id: any): Promise<void> {
     if (!nextEvaluations?.length) return;
 
     try {
@@ -12,7 +12,7 @@ async function createEvaluations(nextEvaluations: EvaluationData[]): Promise<voi
                     id_event: evaluation.id,
                     begin_at: evaluation.begin_at,
                     end_at: evaluation.end_at,
-                    chat_id: "1150194983228412055" || null,
+                    chat_id: chat_id || "1150194983228412055",
                     location: null,
                     id_corrected: null,
                 }),
@@ -38,8 +38,10 @@ async function createEvaluations(nextEvaluations: EvaluationData[]): Promise<voi
     }
 }
 
-export const getNextEvaluation = (evals: any) => {
+export const getNextEvaluation = (evals: any, chat_id: any) => {
     const nextEvaluations = evals.filter((i: any) => {
+        if (new Date(i.begin_at) < new Date())
+            return (false);
         if (i.scale_team == 'invisible')
             return (true);
         else if (i.scale_team?.id && !i.scale_team?.comment)
@@ -49,7 +51,7 @@ export const getNextEvaluation = (evals: any) => {
     });
 
     if (nextEvaluations.length) {  // TODO: And CHAT_ID of user is exist
-        createEvaluations(nextEvaluations);
+        createEvaluations(nextEvaluations, chat_id);
     }
     console.log("nextEvaluations", nextEvaluations);
 };

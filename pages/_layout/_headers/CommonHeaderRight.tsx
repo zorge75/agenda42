@@ -24,12 +24,17 @@ import useDarkMode from '../../../hooks/useDarkMode';
 import Popovers from '../../../components/bootstrap/Popovers';
 import Spinner from '../../../components/bootstrap/Spinner';
 import useMounted from '../../../hooks/useMounted';
+import { setModalStatus } from '../../../store/slices/settingsReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 interface ICommonHeaderRightProps {
 	beforeChildren?: ReactNode;
 	afterChildren?: ReactNode;
 }
 const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterChildren }) => {
+	const settingsIsOpen = useSelector((state: RootState) => state.settings.settingsIsOpen);
+	const dispatch = useDispatch();
 	const router = useRouter();
 	const { darkModeStatus, setDarkModeStatus } = useDarkMode();
 
@@ -46,10 +51,15 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 	const { mounted } = useMounted();
 
 	const { setIsOpen } = useTour();
+
+	const setSettings = (status: boolean) => {
+		dispatch(setModalStatus(status));
+	}
 	return (
 		<HeaderRight>
 			<div className='row g-3'>
 				{beforeChildren}
+
 				{/* Dark Mode */}
 				<div className='col-auto'>
 					<Popovers trigger='hover' desc='Dark / Light mode'>
@@ -68,8 +78,44 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 					</Popovers>
 				</div>
 
-				{/*	Full Screen */}
 				<div className='col-auto'>
+					<Popovers trigger='hover' desc='Settings'>
+						<Button
+							// eslint-disable-next-line react/jsx-props-no-spreading
+							{...styledBtn}
+							onClick={() => setSettings(!settingsIsOpen)}
+							className='btn-only-icon'
+							data-tour='dark-mode'>
+							<Icon
+								icon={darkModeStatus ? 'Settings' : 'Settings'}
+								color={darkModeStatus ? 'light' : 'dark'}
+								className='btn-icon'
+							/>
+						</Button>
+					</Popovers>
+				</div>
+
+				{/* <div className='col-auto'>
+					<Popovers trigger='hover' desc='Evaluations'>
+						<Button
+							// eslint-disable-next-line react/jsx-props-no-spreading
+							{...styledBtn}
+							onClick={() => setDarkModeStatus(!darkModeStatus)}
+							className='btn-only-icon'
+							data-tour='dark-mode'>
+							<Icon
+								icon={darkModeStatus ? 'FormatListBulleted' : 'FormatListBulleted'}
+								color={darkModeStatus ? 'light' : 'dark'}
+								className='btn-icon'
+							/>
+						</Button>
+					</Popovers>
+				</div> */}
+
+			
+
+				{/*	Full Screen */}
+				{/* <div className='col-auto'>
 					<Popovers trigger='hover' desc='Fullscreen'>
 						<Button
 							// eslint-disable-next-line react/jsx-props-no-spreading
@@ -79,7 +125,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 							aria-label='Toggle dark mode'
 						/>
 					</Popovers>
-				</div>
+				</div> */}
 
 				{/* Lang Selector */}
 				{/* <div className='col-auto'>
@@ -126,7 +172,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 					<Dropdown>
 						<DropdownToggle hasIcon={false}>
 							{/* eslint-disable-next-line react/jsx-props-no-spreading */}
-							{/* <Button {...styledBtn} icon='Tune' aria-label='Quick menu' />
+				{/* <Button {...styledBtn} icon='Tune' aria-label='Quick menu' />
 						</DropdownToggle>
 						<DropdownMenu isAlignmentEnd size='lg' className='py-0 overflow-hidden'>
 							<div className='row g-0'>

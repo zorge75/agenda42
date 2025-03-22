@@ -73,6 +73,8 @@ import Defanse from "../components/agenda/Defanse";
 import { setSlotsMod } from "../store/slices/settingsReducer";
 import { roundToNearest15 } from "../common/function/roundToNearest15";
 import { getCorrectorImageUrl } from "../common/function/getCorrectorImageUrl";
+import { useRouter } from "next/router";
+import Settings from "../components/settings";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
@@ -126,6 +128,49 @@ interface IEvent extends IEvents {
   users?: IUserProps[];
   color?: TColor;
 }
+
+
+const MyEvent = (data: { event: IEvent }) => {
+  const { darkModeStatus } = useDarkMode();
+
+  const { event } = data;
+  return (
+    <div className="row g-2">
+      <div className="col text-truncate">
+        {event?.icon && <Icon icon={event?.icon} size="lg" className="me-2" />}
+        {event?.name}
+      </div>
+      {event?.user?.src && (
+        <div className="col-auto">
+          <div className="row g-1 align-items-baseline">
+            <div className="col-auto">
+              <Avatar src={event?.user?.src} size={18} />
+            </div>
+            <small
+              className={classNames("col-auto text-truncate", {
+                "text-dark": !darkModeStatus,
+                "text-white": darkModeStatus,
+              })}
+            >
+              {event?.user?.name}
+            </small>
+          </div>
+        </div>
+      )}
+      {event?.users && (
+        <div className="col-auto">
+          <AvatarGroup size={18}>
+            {event.users.map((user) => (
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              <Avatar key={user.src} {...user} />
+            ))}
+          </AvatarGroup>
+        </div>
+      )}
+    </div>
+  );
+};
+
 
 const MyWeekEvent = (data: { event: IEvent }) => {
   const { darkModeStatus } = useDarkMode();
@@ -207,6 +252,7 @@ const MyEventDay = (data: { event: IEvent }) => {
 const Index: NextPage = ({ token }: any) => {
   const { darkModeStatus, themeStatus } = useDarkMode();
   const dispatch = useDispatch();
+  const settings = useSelector((state: RootState) => state.settings.settingsLoaded);
   const eventsIntra = useSelector((state: RootState) => state.events.events);
   const allEvents = useSelector((state: RootState) => state.events.all);
   const slotsIntra = useSelector((state: RootState) => state.slots.slots);
@@ -217,6 +263,8 @@ const Index: NextPage = ({ token }: any) => {
   const defances = useSelector((state: RootState) => state.slots.defances);
   const defancesHistory = useSelector((state: RootState) => state.slots.defancesHistory);
   const [counter, setSounter] = useState(0);
+  const router = useRouter();
+  const { notify } = router.query;
 
   const clickHandler = () => {
     setSounter(counter + 1);
@@ -265,8 +313,6 @@ const Index: NextPage = ({ token }: any) => {
         scale_team: "event",
       }));
       const slotsList = slotsIntra.map((slot: any) => {
-        console.log(" slot.scale_team?.correcteds", slot.scale_team?.correcteds)
-
         return ({
           id: slot.id,
           name:
@@ -403,6 +449,17 @@ const Index: NextPage = ({ token }: any) => {
     }
   }, [allEvents, switchEvents]);
 
+  useEffect(() => {
+    if (events && notify) {
+      const isEvent = events.filter(i => (i.id == notify))[0];
+      console.log("isEvent", isEvent);
+      if (isEvent?.id) {
+        setEventItem(isEvent);
+        setToggleInfoEventCanvas(true);
+      }
+    }
+  }, [events, notify, settings])
+
   // Calendar Unit Type
   const unitType = getUnitType(viewMode);
   // Calendar Date Label
@@ -485,6 +542,7 @@ const Index: NextPage = ({ token }: any) => {
 
 
   const handleSelect = async ({ start, end }: { start: any; end: any }) => {
+    console.log("handleSelect")
     const startFormated = dayjs(start).add(-1, "h").format();
     const endFormated = dayjs(end).add(-1, "h").format();
     const diffInMinutes = dayjs(endFormated).diff(dayjs(startFormated), 'minute');
@@ -504,8 +562,8 @@ const Index: NextPage = ({ token }: any) => {
     //     name: "Event test",
     //     eventStart: eventStart.toISOString(),
     //     eventEnd: eventEnd.toISOString(),
-    //     reminderTime: reminderTime.toISOString(),
-    //     // chatId: "1150194983228412055",
+    //     // reminderTime: reminderTime.toISOString(),
+    //     chatId: "1150194983228412055",
     //   }),
     // });
 
@@ -685,7 +743,7 @@ const Index: NextPage = ({ token }: any) => {
           <div className="row mb-4 g-3">
             {(loading || !scaleUsers || scaleUsers.length === 0) ? (
 
-              Object.keys(USERS).slice(0, 3).map((u) => (
+              Object.keys(USERS).slice(0, 1).map((u) => (
                 <div key={USERS[u].username} className="col-auto">
                   <div className="position-relative">
                     <Avatar
@@ -744,7 +802,6 @@ const Index: NextPage = ({ token }: any) => {
                         size={64}
                         className="cursor-pointer"
                         borderColor={"info"}
-
                       />
                     </div>
                   </Popovers>
@@ -777,7 +834,7 @@ const Index: NextPage = ({ token }: any) => {
         </div>
         <div className="row h-100">
 
-          <div className="col-xl-3">
+          <div className="col-xl-3 small_agenda">
             <Card stretch style={{ minHeight: 600 }}>
               <CardHeader>
                 <CardLabel icon="Today" iconColor="info">
@@ -808,7 +865,7 @@ const Index: NextPage = ({ token }: any) => {
                   date={date}
                   step={15}
                   min={roundToNearest15(date)}
-                  scrollToTime={dayjs(date).add(-2, 'h').toISOString()}
+                  // scrollToTime={dayjs(date).add(-2, 'h').toISOString()}
                   defaultDate={new Date()}
                   onSelectEvent={(event) => {
                     setInfoEvent();
@@ -836,7 +893,7 @@ const Index: NextPage = ({ token }: any) => {
                     viewMode={viewMode}
                   />
                 </CardActions>
-                <Popovers
+                {/* <Popovers
                   desc={
                     <DatePicker
                       onChange={(item) => setDate(item)}
@@ -849,7 +906,7 @@ const Index: NextPage = ({ token }: any) => {
                   trigger="click"
                 >
                   <Button color="light">{calendarDateLabel}</Button>
-                </Popovers>
+                </Popovers> */}
                 <div className="switch_events">
                   <Button
                     disabled={refresh || !scaleUsers}
@@ -904,6 +961,7 @@ const Index: NextPage = ({ token }: any) => {
                   // onView={handleViewMode}
                   // onDrillDown={handleViewMode}
                   components={{
+                    event: MyEvent,
                     week: {
                       event: MyWeekEvent,
                     },
@@ -953,7 +1011,7 @@ const Index: NextPage = ({ token }: any) => {
                     {
                       (eventItem?.type === "defances")
                         ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
-                        : (eventItem.name != "Available")
+                        : (eventItem?.name != "Available")
                           ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
                           : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
                     }
@@ -965,6 +1023,7 @@ const Index: NextPage = ({ token }: any) => {
             )}
           </OffCanvasBody>
         </OffCanvas>
+        {settings ? <Settings settingsLoaded={settings} /> : null}
         <OverlappingModal events={events} />
       </Page>
     </PageWrapper>
