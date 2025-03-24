@@ -7,12 +7,12 @@ export interface IServiceProps {
 }
 
 const surfing: IServiceProps = {
-	name: 'Surfing',
+	name: 'BDE - SOIRÉE DE FIN DE MANDAT',
 	icon: 'Surfing',
 	color: 'info',
 };
 const kiteSurfing: IServiceProps = {
-	name: 'Kite Surfing',
+	name: 'BDE - SOIRÉE DE FIN DE MANDAT',
 	icon: 'Kitesurfing',
 	color: 'danger',
 };
@@ -22,32 +22,32 @@ const tennis: IServiceProps = {
 	color: 'success',
 };
 const kayaking: IServiceProps = {
-	name: 'Kayaking',
+	name: '42 FITNESS - MALLOC TES MUSCLES',
 	icon: 'Kayaking',
 	color: 'info',
 };
 const handball: IServiceProps = {
-	name: 'Handball',
+	name: '42 FITNESS - MALLOC TES MUSCLES',
 	icon: 'SportsHandball',
 	color: 'warning',
 };
 const iceSkating: IServiceProps = {
-	name: 'Ice Skating',
+	name: '42 FITNESS - MALLOC TES MUSCLES',
 	icon: 'IceSkating',
 	color: 'info',
 };
 const snowboarding: IServiceProps = {
-	name: 'Snowboarding',
+	name: '42 FITNESS - MALLOC TES MUSCLES',
 	icon: 'Snowboarding',
 	color: 'warning',
 };
 const volleyball: IServiceProps = {
-	name: 'Volleyball',
+	name: '42 FITNESS - MALLOC TES MUSCLES',
 	icon: 'SportsVolleyball',
 	color: 'warning',
 };
 const cricket: IServiceProps = {
-	name: 'Cricket',
+	name: '42 FITNESS - MALLOC TES MUSCLES',
 	icon: 'SportsCricket',
 	color: 'success',
 };
@@ -62,7 +62,7 @@ const hiking: IServiceProps = {
 	color: 'danger',
 };
 const football: IServiceProps = {
-	name: 'Football',
+	name: 'BDE - SOIRÉE DE FIN DE MANDAT',
 	icon: 'SportsFootball',
 	color: 'success',
 };

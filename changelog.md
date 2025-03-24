@@ -1,3 +1,7 @@
+# 2.1.0
+- Remove small calendar from tablets
+- Change Overlapping modal
+
 # 2.0.0
 - Refactoring SSR with replase fetch in the front
 - Added function for resize and replase slots

@@ -714,7 +714,7 @@ const Index: NextPage = ({ token, me }: any) => {
           transition: "filter .5s ease-in-out",
         }}>
 
-          <div className="col-xl-3 small_agenda">
+          <div className="col-xl-3 small_agenda d-block d-md-none d-xl-block">
             <Card stretch style={{ minHeight: 600 }}>
               <CardHeader>
                 <CardLabel icon="Today" iconColor="info">

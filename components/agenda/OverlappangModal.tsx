@@ -36,53 +36,40 @@ const OverlappingModal = ({
             >
                 <ModalHeader>
                     <ModalTitle id="example-title">
+                        <Icon icon="Info" color="danger" className="me-2" size="2x" />
                         Overlapping Events Detected
                     </ModalTitle>
                 </ModalHeader>
-                <ModalBody>
-                    <div className="description">
-                        <Icon icon="Info" color="danger" className="me-2" size="2x" />
-                        <p className='h4 mb-5'>We’ve found events with overlapping times. Please review the following conflicts.</p>
-                    </div>
-                    {
-                        overlappingEvents[0].map((event: any, i: number) => {
-                            return (
-                                <Card borderColor={"danger"} borderSize="2">
-                                    <CardHeader>
-                                        <CardLabel>
-                                            <CardTitle>{event.name}</CardTitle>
-                                        </CardLabel>
-                                        {/* <CardActions>
+                <ModalBody onClick={() => setStatus(false)}>
+                    {overlappingEvents[0].map((event: any, i: number) => {
+                        return (
+                            <Card borderColor={"danger"} >
+                                <CardHeader style={{ paddingBottom: 0, minHeight: 0 }} >
+                                    <CardLabel>
+                                        <CardTitle>{event.name}</CardTitle>
+                                    </CardLabel>
+                                    {/* <CardActions>
                                             {}
                                         </CardActions> */}
-                                    </CardHeader>
-                                    <CardBody>
-                                        <div className='row align-items-end'>
-                                            <div className='col-lg-6'>
-                                                <div className='h4 mb-3'>Start event</div>
-                                                <span className='display-6 fw-bold text-danger'>{dayjs(event.start).format('H:mm')}</span>
-                                                <span className='ms-3 fw-bold text-danger'>{dayjs(event.start).format('DD MMMM')}</span>
-                                            </div>
-                                            <div className='col-lg-6'>
-                                                <div className='h4 mb-3'>End event</div>
-                                                <span className='display-6 fw-bold text-success'>{dayjs(event.end).format('H:mm')}</span>
-
-                                            </div>
+                                </CardHeader>
+                                <CardBody>
+                                    <div className='row align-items-end colomn_rest'>
+                                        <div className='col-lg-6' style={{ width: '50%' }}>
+                                            <div className='h6 mb-3'>Start event</div>
+                                            <span className='display-6 fw-bold text-danger'>{dayjs(event.start).format('H:mm')}</span>
+                                            <span className='ms-3 fw-bold text-danger'>{dayjs(event.start).format('DD MMMM')}</span>
                                         </div>
-                                    </CardBody>
-                                </Card>
-                            );
-                        })
+                                        <div className='col-lg-6' style={{ width: '50%' }}>
+                                            <div className='h6 mb-3'>End event</div>
+                                            <span className='display-6 fw-bold text-success'>{dayjs(event.end).format('H:mm')}</span>
+                                        </div>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        );
+                    })
                     }
                 </ModalBody>
-                <ModalFooter>
-                    <Button
-                        color="info"
-                        onClick={() => setStatus(false)}
-                    >
-                        Close
-                    </Button>
-                </ModalFooter>
             </Modal>
         </div>
     );
