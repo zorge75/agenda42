@@ -28,7 +28,7 @@ const getBackoffDelay = (attempt: number, retryAfter?: string): number => {
     return Math.min(exponential + Math.random() * 100, RETRY_CONFIG.maxDelayMs);
 };
 
-const createApiClient = (token: string) => {
+export const createApiClient = (token: string) => {
     const instance = axios.create({
         baseURL: BASE_URL,
         headers: {
@@ -72,7 +72,7 @@ export default async function handler(req: any, res: any) {
         // API endpoints and their transformations
         const requests = {
             evaluations: () => api.get('/me/scale_teams'),
-            events: () => api.get(`/users/${id}/events`, { params: { sort: '-begin_at' } }),
+            events: () => api.get(`/users/${id}/events`, { params: { sort: '-begin_at', 'page[size]': '100' } }),
             slots: () => api.get('/me/slots', { params: { 'page[size]': '100' } }),
             defancesHistory: () => api.get(`/users/${id}/scale_teams/as_corrected`),
             defances: () => api.get(`/me/scale_teams`, { params: { 'filter[future]': 'false' } }),

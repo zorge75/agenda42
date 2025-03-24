@@ -140,7 +140,7 @@ const Index: NextPage = ({ token, me }: any) => {
 
   const clickHandler = () => {
     setSounter(counter + 1);
-    if (counter == 3) {
+    if (counter == 42) {
       dispatch(setSlotsMod(true));
       showNotification(
         <span className="d-flex align-items-center">
@@ -267,7 +267,7 @@ const Index: NextPage = ({ token, me }: any) => {
         name: event.name ?? event.id,
         start: dayjs(event["begin_at"]).toDate(),
         end: dayjs(event["end_at"]).toDate(),
-        color: "primary",
+        color: events.some(e => event.id === e.id) ? "dark" : "primary",
         user: null,
         description: event.description,
         kind: event.kind,
@@ -279,10 +279,12 @@ const Index: NextPage = ({ token, me }: any) => {
         scale_team: "event",
       })) || [];
       setEventsActive([
-        ...events,
         ...eventList,
-      ]);
-      dispatch(setUnitType(Views.WORK_WEEK));
+        ...events,
+      ].filter((item, index, self) =>
+        index === self.findIndex(t => t.id === item.id)
+      ));
+      dispatch(setUnitType(Views.AGENDA));
     }
     else {
       setEventsActive([
@@ -565,46 +567,28 @@ const Index: NextPage = ({ token, me }: any) => {
       const res = await removeCreateSlotHandler(deletedSlotsIds, token, start, end, me.id);
       console.log("res", res);
 
-      if (res.length >= 4) {
+      if (res?.length >= 4) {
         const filtredSlots = originalSlotsIntra.filter((slot: any) => !deletedSlotsIds.includes(slot.id));
         const combined = [...res, ...filtredSlots];
         dispatch(setOriginalSlots(combined));
         dispatch(setSlots(preparationSlots(combined)));
+      } else {
+          showNotification(
+            <span className='d-flex align-items-center'>
+              <Icon
+                icon='Error'
+                size='lg'
+                className='me-1'
+              />
+              <span>Error</span>
+            </span>,
+            "Please, make the new slot for this time",
+            'danger'
+          );
       }
       setLoad(false);
-
-      // if (res.ok) {
-      //   showNotification(
-      //     <span className='d-flex align-items-center'>
-      //       <Icon
-      //         icon='Info'
-      //         size='lg'
-      //         className='me-1'
-      //       />
-      //       <span>Updated Successfully</span>
-      //     </span>,
-      //     'Slot has been created',
-      //     'success'
-      //   );
-      //   const combined = [...slotJson, ...slotsIntra];
-      //   dispatch(setOriginalSlots(combined));
-      //   dispatch(setSlots(preparationSlots(combined)));
-      // } else {
-      //   showNotification(
-      //     <span className='d-flex align-items-center'>
-      //       <Icon
-      //         icon='Error'
-      //         size='lg'
-      //         className='me-1'
-      //       />
-      //       <span>Error</span>
-      //     </span>,
-      //     slotJson.message,
-      //     'danger'
-      //   );
-      // }
     },
-    [me, originalSlotsIntra, slotsIntra] // setMyEvents
+    [me, originalSlotsIntra, slotsIntra]
   )
 
   return (

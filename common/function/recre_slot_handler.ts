@@ -5,7 +5,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const removeSlotsHandler = async (events: any, token: any) => {
     let deletedCount = 0;
     const maxRetries = 5;
-    const retryDelay = 3000;
+    const retryDelay = 1000;
     const deletedEventIds = [];
 
     for (const event of events) {

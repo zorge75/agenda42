@@ -31,8 +31,6 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
         dispatch(setModalStatus(status));
     }
 
-    console.log("settingsLoaded", settingsLoaded);
-
     const setDiscortId = (data: any) => {
         if (data?.data?.chat_id)
             return ("***" + settingsLoaded?.data?.chat_id.slice(settingsLoaded.data.chat_id.length - 5));

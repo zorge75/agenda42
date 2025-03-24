@@ -1,3 +1,9 @@
+# 2.2.0
+- Fixed rest for all events
+- Fixed view for all events
+- Removed subsctibed events from all events
+- 
+
 # 2.1.0
 - Remove small calendar from tablets
 - Change Overlapping modal

@@ -18,7 +18,7 @@ const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
     const unsubscribeHandler = async (event: any) => {
         window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
     };
-
+    console.log("event", eventItem);
     return (
         eventItem.scale_team != "invisible"
             ? <>

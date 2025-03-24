@@ -9,7 +9,7 @@ export default async function handler(req: any, res: any) {
     const tokenFromCookie = cookieObj["token"];
     try {
         const response = await axios.get(
-            "https://api.intra.42.fr/v2/campus/" + id + "/events",
+            "https://api.intra.42.fr/v2/campus/" + id + "/events?page[size]=100&sort=-created_at",
             {
                 headers: {
                     Authorization: `Bearer ${tokenFromCookie}`,

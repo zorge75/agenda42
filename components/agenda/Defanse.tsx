@@ -25,7 +25,6 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
         const etage = i.location.split("-")[1].slice(0, 2);
         return `https://friends.42paris.fr/?cluster=${claster}-${etage}&p=${i.location}`;
     };
-    console.log(">", eventItem);
     return (
         <div>
             <h2>Evaluation {eventItem.name}</h2>
