@@ -17,7 +17,7 @@ const kiteSurfing: IServiceProps = {
 	color: 'danger',
 };
 const tennis: IServiceProps = {
-	name: 'Tennis',
+	name: '42 FITNESS - MALLOC TES MUSCLES',
 	icon: 'SportsTennis',
 	color: 'success',
 };
@@ -57,7 +57,7 @@ const yoga: IServiceProps = {
 	color: 'success',
 };
 const hiking: IServiceProps = {
-	name: 'Hiking',
+	name: 'BDE - SOIRÉE DE FIN DE MANDAT',
 	icon: 'Hiking',
 	color: 'danger',
 };
