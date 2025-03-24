@@ -1,3 +1,6 @@
+# 2.3.0
+- Add notidy for settings
+
 # 2.2.0
 - Fixed rest for all events
 - Fixed view for all events

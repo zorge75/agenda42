@@ -19,6 +19,8 @@ import Select from "../bootstrap/forms/Select";
 import Textarea from "../bootstrap/forms/Textarea";
 import Modal, { ModalHeader, ModalTitle, ModalBody, ModalFooter } from "../bootstrap/Modal";
 import Input from "../bootstrap/forms/Input";
+import Icon from "../icon/Icon";
+import showNotification from "../extras/showNotification";
 
 const Settings: FC<any> = ({ settingsLoaded }: any) => {
     const settingsIsOpen = useSelector((state: RootState) => state.settings.settingsIsOpen);
@@ -33,7 +35,8 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
 
     const setDiscortId = (data: any) => {
         if (data?.data?.chat_id)
-            return ("***" + settingsLoaded?.data?.chat_id.slice(settingsLoaded.data.chat_id.length - 5));
+            return (data?.data?.chat_id)
+        // return ("***" + settingsLoaded?.data?.chat_id.slice(settingsLoaded.data.chat_id.length - 5));
         else
             return ("");
     }
@@ -50,7 +53,7 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
         onSubmit: async (values, { resetForm }) => {
             // TODO: save to SQLite3
             await fetch("/api/settings", {
-                method: settingsLoaded?.data ? "PATCH": "POST",
+                method: settingsLoaded?.data.data.user_id ? "PATCH" : "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -63,7 +66,19 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
             }).then(async (response) => {
                 if (!response.ok) {
                     console.log(`Failed to create settings: ${response.statusText}`);
+                    showNotification(
+                        <span className="d-flex align-items-center">
+                            <Icon icon="error" size="lg" className="me-1" />
+                            <span>🐱 Settings not saved</span>
+                        </span>, ""
+                    );
                 }
+                showNotification(
+                    <span className="d-flex align-items-center">
+                        <Icon icon="success" size="lg" className="me-1" />
+                        <span>🐱 Settings saved 🐱</span>
+                    </span>, ""
+                );
                 return { success: true };
             })
 
