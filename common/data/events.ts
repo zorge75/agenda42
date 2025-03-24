@@ -83,7 +83,7 @@ const events: IEvents[] = [
 	},
 	{
 		id: 9,
-		start: dayjs().startOf('month').add(22, 'day').startOf('day').add(9, 'hour').toDate(),
+		start: dayjs().startOf('month').add(24, 'day').startOf('day').add(9, 'hour').toDate(),
 		end: dayjs().startOf('month').add(24, 'day').startOf('day').add(17, 'hour').toDate(),
 		user: USERS.RYAN,
 		...SERVICES.HIKING,

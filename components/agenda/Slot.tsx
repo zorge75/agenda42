@@ -73,15 +73,7 @@ const Slot = ({ eventItem, token, originalSlotsIntra }: any) => {
                         deletedEventIds.push(event.id);
                         deletedCount++;
                         success = true;
-                        showNotification(
-                            <span className="d-flex align-items-center">
-                                <Icon icon="Info" size="lg" className="me-1" />
-                                <span>Successfully</span>
-                            </span>,
-                            "Slot has been deleted",
-                            "success"
-                        );
-                        await delay(1000);
+                        await delay(500);
                     } else if (res.status === 429) {
                         retries++;
                         if (retries < maxRetries) {
@@ -132,6 +124,14 @@ const Slot = ({ eventItem, token, originalSlotsIntra }: any) => {
 
         // After the loop, filter and dispatch once if any events were deleted
         if (deletedEventIds.length > 0) {
+            showNotification(
+                <span className="d-flex align-items-center">
+                    <Icon icon="Info" size="lg" className="me-1" />
+                    <span>Successfully</span>
+                </span>,
+                "Slot has been deleted",
+                "success"
+            );
             const filtredSlots = originalSlotsIntra.filter((slot) => !deletedEventIds.includes(slot.id));
             dispatch(setOriginalSlots(filtredSlots));
             dispatch(setSlots(preparationSlots(filtredSlots)));
@@ -184,7 +184,7 @@ const Slot = ({ eventItem, token, originalSlotsIntra }: any) => {
                         })
                     }
                 </> : null}
-                
+
                 <p className="mt-5">The buttons is disabled if the event starts more than 1 hour ago from now.</p>
             </div>
         </>
