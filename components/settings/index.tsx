@@ -53,7 +53,7 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
         onSubmit: async (values, { resetForm }) => {
             // TODO: save to SQLite3
             await fetch("/api/settings", {
-                method: settingsLoaded?.data.data.user_id ? "PATCH" : "POST",
+                method: settingsLoaded?.data?.data ? "PATCH" : "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },

@@ -57,7 +57,7 @@ import axios from "axios";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/fr";
 import showNotification from "../components/extras/showNotification";
-import { setOriginalSlots, setScaleTeams, setSlots } from "../store/slices/slotsSlice";
+import { setDefances, setOriginalSlots, setScaleTeams, setSlots } from "../store/slices/slotsSlice";
 import { preparationSlots } from "../common/function/preparationSlots";
 import { getScaleTeams } from "../common/function/getScaleTeams";
 import { setEvals } from "../store/slices/evalsSlice";
@@ -338,8 +338,10 @@ const Index: NextPage = ({ token, me }: any) => {
 
         if (res.ok) {
           // Success case
-          if (response.evaluations)
+          if (response.evaluations) {
             dispatch(setEvals(response.evaluations));
+            dispatch(setDefances(response.evaluations));
+          }
           if (response.slots) {
             dispatch(setOriginalSlots(response.slots));
             dispatch(setSlots(preparationSlots(response.slots)));
@@ -573,18 +575,18 @@ const Index: NextPage = ({ token, me }: any) => {
         dispatch(setOriginalSlots(combined));
         dispatch(setSlots(preparationSlots(combined)));
       } else {
-          showNotification(
-            <span className='d-flex align-items-center'>
-              <Icon
-                icon='Error'
-                size='lg'
-                className='me-1'
-              />
-              <span>Error</span>
-            </span>,
-            "Please, make the new slot for this time",
-            'danger'
-          );
+        showNotification(
+          <span className='d-flex align-items-center'>
+            <Icon
+              icon='Error'
+              size='lg'
+              className='me-1'
+            />
+            <span>Error</span>
+          </span>,
+          "Please, make the new slot for this time",
+          'danger'
+        );
       }
       setLoad(false);
     },

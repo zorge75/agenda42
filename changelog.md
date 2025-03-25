@@ -1,3 +1,7 @@
+# 2.3.1
+- Fixed a bug with next evaluations
+- Optimisation of the request api
+
 # 2.3.0
 - Add notidy for settings
 

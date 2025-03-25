@@ -45,9 +45,11 @@ export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
                 dispatch(setOriginalSlots(res.slots));
                 dispatch(setSlots(preparedSlots));
             }
+            if (res.evaluations) {
+                dispatch(setEvals(res.evaluations));
+                dispatch(setDefances(res.evaluations));
+            }
             // Batch additional updates
-            res.evals && dispatch(setEvals(res.evals));
-            res.defances && dispatch(setDefances(res.defances));
             res.defancesHistory && dispatch(setDefancesHistory(res.defancesHistory));
             res.events && dispatch(setEvents(res.events));
         } catch (error) {
