@@ -5,12 +5,20 @@ import Markdown from 'react-markdown'
 import Badge from "../bootstrap/Badge";
 import Icon from "../icon/Icon";
 
-function convertToMdLinks(text: any) {
-    const urlPattern = /(https?:\/\/[^\s]+)/g;
+const replaceBoldInLink = (link: string) => {
+    return link.replace("**_", "").replace("_**", "")
+    .replace("_**", "").replace("**_", "")
+}
+
+function convertToMdLinks(text: string) {
+    const mdLinkPattern = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g; // Détecte les liens Markdown existants
+    const urlPattern = /(?<!\])(?:\*\*?_?https?:\/\/[^\s]+)(?=\S*)/; // Détecte les liens bruts sans toucher aux liens MD
+
     return text.replace(urlPattern, (match: string) => {
-        // Extract just the domain part
-        const domain = match.split('/')[2] || match;
-        return `[${domain}](${match})`;
+        const mdLinkCheck = new RegExp(mdLinkPattern); // Create a new instance for each check
+        if (mdLinkCheck.test(text)) return replaceBoldInLink(match); // Si c'est déjà un lien Markdown, on ne touche pas
+        const domain = replaceBoldInLink(match.replace(/https?:\/\//, "").split('/')[0]); // Extrait le domaine proprement
+        return `[${domain}](${replaceBoldInLink(match)})`;
     });
 }
 

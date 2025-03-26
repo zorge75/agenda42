@@ -1,3 +1,5 @@
+# 2.3.2
+- Fixed bugs with MD and links
 # 2.3.1
 - Fixed a bug with next evaluations
 - Optimisation of the request api
