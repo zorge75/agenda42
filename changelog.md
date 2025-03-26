@@ -1,3 +1,7 @@
+# 2.3.3
+- Changed view default for all events
+- Fix bug with 2 events if futur eval is exist
+
 # 2.3.2
 - Fixed bugs with MD and links
 # 2.3.1

@@ -199,28 +199,30 @@ const Index: NextPage = ({ token, me }: any) => {
         })
       });
 
-      const defancesList = [...defancesHistory, ...defances].map((slot: any) => ({
-        id: slot.id,
-        name: `📥 ${slot.team?.project_gitlab_path?.split('/').pop()}`,
-        start: dayjs(slot["begin_at"]).toDate(),
-        end: dayjs(slot["begin_at"]).add(slot.scale.duration, 's').toDate(),
-        color:
-          slot.scale_team == "invisible" || slot.scale_team?.id
-            ? "danger"
-            : "dark",
-        user: null,
-        description: null,
-        kind: "kind",
-        location: "event.location",
-        max_people: "event.max_people",
-        nbr_subscribers: "event.nbr_subscribers",
-        prohibition_of_cancellation: "event.prohibition_of_cancellation",
-        themes: "event.themes",
-        scale_team: slot,
-        slots_data: null,
-        type: "defances",
-        isDraggable: false
-      }));
+      const defancesList = [...defancesHistory, ...defances]
+        .filter((i) => i.team?.project_gitlab_path?.split('/').pop())
+        .map((slot: any) => ({
+          id: slot.id,
+          name: `📥 ${slot.team?.project_gitlab_path?.split('/').pop()}`,
+          start: dayjs(slot["begin_at"]).toDate(),
+          end: dayjs(slot["begin_at"]).add(slot.scale.duration, 's').toDate(),
+          color:
+            slot.scale_team == "invisible" || slot.scale_team?.id
+              ? "danger"
+              : "dark",
+          user: null,
+          description: null,
+          kind: "kind",
+          location: "event.location",
+          max_people: "event.max_people",
+          nbr_subscribers: "event.nbr_subscribers",
+          prohibition_of_cancellation: "event.prohibition_of_cancellation",
+          themes: "event.themes",
+          scale_team: slot,
+          slots_data: null,
+          type: "defances",
+          isDraggable: false
+        }));
 
       setEvents([...eventList, ...slotsList, ...defancesList]);
       setEventsActive([...eventList, ...slotsList, ...defancesList]);
@@ -874,17 +876,14 @@ const Index: NextPage = ({ token, me }: any) => {
 
                 {(eventItem?.scale_team?.id && !(eventItem?.type === "defances")) ? (
                   <Evaluation token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
-                ) : (
-                  <div>
-                    {
-                      (eventItem?.type === "defances")
-                        ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
-                        : (eventItem?.name != "Available")
-                          ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
-                          : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
-                    }
-                  </div>
-                )}
+                ) :
+                  (eventItem?.type === "defances")
+                    ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
+                    : (eventItem?.name != "Available")
+                      ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
+                      : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
+
+                }
               </div>
             ) : (
               <div className="row g-4">{ }</div>

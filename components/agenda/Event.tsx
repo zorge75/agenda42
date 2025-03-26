@@ -22,7 +22,9 @@ function convertToMdLinks(text: string) {
     });
 }
 
+
 const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
+    console.log("Event", eventItem);
     const unsubscribeHandler = async (event: any) => {
         window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
     };

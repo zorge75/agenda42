@@ -11,6 +11,7 @@ import Badge from "../bootstrap/Badge";
 const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
     return (
         <div>
+            {console.log("Evaluation", eventItem)}
             <h2>Evaluation of the project</h2>
             <br />
             <div className="col-12">
@@ -30,7 +31,6 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
                                 />
                                 <CardLabel iconColor="dark">
                                     <CardTitle>
-
                                         {getCorrectorName(eventItem?.scale_team?.corrector.id, scaleUsers, me) || eventItem?.scale_team?.corrector.login}
                                     </CardTitle>
                                     <p style={{ marginTop: 5 }}>
