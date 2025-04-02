@@ -7,7 +7,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
-    slotRemoveMod: false,
+    slotRemoveMod: true,
     settingsIsOpen: false,
     settingsLoaded: null,
 };
