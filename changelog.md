@@ -1,3 +1,6 @@
+# 2.4.1
+- Changed layout
+
 # 2.4.0
 - Added flags for languages in the modal of evaluation
 - Changed dafault view for All events

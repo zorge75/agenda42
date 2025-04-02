@@ -382,6 +382,7 @@ const Index: NextPage = ({ token, me }: any) => {
         location?.reload();
       }
       setRefresh(false);
+      setSwitchEvents("my");
       await delay(3000);
     };
 
@@ -800,9 +801,7 @@ const Index: NextPage = ({ token, me }: any) => {
                     ?
                     <div className="spinner"> <Spinner random inButton /></div>
                     :
-                    <Button icon='Refresh' color='storybook' onClick={refreshHandler}>
-                      Refresh
-                    </Button>
+                    <Button icon='Refresh' color='storybook' onClick={refreshHandler}></Button>
                 }
                 <CardActions>
 
