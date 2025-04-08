@@ -685,19 +685,6 @@ const Index: NextPage = ({ token, me }: any) => {
             <Icon icon="Info" color="danger" className="me-2" size="2x" />
             <p>Attention ! L'agenda ne prend pas en compte <strong>les examens</strong>.
               Pour vous inscrire aux examens, veuillez vous rendre sur l'intra !</p>
-            <img
-              onClick={clickHandler}
-              src={Hanna}
-              alt="Petit chat"
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                transition: 'transform 0.3s ease-in-out'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.3)'}
-              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            />
           </div>
         </div>
         <div className="row h-100" style={{
