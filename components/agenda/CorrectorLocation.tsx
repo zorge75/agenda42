@@ -21,10 +21,10 @@ export const CorrectorLocation = ({ id, token = null, user = null }: { id: any; 
             setUserData(user);
     }, [id, token]);
 
+    // https://friends.42paris.fr/?cluster=f1&p=f1r12s2
     const getLinkForFriends42 = (i: any) => {
-        const claster = i.location.split("-")[0];
-        const etage = i.location.split("-")[1].slice(0, claster == 'made' ? 3 : 2);
-        return `https://friends.42paris.fr/?cluster=${claster}-${etage}&p=${i.location}`;
+        const claster = i.location.split("r")[0];
+        return `https://friends.42paris.fr/?cluster=${claster}&p=${i.location}`;
     };
 
     const btnStyle = {
