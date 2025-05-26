@@ -686,7 +686,6 @@ const Index: NextPage = ({ token, me }: any) => {
             <p>Attention ! L'agenda ne prend pas en compte <strong>les examens</strong>.
               Pour vous inscrire aux examens, veuillez vous rendre sur l'intra !</p>
             {
-              me.login == "hsharame" &&
               <img
                 onClick={clickHandler}
                 src={Hanna}
