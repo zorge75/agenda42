@@ -823,7 +823,7 @@ const Index: NextPage = ({ token, me }: any) => {
                   views={views}
                   view={viewMode}
                   date={date}
-                  step={60}
+                  step={15}
                   min={viewMode == Views.WORK_WEEK ? todayAt9AM : todayAt0AM}
                   onNavigate={(_date) => setDate(_date)}
                   scrollToTime={dayjs().add(-1, 'h').toISOString()}
