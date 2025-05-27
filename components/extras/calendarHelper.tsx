@@ -193,7 +193,7 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
             Day
           </Button>
         </DropdownItem> */}
-        <DropdownItem>
+        {/* <DropdownItem>
           <Button
             color="link"
             icon="view_agenda"
@@ -202,7 +202,7 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
           >
             Agenda
           </Button>
-        </DropdownItem>
+        </DropdownItem> */}
       </DropdownMenu>
     </Dropdown>
   );

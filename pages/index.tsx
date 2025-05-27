@@ -140,13 +140,13 @@ const Index: NextPage = ({ token, me }: any) => {
 
   const clickHandler = () => {
     setSounter(counter + 1);
-    if (counter == 42) {
+    if (counter == 3) {
       dispatch(setSlotsMod(true));
       showNotification(
         <span className="d-flex align-items-center">
           <Icon icon="Info" size="lg" className="me-1" />
-          <span>🐱 Attention 🐱</span>
-        </span>, "Aide du chat activée", "info"
+          <span>🐱🐱</span>
+        </span>, "Moderator mode est activée...", "info"
       );
     }
   }
@@ -610,9 +610,9 @@ const Index: NextPage = ({ token, me }: any) => {
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <Page container="fluid">
-        <div className="stories">
-          <div className="row mb-4 g-3">
+      <Page container="fluid pb-0">
+        <div className="stories pb-0">
+          <div className="row g-3 mb-0">
             {(loading || error) ? (
               Object.keys(USERS).slice(0, 6).map((u) => (
                 <div key={USERS[u].username} className="col-auto">
@@ -707,10 +707,9 @@ const Index: NextPage = ({ token, me }: any) => {
           pointerEvents: loadGeneral ? "none" : "auto",
           transition: "filter .5s ease-in-out",
         }}>
-
           <div className="col-xl-3 small_agenda d-block d-md-none d-xl-block">
             <Card stretch style={{ minHeight: 600 }}>
-              <CardHeader>
+              <CardHeader className="pb-0">
                 <CardLabel icon="Today" iconColor="info">
                   <CardTitle>
                     {dayjs(date).format("dddd, D MMMM")}
@@ -758,96 +757,144 @@ const Index: NextPage = ({ token, me }: any) => {
             </Card>
           </div>
           <div className="col-xl-9">
-            <Card stretch style={{ minHeight: 600 }}>
-              <CardHeader>
-                <CardActions>
-                  <CalendarTodayButton
-                    unitType={unitType}
-                    date={date}
-                    setDate={setDate}
-                    viewMode={viewMode}
-                  />
-                </CardActions>
-                <Popovers
-                  desc={
-                    <DatePicker
-                      onChange={(item) => setDate(item)}
-                      date={date}
-                      color={process.env.NEXT_PUBLIC_PRIMARY_COLOR}
-                    />
-                  }
-                  placement="bottom-end"
-                  className="mw-100"
-                  trigger="click"
-                >
-                  <Button color="light">{calendarDateLabel}</Button>
-                </Popovers>
-                <div className="switch_events">
-                  <Button
-                    disabled={refresh || !scaleUsers}
-                    color={switchEvents == "all" ? 'light' : 'primary'}
-                    onClick={() => setSwitchEvents("my")}
-                  >
-                    My slots & events
-                  </Button>
-                  <Button
-                    disabled={refresh || !scaleUsers}
-                    color={switchEvents == "my" ? 'light' : 'primary'}
-                    onClick={() => setSwitchEvents("all")}
-                  >
-                    All events
-                  </Button>
-                </div>
-                {
-                  (refresh || !scaleUsers)
-                    ?
-                    <div className="spinner"> <Spinner random inButton /></div>
-                    :
-                    <Button icon='Refresh' color='storybook' onClick={refreshHandler}></Button>
-                }
-                <CardActions>
+            <div className="row">
+              <div className="d-flex flex-column">
+                        <div>
+                          <Card stretch style={{ minHeight: 600 }}>
+                            <CardHeader>
+                              <CardActions>
+                                <CalendarTodayButton
+                                  unitType={unitType}
+                                  date={date}
+                                  setDate={setDate}
+                                  viewMode={viewMode}
+                                />
+                              </CardActions>
+                              <Popovers
+                                desc={
+                                  <DatePicker
+                                    onChange={(item) => setDate(item)}
+                                    date={date}
+                                    color={process.env.NEXT_PUBLIC_PRIMARY_COLOR}
+                                  />
+                                }
+                                placement="bottom-end"
+                                className="mw-100"
+                                trigger="click"
+                              >
+                                <Button color="light">{calendarDateLabel}</Button>
+                              </Popovers>
+                              <div className="switch_events">
+                                <Button
+                                  disabled={refresh || !scaleUsers}
+                                  color={switchEvents == "all" ? 'light' : 'primary'}
+                                  onClick={() => setSwitchEvents("my")}
+                                >
+                                  My slots & events
+                                </Button>
+                                <Button
+                                  disabled={refresh || !scaleUsers}
+                                  color={switchEvents == "my" ? 'light' : 'primary'}
+                                  onClick={() => setSwitchEvents("all")}
+                                >
+                                  All from intra
+                                </Button>
+                              </div>
+                              {
+                                (refresh || !scaleUsers)
+                                  ?
+                                  <div className="spinner"> <Spinner random inButton /></div>
+                                  :
+                                  <Button icon='Refresh' color='storybook' onClick={refreshHandler}>Update</Button>
+                              }
+                              <CardActions>
+                                <CalendarViewModeButtons viewMode={viewMode} />
+                              </CardActions>
+                            </CardHeader>
+                            <CardBody isScrollable>
+                              <DnDCalendar
+                                formats={customFormats}
+                                selectable
+                                toolbar={false}
+                                localizer={localizer}
+                                events={eventsActive}
+                                defaultView={Views.WEEK}
+                                views={views}
+                                view={viewMode}
+                                date={date}
+                                step={15}
+                                min={viewMode == Views.WORK_WEEK ? todayAt9AM : todayAt0AM}
+                                onNavigate={(_date) => setDate(_date)}
+                                scrollToTime={dayjs().add(-1, 'h').toISOString()}
+                                defaultDate={new Date()}
+                                onEventDrop={moveEvent}
+                                onEventResize={moveEvent}
+                                draggableAccessor="isDraggable"
+                                onSelectEvent={(event) => {
+                                  setInfoEvent();
+                                  setEventItem(event);
+                                }}
+                                onSelectSlot={handleSelect}
+                                components={{
+                                  event: MyEvent,
+                                  week: {
+                                    event: MyWeekEvent,
+                                  },
+                                  work_week: {
+                                    event: MyWeekEvent,
+                                  },
+                                }}
+                                eventPropGetter={eventStyleGetter}
+                              />
+                              <style>{customStyles}</style>
+                            </CardBody>
+                          </Card>
+                        </div>
+                <div>
+                  <Card stretch style={{ minHeight: 390 }}>
+                    <CardBody isScrollable>
 
-                  <CalendarViewModeButtons viewMode={viewMode} />
-                </CardActions>
-              </CardHeader>
-              <CardBody isScrollable>
-                <style>{customStyles}</style>
-                <DnDCalendar
-                  formats={customFormats}
-                  selectable
-                  toolbar={false}
-                  localizer={localizer}
-                  events={eventsActive}
-                  defaultView={Views.WEEK}
-                  views={views}
-                  view={viewMode}
-                  date={date}
-                  step={15}
-                  min={viewMode == Views.WORK_WEEK ? todayAt9AM : todayAt0AM}
-                  onNavigate={(_date) => setDate(_date)}
-                  scrollToTime={dayjs().add(-1, 'h').toISOString()}
-                  defaultDate={new Date()}
-                  onEventDrop={moveEvent}
-                  onEventResize={moveEvent}
-                  draggableAccessor="isDraggable"
-                  onSelectEvent={(event) => {
-                    setInfoEvent();
-                    setEventItem(event);
-                  }}
-                  onSelectSlot={handleSelect}
-                  components={{
-                    event: MyEvent,
-                    week: {
-                      event: MyWeekEvent,
-                    },
-                    work_week: {
-                      event: MyWeekEvent,
-                    },
-                  }}
-                  eventPropGetter={eventStyleGetter}
-                />
-              </CardBody>
-            </Card>
+                      <style>{customStyles}</style>
+                      <DnDCalendar
+                        heigth="100"
+                        formats={customFormats}
+                        selectable
+                        toolbar={false}
+                        localizer={localizer}
+                        events={eventsActive}
+                        defaultView={"agenda"}
+                        views={views}
+                        view={"agenda"}
+                        date={date}
+                        step={15}
+                        min={viewMode == Views.WORK_WEEK ? todayAt9AM : todayAt0AM}
+                        onNavigate={(_date) => setDate(_date)}
+                        scrollToTime={dayjs().add(-1, 'h').toISOString()}
+                        defaultDate={new Date()}
+                        onEventDrop={moveEvent}
+                        onEventResize={moveEvent}
+                        draggableAccessor="isDraggable"
+                        onSelectEvent={(event) => {
+                          setInfoEvent();
+                          setEventItem(event);
+                        }}
+                        onSelectSlot={handleSelect}
+                        components={{
+                          event: MyEvent,
+                          week: {
+                            event: MyWeekEvent,
+                          },
+                          work_week: {
+                            event: MyWeekEvent,
+                          },
+                        }}
+                        eventPropGetter={eventStyleGetter}
+                      />
+                    </CardBody>
+                  </Card>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -896,7 +943,7 @@ const Index: NextPage = ({ token, me }: any) => {
           </OffCanvasBody>
         </OffCanvas>
         {settings ? <Settings settingsLoaded={settings} /> : null}
-        <OverlappingModal events={events} />
+        {!loadGeneral ? <OverlappingModal events={events} /> : null}
       </Page>
     </PageWrapper>
   );

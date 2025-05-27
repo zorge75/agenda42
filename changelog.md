@@ -1,3 +1,7 @@
+# 2.5.0
+- Removed overlapping modal from loading page
+- Add table view in header of main calendar
+
 # 2.4.1
 - Changed layout
 
