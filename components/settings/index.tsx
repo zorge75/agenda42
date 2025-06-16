@@ -119,6 +119,7 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
                     <div className='col-md-8'>
 
                         <div className='row g-4'>
+                            <p>Notify with Bot Discord</p>
                             <FormGroup
                                 className='col-12'
                                 id='discordId'
@@ -128,6 +129,9 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
                                     value={formik.values.discordId}
                                 />
                             </FormGroup>
+                            <p>Default layout for main page</p>
+                            <p>Default tab for main page</p>
+                            <p>Default color theme</p>
                             {/* <FormGroup
                                         className='col-12'
                                         id='description'
