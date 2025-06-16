@@ -31,9 +31,9 @@ const DefaultFooter = () => {
               <Tooltips title='Send your suggestions, questions, and bug reports here.'
                 placement='top'>
                 <a style={{ textDecoration: 'inherit', color: 'inherit' }}
-                  href="mailto:team@agenda42.fr">@agenda42.fr</a>
+                  href="mailto:help@agenda42.fr">help@agenda42.fr</a>
               </Tooltips>
-              &nbsp;| 2025 | version {packageJson.version}</span>
+              &nbsp;| version {packageJson.version}</span>
           </div>
         </div>
       </div>

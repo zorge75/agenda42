@@ -142,12 +142,6 @@ const Index: NextPage = ({ token, me }: any) => {
     setSounter(counter + 1);
     if (counter == 3) {
       dispatch(setSlotsMod(true));
-      showNotification(
-        <span className="d-flex align-items-center">
-          <Icon icon="Info" size="lg" className="me-1" />
-          <span>🐱🐱</span>
-        </span>, "Moderator mode est activée...", "info"
-      );
     }
   }
 
@@ -226,6 +220,8 @@ const Index: NextPage = ({ token, me }: any) => {
 
       setEvents([...eventList, ...slotsList, ...defancesList]);
       setEventsActive([...eventList, ...slotsList, ...defancesList]);
+
+      setSwitchEvents("all");
     }
   }, [eventsIntra, slotsIntra, defances, defancesHistory]);
 
@@ -611,97 +607,6 @@ const Index: NextPage = ({ token, me }: any) => {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <Page container="fluid pb-0">
-        <div className="stories pb-0">
-          <div className="row g-3 mb-0">
-            {(loading || error) ? (
-              Object.keys(USERS).slice(0, 6).map((u) => (
-                <div key={USERS[u].username} className="col-auto">
-
-                  <div className="position-relative" style={{ filter: "blur(5px)" }}>
-                    <Avatar
-                      src={USERS[u].src}
-                      color={USERS[u].color}
-                      size={64}
-                      className="cursor-pointer"
-                      borderColor={
-                        employeeList[USERS[u].username] ? "info" : themeStatus
-                      }
-                      onClick={() =>
-                        setEmployeeList({
-                          ...employeeList,
-                          [USERS[u].username]: !employeeList[USERS[u].username],
-                        })
-                      }
-                    />
-                    {!!events.filter(
-                      (i) =>
-                        i.user?.username === USERS[u].username &&
-                        i.start &&
-                        i.start < now &&
-                        i.end &&
-                        i.end > now,
-                    ).length && (
-                        <span className="position-absolute top-85 start-85 translate-middle badge border border-2 border-light rounded-circle bg-success p-2">
-                          <span className="visually-hidden">Online user</span>
-                        </span>
-                      )}
-                  </div>
-                </div>
-              ))
-            ) : (
-              [...scaleUsers].slice(0, 6).reverse().map((u: any) => (
-                <div key={u.login} className="col-auto">
-                  <Popovers
-                    trigger="hover"
-                    desc={
-                      <>
-                        <div className="h4">{`${u.usual_full_name}`}</div>
-                        <div className="h6">{`${u.pool_month} ${u.pool_year}`}</div>
-                      </>
-                    }
-                  >
-                    <div className="position-relative"
-                      onClick={() => {
-                        window.open("https://profile.intra.42.fr/users/" + u.login, "_blank")
-                      }
-                      }
-                    >
-                      <Avatar
-                        src={u.image}
-                        color={"info"}
-                        size={64}
-                        className="cursor-pointer"
-                        borderColor={"info"}
-                      />
-                    </div>
-                  </Popovers>
-
-                </div>
-              )))
-            }
-
-          </div>
-          <div className="message_exam mb-4">
-            <Icon icon="Info" color="danger" className="me-2" size="2x" />
-            <p>Attention ! L'agenda ne prend pas en compte <strong>les examens</strong>.
-              Pour vous inscrire aux examens, veuillez vous rendre sur l'intra !</p>
-            {
-              <img
-                onClick={clickHandler}
-                src={Hanna}
-                alt="Petit chat"
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  transition: 'transform 0.3s ease-in-out'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.3)'}
-                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-              />
-            }
-          </div>
-        </div>
         <div className="row h-100" style={{
           filter: loadGeneral ? "blur(5px)" : "blur(0px)",
           pointerEvents: loadGeneral ? "none" : "auto",
@@ -757,10 +662,9 @@ const Index: NextPage = ({ token, me }: any) => {
             </Card>
           </div>
           <div className="col-xl-9">
-            <div className="row">
-              <div className="d-flex flex-column">
-                        <div>
-                          <Card stretch style={{ minHeight: 600 }}>
+            
+                       
+                <Card stretch style={{ minHeight: 600 }} >
                             <CardHeader>
                               <CardActions>
                                 <CalendarTodayButton
@@ -785,19 +689,27 @@ const Index: NextPage = ({ token, me }: any) => {
                                 <Button color="light">{calendarDateLabel}</Button>
                               </Popovers>
                               <div className="switch_events">
+                  <Button
+                    disabled={refresh || !scaleUsers}
+                    color={switchEvents == "all" ? 'primary' : 'light'}
+                    onClick={() => setSwitchEvents("all")}
+                  >
+                    Agenda
+                  </Button>
                                 <Button
                                   disabled={refresh || !scaleUsers}
-                                  color={switchEvents == "all" ? 'light' : 'primary'}
+                          color={switchEvents == "my" ? 'primary' : 'light'} 
                                   onClick={() => setSwitchEvents("my")}
                                 >
                                   My slots & events
                                 </Button>
+                                
                                 <Button
                                   disabled={refresh || !scaleUsers}
-                                  color={switchEvents == "my" ? 'light' : 'primary'}
-                                  onClick={() => setSwitchEvents("all")}
+                                  color={switchEvents == "meeting" ? 'primary' : 'light'}
+                                  onClick={() => setSwitchEvents("meeting")}
                                 >
-                                  All from intra
+                                  Meeting rooms
                                 </Button>
                               </div>
                               {
@@ -849,52 +761,8 @@ const Index: NextPage = ({ token, me }: any) => {
                               <style>{customStyles}</style>
                             </CardBody>
                           </Card>
-                        </div>
-                <div>
-                  <Card stretch style={{ minHeight: 390 }}>
-                    <CardBody isScrollable>
-
-                      <style>{customStyles}</style>
-                      <DnDCalendar
-                        heigth="100"
-                        formats={customFormats}
-                        selectable
-                        toolbar={false}
-                        localizer={localizer}
-                        events={eventsActive}
-                        defaultView={"agenda"}
-                        views={views}
-                        view={"agenda"}
-                        date={date}
-                        step={15}
-                        min={viewMode == Views.WORK_WEEK ? todayAt9AM : todayAt0AM}
-                        onNavigate={(_date) => setDate(_date)}
-                        scrollToTime={dayjs().add(-1, 'h').toISOString()}
-                        defaultDate={new Date()}
-                        onEventDrop={moveEvent}
-                        onEventResize={moveEvent}
-                        draggableAccessor="isDraggable"
-                        onSelectEvent={(event) => {
-                          setInfoEvent();
-                          setEventItem(event);
-                        }}
-                        onSelectSlot={handleSelect}
-                        components={{
-                          event: MyEvent,
-                          week: {
-                            event: MyWeekEvent,
-                          },
-                          work_week: {
-                            event: MyWeekEvent,
-                          },
-                        }}
-                        eventPropGetter={eventStyleGetter}
-                      />
-                    </CardBody>
-                  </Card>
-                </div>
-              </div>
-            </div>
+                      
+             
           </div>
         </div>
 
