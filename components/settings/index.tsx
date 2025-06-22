@@ -13,7 +13,6 @@ import validate from "../../common/function/validation/editPagesValidate";
 import dayjs from "dayjs";
 import FormText from "../bootstrap/forms/FormText";
 import TAGS from "../../common/data/boardTagsData";
-import USERS from "../../common/data/userDummyData";
 import Card, { CardHeader, CardLabel, CardTitle, CardBody } from "../bootstrap/Card";
 import Select from "../bootstrap/forms/Select";
 import Textarea from "../bootstrap/forms/Textarea";

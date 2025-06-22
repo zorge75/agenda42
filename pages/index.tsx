@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import dayjs from "dayjs";
 import classNames from "classnames";
-import Preview from './../assets/img/preview.png';
 import {
   Calendar,
   dayjsLocalizer,
@@ -13,10 +12,6 @@ import {
 import { useFormik } from "formik";
 import Head from "next/head";
 import { Calendar as DatePicker } from "react-date-range";
-import eventList, { IEvents } from "../common/data/events";
-import USERS, {
-  getUserDataWithUsername,
-} from "../common/data/userDummyData";
 import { TColor } from "../type/color-type";
 import useDarkMode from "../hooks/useDarkMode";
 import Icon from "../components/icon/Icon";
@@ -28,9 +23,6 @@ import {
   getUnitType,
   getViews,
 } from "../components/extras/calendarHelper";
-import {
-  getServiceDataWithServiceName,
-} from "../common/data/serviceDummyData";
 import PageWrapper from "../layout/PageWrapper/PageWrapper";
 import { demoPagesMenu } from "../menu";
 import Popovers from "../components/bootstrap/Popovers";
@@ -128,8 +120,8 @@ const Index: NextPage = ({ token, me }: any) => {
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
   const [switchEvents, setSwitchEvents] = useState("my");
   const [counter, setSounter] = useState(0);
-  const [events, setEvents] = useState(eventList);
-  const [eventsActive, setEventsActive] = useState(eventList);
+  const [events, setEvents] = useState([]);
+  const [eventsActive, setEventsActive] = useState([]);
   const router = useRouter();
   const { notify } = router.query;
 
@@ -544,16 +536,7 @@ const Index: NextPage = ({ token, me }: any) => {
     return () => { };
     //	eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventItem]);
-  // END:: Calendar
 
-  // BEGIN :: Calendar
-  // Active employee
-  const [employeeList, setEmployeeList] = useState({
-    [USERS.JOHN.username]: true,
-    [USERS.ELLA.username]: true,
-    [USERS.RYAN.username]: true,
-    [USERS.GRACE.username]: true,
-  });
 
   const todayAt9AM = dayjs().set('hour', 7).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
   const todayAt0AM = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
@@ -600,7 +583,6 @@ const Index: NextPage = ({ token, me }: any) => {
         <title>{demoPagesMenu.dashboard.text}</title>
         <meta property="og:title" content="Agenda42" />
         <meta property="og:description" content="This is a description of my awesome app.Simplify your life with Agenda42! Manage all your events and evaluations in a single, easy-to-use calendar. Whether it’s scheduling appointments, tracking availability, or organizing tasks, Agenda42 keeps everything in one place for seamless planning and productivity." />
-        <meta property="og:image" content={Preview} />
         <meta property="og:url" content="https://agenda42.fr" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />

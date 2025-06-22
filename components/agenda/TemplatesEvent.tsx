@@ -4,7 +4,6 @@ import Avatar, { AvatarGroup } from "../Avatar";
 import Icon from "../icon/Icon";
 import dayjs from "dayjs";
 import { IEvents } from "../../common/data/events";
-import { IUserProps } from "../../common/data/userDummyData";
 import { TColor } from "../../type/color-type";
 import Tooltips from "../bootstrap/Tooltips";
 

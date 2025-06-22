@@ -1,12 +1,10 @@
 import axios from 'axios';
 import React, { createContext, FC, ReactNode, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getUserDataWithUsername, IUserProps } from '../common/data/userDummyData';
 
 export interface IAuthContextProps {
 	user: string; // Username (e.g., 42 login)
 	setUser: (user: string) => void;
-	userData: Partial<IUserProps>; // Dummy user data
 	token: string | null; // Bearer token
 }
 
@@ -14,7 +12,6 @@ export interface IAuthContextProps {
 const AuthContext = createContext<IAuthContextProps>({
 	user: '',
 	setUser: () => { },
-	userData: {},
 	token: null,
 });
 
@@ -27,7 +24,6 @@ interface IAuthContextProviderProps {
 export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children, initialToken, me }) => {
 	// @ts-ignore
 	const [user, setUser] = useState<string>(null);
-	const [userData, setUserData] = useState<Partial<IUserProps>>({});
 	const [token, setToken] = useState<string | null>(initialToken || null);
 
 	// Hydrate token and fetch user data on mount (client-side)
@@ -45,7 +41,6 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children, i
     if (typeof window !== 'undefined') {
       localStorage.setItem('facit_authUsername', user);
     }
-    setUserData(user ? getUserDataWithUsername(user) : {});
 
   }, [user]);
 
@@ -53,10 +48,9 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children, i
     () => ({
       user,
       setUser,
-      userData,
       token,
     }),
-    [user, userData, token],
+    [user, token],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
