@@ -9,6 +9,7 @@ import useDarkMode from '../../hooks/useDarkMode';
 import useMounted from '../../hooks/useMounted';
 import Mounted from '../../components/Mounted';
 import useRoot from '../../hooks/useRoot';
+import Logo42 from '/home/aron/agenda42/pages/_layout/_headers/Logo42.tsx';
 
 interface IHeaderLeftProps {
 	children: ReactNode;
@@ -96,9 +97,9 @@ const Header: FC<IHeaderProps> = ({ children, hasLeftMobileMenu, hasRightMobileM
 			<header ref={refMobileHeader} className='mobile-header'>
 				<div className='container-fluid'>
 					<div className='row'>
-						<div className='col'>
-							<h4 className="fw-bold">Agenda 42 <sup>beta</sup></h4>
-							{/* <Button
+						<Logo42/>
+						{/*<div className='col'>
+							 <Button
 								aria-label='Toggle Aside'
 								className='mobile-header-toggle'
 								size='lg'
@@ -125,8 +126,8 @@ const Header: FC<IHeaderProps> = ({ children, hasLeftMobileMenu, hasRightMobileM
 										setRightMenuStatus(false);
 									}}
 								/>
-							)} */}
-						</div>
+							)}
+						</div> */}
 						{hasRightMobileMenu && (
 							<div className='col-auto'>
 								<Button

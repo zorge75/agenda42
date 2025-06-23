@@ -683,16 +683,16 @@ const Index: NextPage = ({ token, me }: any) => {
                           color={switchEvents == "my" ? 'primary' : 'light'} 
                                   onClick={() => setSwitchEvents("my")}
                                 >
-                                  My slots & events
+                    Focusing
                                 </Button>
                                 
-                                <Button
+                                {/* <Button
                                   disabled={refresh || !scaleUsers}
                                   color={switchEvents == "meeting" ? 'primary' : 'light'}
                                   onClick={() => setSwitchEvents("meeting")}
                                 >
                                   Meeting rooms
-                                </Button>
+                                </Button> */}
                               </div>
                               {
                                 (refresh || !scaleUsers)
