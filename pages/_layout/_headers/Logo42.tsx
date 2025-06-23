@@ -1,7 +1,7 @@
 import React from 'react';
 import useDarkMode from "../../../hooks/useDarkMode";
 
-const Logo42: React.FC = () => {
+const Logo42 = () => {
     const { darkModeStatus } = useDarkMode();
 
     return (
