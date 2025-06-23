@@ -9,7 +9,7 @@ import useDarkMode from '../../hooks/useDarkMode';
 import useMounted from '../../hooks/useMounted';
 import Mounted from '../../components/Mounted';
 import useRoot from '../../hooks/useRoot';
-import Logo42 from '/home/aron/agenda42/pages/_layout/_headers/Logo42.tsx';
+import Logo42 from '../../pages/_layout/_headers/Logo42';
 
 interface IHeaderLeftProps {
 	children: ReactNode;
