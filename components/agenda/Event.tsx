@@ -32,19 +32,14 @@ const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
     return (
         eventItem.scale_team != "invisible"
             ? <>
+                <h2>{eventItem.name}</h2>
 
-
-                <Badge color='success' className="mb-4">
-                    <Icon icon="LocationOn" />  {eventItem.location}
-                </Badge>
-                <h3>{eventItem.name}</h3>
-
-                <Card borderColor={"light"} borderSize="2" className="mt-4 mb-5" >
+                <Card borderColor={"light"} borderSize="2" className="mt-4 mb-2" >
                     <CardBody>
                         <div className='row align-items-end event_row'>
                             <div className='col-lg-6'>
                                 <div className='h4 mb-3'>{dayjs(eventItem.start).format('DD MMMM')}</div>
-                                <span className='display-6 fw-bold text-dark'>{dayjs(eventItem.start).format('H:mm')}</span>
+                                <span className='display-6 fw-bold'>{dayjs(eventItem.start).format('H:mm')}</span>
                             </div>
                             <div className='col-lg-6'>
                                 <div className='h4 mb-3'>
@@ -52,24 +47,27 @@ const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
                                         {eventItem.kind}
                                     </Badge>
                                 </div>
-                                <span className='display-6 fw-bold text-dark'>{dayjs(eventItem.end).format('H:mm')}</span>
+                                <span className='display-6 fw-bold'>{dayjs(eventItem.end).format('H:mm')}</span>
                             </div>
                         </div>
+                        <Badge color='success' className="mt-4">
+                            <Icon icon="LocationOn" />  {eventItem.location}
+                        </Badge>
                     </CardBody>
                 </Card>
 
-                <p className="h5"> <Markdown>{convertToMdLinks(eventItem.description)}</Markdown></p>
-
-                <div className="col mt-5">
+                <div className="col mb-3">
                     <Button
                         color="success"
                         type="submit"
                         onClick={() => unsubscribeHandler(eventItem)}
                     >
-                        Open event in intra
+                        Subscribe with intra
                     </Button>
                     <br />
                 </div>
+
+                <p className="h5"> <Markdown>{convertToMdLinks(eventItem.description)}</Markdown></p>
             </>
             : <div>You will evaluate someone at {dayjs(eventItem.slots_data[0].begin_at).format('H:mm')}</div>
     );

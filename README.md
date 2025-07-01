@@ -18,4 +18,7 @@ docker build -t agenda42-app .
 docker run --env-file .env.production -p 3002:3002 agenda42-app
 
 ----------------
+
+# Other command
+
 kill -9 $(lsof -t -i:3002)

@@ -83,23 +83,21 @@ export const CalendarTodayButton: FC<ICalendarTodayButtonProps> = ({
   return (
     <ButtonGroup>
       <Button
-        color="info"
-        isLight
+        color="primary"
         // @ts-ignore
         onClick={() => setDate(dayjs(date).add(-1, unitType).toDate())}
         icon="ChevronLeft"
         aria-label="Prev"
       />
       {/* @ts-ignore */}
-      {central ? <Button color="info" isLight
-        disabled={dayjs(date).isSame(dayjs(), 'day')}
+      {central ? <Button color="primary" 
+        className={dayjs(date).isSame(dayjs(), 'day') ? '' : 'btn-light'}
         onClick={() => setDate(dayjs(new Date()).toDate())}
       >
         Today
       </Button> : null}
       <Button
-        color="info"
-        isLight
+        color="primary"
         // @ts-ignore
         onClick={() => setDate(dayjs(date).add(1, unitType).toDate())}
         icon="ChevronRight"
@@ -137,7 +135,6 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
       <DropdownToggle>
         <Button
           color="primary"
-          isLight
           icon={
             (viewMode === Views.MONTH && "calendar_view_month") ||
             (viewMode === Views.WEEK && "calendar_view_week") ||
