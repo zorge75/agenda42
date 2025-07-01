@@ -13,7 +13,7 @@ import { useEffect } from "react";
 const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
     return (
         <div>
-            <h2>Evaluation of the project</h2>
+            <h2>You are reviewing</h2>
             <br />
             <div className="col-12">
                 {

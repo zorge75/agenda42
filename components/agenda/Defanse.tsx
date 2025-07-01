@@ -30,11 +30,10 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
     
     return (
         <div>
-            <h2>Evaluation {eventItem.name}</h2>
+            <h2>You are evaluated {eventItem.name.substr(2, eventItem.name.lenght)}</h2>
             <br />
             {eventItem?.scale_team.corrector !== 'invisible' ? <div className="col-12">
                 <Card className="mb-0 bg-l10-success" shadow="sm">
-
                     {
                         userData && <CardHeader className="bg-l25-success colomn_rest">
                             <CardLabel iconColor="dark">

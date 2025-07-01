@@ -187,6 +187,10 @@ $border-radius-child: #{$card-border-radius - $card-border-width};
 			height: 10rem;
 		}
 	}
+
+	p {
+		text-align: justify;
+	}
 }
 
 .card-footer {

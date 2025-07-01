@@ -183,16 +183,17 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
             Work Week
           </Button>
         </DropdownItem>
-        {/* <DropdownItem>
+        <DropdownItem>
           <Button
             color="link"
             icon="calendar_view_day"
+            className="d-block d-xl-none"
             isActive={viewMode === Views.DAY}
             onClick={() => setViewMode(Views.DAY)}
           >
             Day
           </Button>
-        </DropdownItem> */}
+        </DropdownItem>
         <DropdownItem>
           <Button
             color="link"

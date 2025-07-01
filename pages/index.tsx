@@ -160,9 +160,9 @@ const Index: NextPage = ({ token, me }: any) => {
           id: slot.id,
           name:
             slot.scale_team == "invisible"
-              ? `📤 Invisible`
+              ? `⬆️ Invisible`
               : slot.scale_team?.correcteds
-                ? `📤 ${slot.scale_team?.correcteds[0].login}`
+                ? `⬆️ ${slot.scale_team?.correcteds[0].login}`
                 : "Available",
           start: dayjs(slot["begin_at"]).toDate(),
           end: dayjs(slot["end_at"]).toDate(),
@@ -188,7 +188,7 @@ const Index: NextPage = ({ token, me }: any) => {
         .filter((i) => i.team?.project_gitlab_path?.split('/').pop())
         .map((slot: any) => ({
           id: slot.id,
-          name: `📥 ${slot.team?.project_gitlab_path?.split('/').pop()}`,
+          name: `⬇️ ${slot.team?.project_gitlab_path?.split('/').pop()}`,
           start: dayjs(slot["begin_at"]).toDate(),
           end: dayjs(slot["begin_at"]).add(slot.scale.duration, 's').toDate(),
           color:
@@ -273,13 +273,11 @@ const Index: NextPage = ({ token, me }: any) => {
       ].filter((item, index, self) =>
         index === self.findIndex(t => t.id === item.id)
       ));
-      dispatch(setUnitType(Views.WORK_WEEK));
     }
     else {
       setEventsActive([
         ...events
       ]);
-      dispatch(setUnitType(Views.WEEK));
     }
   }, [allEvents, switchEvents]);
 
@@ -593,8 +591,7 @@ const Index: NextPage = ({ token, me }: any) => {
           pointerEvents: loadGeneral ? "none" : "auto",
           transition: "filter .5s ease-in-out",
         }}>
-
-          <div className="col-xl-3 small_agenda d-block d-md-none d-xl-block">
+          <div className="col-xl-3 small_agenda d-none d-md-none d-xl-block">
             <Card stretch style={{ minHeight: 600 }}>
               <CardHeader>
                 <CardLabel icon="Today" iconColor="info">
@@ -625,7 +622,6 @@ const Index: NextPage = ({ token, me }: any) => {
                   view={Views.DAY}
                   date={date}
                   step={15}
-                  min={roundToNearest15(date)}
                   scrollToTime={dayjs(date).add(-1, 'h').toISOString()}
                   defaultDate={new Date()}
                   onSelectEvent={(event) => {
