@@ -91,7 +91,7 @@ export const CalendarTodayButton: FC<ICalendarTodayButtonProps> = ({
       />
       {/* @ts-ignore */}
       {central ? <Button color="primary" 
-        className={dayjs(date).isSame(dayjs(), 'day') ? '' : 'btn-light'}
+        className={dayjs(date).isSame(dayjs(), 'day') ? 'btn-light' : ''}
         onClick={() => setDate(dayjs(new Date()).toDate())}
       >
         Today
