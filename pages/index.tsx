@@ -3,39 +3,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import dayjs from "dayjs";
 import classNames from "classnames";
-import {
-  Calendar,
-  dayjsLocalizer,
-  Formats,
-  Views,
-} from "react-big-calendar";
 import { useFormik } from "formik";
 import Head from "next/head";
-import { Calendar as DatePicker } from "react-date-range";
 import { TColor } from "../type/color-type";
 import useDarkMode from "../hooks/useDarkMode";
 import Icon from "../components/icon/Icon";
-import Avatar from "../components/Avatar";
-import {
-  CalendarTodayButton,
-  CalendarViewModeButtons,
-  getLabel,
-  getUnitType,
-  getViews,
-} from "../components/extras/calendarHelper";
+import { getUnitType, getViews } from "../components/extras/calendarHelper";
 import PageWrapper from "../layout/PageWrapper/PageWrapper";
-import { demoPagesMenu } from "../menu";
-import Popovers from "../components/bootstrap/Popovers";
-import Button from "../components/bootstrap/Button";
 import Page from "../layout/Page/Page";
-import Card, {
-  CardActions,
-  CardBody,
-  CardHeader,
-  CardLabel,
-  CardSubTitle,
-  CardTitle,
-} from "../components/bootstrap/Card";
 import OffCanvas, {
   OffCanvasBody,
   OffCanvasHeader,
@@ -53,41 +28,28 @@ import { preparationSlots } from "../common/function/preparationSlots";
 import { getScaleTeams } from "../common/function/getScaleTeams";
 import { setEvals } from "../store/slices/evalsSlice";
 import { setEvents as setEventsRedux, setAllEvents } from '../store/slices/eventsSlice';
-import Spinner from "../components/bootstrap/Spinner";
 import OverlappingModal from "../components/agenda/OverlappangModal";
 import Evaluation from "../components/agenda/Evaluation";
 import Event from "../components/agenda/Event";
 import Slot from "../components/agenda/Slot";
 import Defanse from "../components/agenda/Defanse";
-import { roundToNearest15 } from "../common/function/roundToNearest15";
 import { useRouter } from "next/router";
 import Settings from "../components/settings";
-import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
 import { removeCreateSlotHandler } from "../common/function/recre_slot_handler";
-import { MyEventDay, MyEvent, MyWeekEvent, IEvent } from "../components/agenda/TemplatesEvent";
-import { customStyles } from "../common/function/customStyles";
+import { IEvent } from "../components/agenda/TemplatesEvent";
 import { useRefreshAgenda } from "../common/function/useRefreshAgenda";
-import { setSlotsMod } from "../store/slices/settingsReducer";
+import useNotification from "../hooks/useNotification";
+import useFetchAllEvents from "../hooks/useFetchAllEvents";
+import useParsingEvents from "../hooks/useParsingEvents";
+import useSwitchEvents from "../hooks/useSwichEvents";
+import MasterCalendar from "../components/agenda/MasterCalendar";
+import SideCalendar from "../components/agenda/SideCalendar";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
-const localizer = dayjsLocalizer(dayjs);
-const now = new Date();
-const DnDCalendar = withDragAndDrop(Calendar)
 
-const customFormats = {
-  firstDayOfWeek: () => 1,
-  timeGutterFormat: "H:mm", // Simple string format: "8:00", "9:00", etc.
-  eventTimeRangeFormat: (
-    { start, end }: { start: Date; end: Date },
-    culture: string,
-    localizer: any,
-  ) => `${localizer.format(start, "H:mm")} - ${localizer.format(end, "H:mm")}`,
-  dayHeaderFormat: (date: any) => dayjs(date).format("D MMMM (dddd)"),
-  dayFormat: (date: any) => dayjs(date).format("ddd, D MMMM"),
-  weekdayFormat: (date: any) => dayjs(date).format("ddd"),
-} as Formats;
+const now = new Date();
 
 const initialEventItem: IEvent = {
   start: undefined,
@@ -119,7 +81,6 @@ const Index: NextPage = ({ token, me }: any) => {
   const [refresh, setRefresh] = useState(false);
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
   const [switchEvents, setSwitchEvents] = useState("my");
-  const [counter, setSounter] = useState(0);
   const [events, setEvents] = useState([]);
   const [eventsActive, setEventsActive] = useState([]);
   const router = useRouter();
@@ -129,179 +90,13 @@ const Index: NextPage = ({ token, me }: any) => {
     refreshAgenda();
   }, [refreshAgenda]);
 
-  const clickHandler = () => {
-    setSounter(counter + 1);
-    if (counter == 42) {
-      dispatch(setSlotsMod(true));
-    }
-  }
-
-  useEffect(() => {
-    if (eventsIntra && slotsIntra && defances && defancesHistory) {
-      const eventList = eventsIntra.map((event: any) => ({
-        id: event.id,
-        name: event.name ?? event.id,
-        start: dayjs(event["begin_at"]).toDate(),
-        end: dayjs(event["end_at"]).toDate(),
-        color: "primary",
-        user: null,
-        description: event.description,
-        kind: event.kind,
-        location: event.location,
-        max_people: event.max_people,
-        nbr_subscribers: event.nbr_subscribers,
-        prohibition_of_cancellation: event.prohibition_of_cancellation,
-        themes: event.themes,
-        scale_team: "event",
-        isDraggable: false,
-      }));
-      const slotsList = slotsIntra.map((slot: any) => {
-        return ({
-          id: slot.id,
-          name:
-            slot.scale_team == "invisible"
-              ? `⬆️ Invisible`
-              : slot.scale_team?.correcteds
-                ? `⬆️ ${slot.scale_team?.correcteds[0].login}`
-                : "Available",
-          start: dayjs(slot["begin_at"]).toDate(),
-          end: dayjs(slot["end_at"]).toDate(),
-          color:
-            slot.scale_team == "invisible" || slot.scale_team?.id
-              ? "danger"
-              : "success",
-          user: null,
-          description: null,
-          kind: "kind",
-          location: "event.location",
-          max_people: "event.max_people",
-          nbr_subscribers: "event.nbr_subscribers",
-          prohibition_of_cancellation: "event.prohibition_of_cancellation",
-          themes: "event.themes",
-          scale_team: slot.scale_team,
-          slots_data: slot?.slots_data,
-          isDraggable: dayjs(new Date()).isBefore(slot["end_at"]) && (slot.scale_team != "invisible")
-        })
-      });
-
-      const defancesList = [...defancesHistory, ...defances]
-        .filter((i) => i.team?.project_gitlab_path?.split('/').pop())
-        .map((slot: any) => ({
-          id: slot.id,
-          name: `⬇️ ${slot.team?.project_gitlab_path?.split('/').pop()}`,
-          start: dayjs(slot["begin_at"]).toDate(),
-          end: dayjs(slot["begin_at"]).add(slot.scale.duration, 's').toDate(),
-          color:
-            slot.scale_team == "invisible" || slot.scale_team?.id
-              ? "danger"
-              : "dark",
-          user: null,
-          description: null,
-          kind: "kind",
-          location: "event.location",
-          max_people: "event.max_people",
-          nbr_subscribers: "event.nbr_subscribers",
-          prohibition_of_cancellation: "event.prohibition_of_cancellation",
-          themes: "event.themes",
-          scale_team: slot,
-          slots_data: null,
-          type: "defances",
-          isDraggable: false
-        }));
-
-      setEvents([...eventList, ...slotsList, ...defancesList]);
-      setEventsActive([...eventList, ...slotsList, ...defancesList]);
-
-      setSwitchEvents("all");
-    }
-  }, [eventsIntra, slotsIntra, defances, defancesHistory]);
-
-  useEffect(() => {
-    let isMounted = true; // To prevent state updates after unmount
-    let response;
-
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`/api/all_events?id=${me?.campus[0].id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        response = await res.json();
-
-        if (res.ok) {
-          dispatch(setAllEvents(response));
-          // Example: setState(response);
-        } else {
-          throw new Error(response?.message || "Request failed");
-        }
-      } catch (error) {
-        if (isMounted) {
-          console.error("Fetch error:", error);
-          // Handle error (e.g., setError(error.message))
-        }
-      }
-    };
-    if (!allEvents)
-      fetchData();
-
-    return () => {
-      isMounted = false; // Prevent updates if component unmounts
-    };
-  }, [switchEvents, allEvents]);
-
-  useEffect(() => {
-    if (switchEvents == 'all' && allEvents) {
-      const eventList = allEvents.map((event: any) => ({
-        id: event.id,
-        name: event.name ?? event.id,
-        start: dayjs(event["begin_at"]).toDate(),
-        end: dayjs(event["end_at"]).toDate(),
-        color: events.some(e => event.id === e.id) ? "dark" : "primary",
-        user: null,
-        description: event.description,
-        kind: event.kind,
-        location: event.location,
-        max_people: event.max_people,
-        nbr_subscribers: event.nbr_subscribers,
-        prohibition_of_cancellation: event.prohibition_of_cancellation,
-        themes: event.themes,
-        scale_team: "event",
-      })) || [];
-      setEventsActive([
-        ...eventList,
-        ...events,
-      ].filter((item, index, self) =>
-        index === self.findIndex(t => t.id === item.id)
-      ));
-    }
-    else {
-      setEventsActive([
-        ...events
-      ]);
-    }
-  }, [allEvents, switchEvents]);
-
-  useEffect(() => {
-    if (events && notify) {
-      const isEvent = events.filter((i: any) => (i.id == notify))[0];
-      console.log("isEvent", isEvent);
-      if (isEvent?.id) {
-        setEventItem(isEvent);
-        setToggleInfoEventCanvas(true);
-      }
-    }
-  }, [events, notify, settings])
+  useParsingEvents(eventsIntra, slotsIntra, defances, defancesHistory, me, setEvents, setEventsActive, setSwitchEvents);
+  useFetchAllEvents(switchEvents, allEvents, token, me, setAllEvents);
+  useSwitchEvents(events, allEvents, switchEvents, setEventsActive);
+  useNotification(events, notify, settings, setEventItem, setToggleInfoEventCanvas);
 
   // Calendar Unit Type
   const unitType = getUnitType(viewMode);
-  // Calendar Date Label
-  const calendarDateLabel = getLabel(date, viewMode);
-
-  // Change view mode
-  const handleViewMode = (e: dayjs.ConfigType) => {
-    setDate(dayjs(e).toDate());
-    dispatch(setUnitType(Views.DAY));
-  };
 
   // View modes; Month, Week, Work Week, Day and Agenda
   const views = getViews();
@@ -412,9 +207,13 @@ const Index: NextPage = ({ token, me }: any) => {
         'Slot has been created',
         'success'
       );
-      const combined = [...slotJson, ...slotsIntra];
-      dispatch(setOriginalSlots(combined));
-      dispatch(setSlots(preparationSlots(combined)));
+      // TODO: Make update agenda page after added slot
+
+      // const combined = [...slotJson, ...slotsIntra];
+      // dispatch(setOriginalSlots(combined));
+      // dispatch(setSlots(preparationSlots(combined)));
+      // setSwitchEvents("my");
+      // setSwitchEvents("all");
     } else {
       showNotification(
         <span className='d-flex align-items-center'>
@@ -493,14 +292,9 @@ const Index: NextPage = ({ token, me }: any) => {
     },
   });
 
-  // Add state for loading and error handling
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   // Fetch scaleUsers on mount
   useEffect(() => {
     const fetchScaleUsers = async () => {
-      setLoading(true);
       try {
         await delay(1000);
         const users = await getScaleTeams(slotsIntra, token);
@@ -508,10 +302,6 @@ const Index: NextPage = ({ token, me }: any) => {
         dispatch(setScaleTeams(users));
       } catch (err) {
         console.error("Failed to fetch scale users:", err);
-        setError("Failed to load scale users. Please try again later.");
-        dispatch(setScaleTeams([]));
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -534,10 +324,6 @@ const Index: NextPage = ({ token, me }: any) => {
     return () => { };
     //	eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventItem]);
-
-
-  const todayAt9AM = dayjs().set('hour', 7).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
-  const todayAt0AM = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
 
   const moveEvent = useCallback(
     async ({ event, start, end, isAllDay: droppedOnAllDaySlot = false }: any) => {
@@ -578,7 +364,7 @@ const Index: NextPage = ({ token, me }: any) => {
   return (
     <PageWrapper>
       <Head>
-        <title>{demoPagesMenu.dashboard.text}</title>
+        <title>Agenda42</title>
         <meta property="og:title" content="Agenda42" />
         <meta property="og:description" content="This is a description of my awesome app.Simplify your life with Agenda42! Manage all your events and evaluations in a single, easy-to-use calendar. Whether it’s scheduling appointments, tracking availability, or organizing tasks, Agenda42 keeps everything in one place for seamless planning and productivity." />
         <meta property="og:url" content="https://agenda42.fr" />
@@ -592,155 +378,38 @@ const Index: NextPage = ({ token, me }: any) => {
           transition: "filter .5s ease-in-out",
         }}>
           <div className="col-xl-3 small_agenda d-none d-md-none d-xl-block">
-            <Card stretch style={{ minHeight: 600 }}>
-              <CardHeader>
-                <CardLabel icon="Today" iconColor="info">
-                  <CardTitle>
-                    {dayjs(date).format("dddd, D MMMM")}
-                  </CardTitle>
-                  <CardSubTitle>{dayjs(date).fromNow()}</CardSubTitle>
-                </CardLabel>
-                <CardActions>
-                  <CalendarTodayButton
-                    unitType={Views.DAY}
-                    date={date}
-                    setDate={setDate}
-                    viewMode={Views.DAY}
-                    central={false}
-                  />
-                </CardActions>
-              </CardHeader>
-              <CardBody isScrollable>
-                <Calendar
-                  formats={customFormats}
-                  selectable
-                  toolbar={false}
-                  localizer={localizer}
-                  events={events}
-                  defaultView={Views.WEEK}
-                  views={views}
-                  view={Views.DAY}
-                  date={date}
-                  step={15}
-                  scrollToTime={dayjs(date).add(-1, 'h').toISOString()}
-                  defaultDate={new Date()}
-                  onSelectEvent={(event) => {
-                    setInfoEvent();
-                    setEventItem(event);
-                  }}
-                  onSelectSlot={handleSelect}
-                  onView={handleViewMode}
-                  onDrillDown={handleViewMode}
-                  components={{
-                    event: MyEventDay, // used by each view (Month, Day, Week)
-                  }}
-                  eventPropGetter={eventStyleGetter}
-                />
-              </CardBody>
-            </Card>
+            <SideCalendar
+              events={events}
+              views={views}
+              date={date}
+              handleSelect={handleSelect}
+              eventStyleGetter={eventStyleGetter}
+              setDate={setDate}
+              setUnitType={setUnitType}
+              setInfoEvent={setInfoEvent}
+              setEventItem={setEventItem}
+
+            />
           </div>
           <div className="col-xl-9">
-            
-                       
-                <Card stretch style={{ minHeight: 600 }} >
-                            <CardHeader>
-                              <CardActions>
-                                <CalendarTodayButton
-                                  unitType={unitType}
-                                  date={date}
-                                  setDate={setDate}
-                                  viewMode={viewMode}
-                                />
-                              </CardActions>
-                              <Popovers
-                                desc={
-                                  <DatePicker
-                                    onChange={(item) => setDate(item)}
-                                    date={date}
-                                    color={process.env.NEXT_PUBLIC_PRIMARY_COLOR}
-                                  />
-                                }
-                                placement="bottom-end"
-                                className="mw-100"
-                                trigger="click"
-                              >
-                                <Button color="light">{calendarDateLabel}</Button>
-                              </Popovers>
-                              <div className="switch_events">
-                  <Button
-                    disabled={refresh || !scaleUsers}
-                    color={switchEvents == "all" ? 'primary' : 'light'}
-                    onClick={() => setSwitchEvents("all")}
-                  >
-                    Agenda
-                  </Button>
-                                <Button
-                                  disabled={refresh || !scaleUsers}
-                          color={switchEvents == "my" ? 'primary' : 'light'} 
-                                  onClick={() => setSwitchEvents("my")}
-                                >
-                    Focusing
-                                </Button>
-                                
-                                {/* <Button
-                                  disabled={refresh || !scaleUsers}
-                                  color={switchEvents == "meeting" ? 'primary' : 'light'}
-                                  onClick={() => setSwitchEvents("meeting")}
-                                >
-                                  Meeting rooms
-                                </Button> */}
-                              </div>
-                              {
-                                (refresh || !scaleUsers)
-                                  ?
-                                  <div className="spinner"> <Spinner random inButton /></div>
-                                  :
-                                  <Button icon='Refresh' color='storybook' onClick={refreshHandler}>Update</Button>
-                              }
-                              <CardActions>
-                                <CalendarViewModeButtons viewMode={viewMode} />
-                              </CardActions>
-                            </CardHeader>
-                            <CardBody isScrollable>
-                              <DnDCalendar
-                                formats={customFormats}
-                                selectable
-                                toolbar={false}
-                                localizer={localizer}
-                                events={eventsActive}
-                                defaultView={Views.WEEK}
-                                views={views}
-                                view={viewMode}
-                                date={date}
-                                step={15}
-                                min={viewMode == Views.WORK_WEEK ? todayAt9AM : todayAt0AM}
-                                onNavigate={(_date) => setDate(_date)}
-                                scrollToTime={dayjs().add(-1, 'h').toISOString()}
-                                defaultDate={new Date()}
-                                onEventDrop={moveEvent}
-                                onEventResize={moveEvent}
-                                draggableAccessor="isDraggable"
-                                onSelectEvent={(event) => {
-                                  setInfoEvent();
-                                  setEventItem(event);
-                                }}
-                                onSelectSlot={handleSelect}
-                                components={{
-                                  event: MyEvent,
-                                  week: {
-                                    event: MyWeekEvent,
-                                  },
-                                  work_week: {
-                                    event: MyWeekEvent,
-                                  },
-                                }}
-                                eventPropGetter={eventStyleGetter}
-                              />
-                              <style>{customStyles}</style>
-                            </CardBody>
-                          </Card>
-                      
-             
+            <MasterCalendar
+              unitType={unitType}
+              date={date}
+              setDate={setDate}
+              viewMode={viewMode}
+              refresh={refresh}
+              scaleUsers={scaleUsers}
+              setSwitchEvents={setSwitchEvents}
+              switchEvents={switchEvents}
+              refreshHandler={refreshHandler}
+              eventsActive={eventsActive}
+              views={views}
+              moveEvent={moveEvent}
+              setInfoEvent={setInfoEvent}
+              setEventItem={setEventItem}
+              handleSelect={handleSelect}
+              eventStyleGetter={eventStyleGetter}
+            />
           </div>
         </div>
 
@@ -780,7 +449,6 @@ const Index: NextPage = ({ token, me }: any) => {
                     : (eventItem?.name != "Available")
                       ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
                       : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
-
                 }
               </div>
             ) : (

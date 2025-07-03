@@ -2,7 +2,6 @@ import React from "react";
 import dayjs from "dayjs";
 import Head from "next/head";
 import PageWrapper from "../layout/PageWrapper/PageWrapper";
-import { demoPagesMenu } from "../menu";
 import Page from "../layout/Page/Page";
 import changelogData from '../changelog.json';
 
@@ -10,7 +9,7 @@ const Changelog = () => {
   return (
     <PageWrapper>
       <Head>
-        <title>{demoPagesMenu.page404.text}</title>
+        <title>Changelog</title>
       </Head>
       <Page>
         <div className="row d-flex align-items-center h-100">

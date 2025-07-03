@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
 import PageWrapper from "../layout/PageWrapper/PageWrapper";
-import { demoPagesMenu } from "../menu";
 import Page from "../layout/Page/Page";
 import Spinner from "../components/bootstrap/Spinner";
 import { GetStaticProps } from "next/types";
@@ -21,7 +20,7 @@ const Page404 = () => {
   return (
     <PageWrapper>
       <Head>
-        <title>{demoPagesMenu.page404.text}</title>
+        <title>Error: 404</title>
       </Head>
       <Page>
         <div className="row d-flex align-items-center h-100">

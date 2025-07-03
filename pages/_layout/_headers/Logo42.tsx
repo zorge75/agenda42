@@ -1,15 +1,19 @@
 import React from 'react';
 import useDarkMode from "../../../hooks/useDarkMode";
+import Link from 'next/link';
 
 const Logo42 = () => {
     const { darkModeStatus } = useDarkMode();
 
     return (
-        <div className='col'
+        <Link href='/' className='col'
             style={{
                 flexDirection: 'row',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                color: 'initial',
+                width: 'maxContent',
+                textDecoration: 'none',
             }}
         >
             <img
@@ -20,7 +24,7 @@ const Logo42 = () => {
                 }}
                 src="https://42.fr/wp-content/uploads/2021/05/42-Final-sigle-seul.svg"></img>
             <h4 className="fw-bold">Agenda</h4>
-        </div>
+        </Link>
     );
 }
 

@@ -1,13 +1,9 @@
 import React from 'react';
-import { demoPagesMenu, pageLayoutTypesPagesMenu } from '../menu';
+import Changelog from '../pages/changelog';
 import DefaultFooter from '../pages/_layout/_footers/DefaultFooter';
 
 const footers = [
-	{ path: pageLayoutTypesPagesMenu.blank.path, element: null, exact: true },
-	{ path: demoPagesMenu.login.path, element: null, exact: true },
-	{ path: demoPagesMenu.signUp.path, element: null, exact: true },
-	{ path: demoPagesMenu.page404.path, element: null, exact: true },
-	{ path: demoPagesMenu.knowledge.subMenu.grid.path, element: null, exact: true },
+	{ path: '/changelog', element: <Changelog/>, exact: true },
 	{ path: '/*', element: <DefaultFooter />, exact: true },
 ];
 

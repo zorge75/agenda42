@@ -5,6 +5,7 @@ import useDarkMode from "../../../hooks/useDarkMode";
 import packageJson from '../../../package.json';
 import Tooltips from "../../../components/bootstrap/Tooltips";
 import RandomCats from "../../../components/RandomCats";
+import Link from "next/link";
 
 const DefaultFooter = () => {
   const { darkModeStatus } = useDarkMode();
@@ -27,13 +28,16 @@ const DefaultFooter = () => {
             </a>
           </div>
           <div className="col-auto">
-            <span className="fw-light">
-              <Tooltips title='Send your suggestions, questions, and bug reports here.'
+            <span className="fw-light" >
+              <Tooltips title="Submit suggestions and bug reports in the issues."
                 placement='top'>
-                <a style={{ textDecoration: 'inherit', color: 'inherit' }}
-                  href="mailto:help@agenda42.fr">help@agenda42.fr</a>
+                <a className="text-decoration-none text-reset"
+                  href="https://githeb.com/42paris">GitHub</a>
               </Tooltips>
-              &nbsp;| version {packageJson.version}</span>
+              <Link className="m-3 text-decoration-none text-reset" href="/changelog">
+                Changelog
+              </Link>
+              version {packageJson.version}</span>
           </div>
         </div>
       </div>
