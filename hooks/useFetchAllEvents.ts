@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 const useFetchAllEvents = (switchEvents: any, allEvents: any, token: any, me: any, setAllEvents: any) => {
-    const dispatch = useDispatch();
-    let isMounted = true; // To prevent state updates after unmount
-    useEffect(() => {
+  const dispatch = useDispatch();
+  let isMounted = true; // To prevent state updates after unmount
+  useEffect(() => {
     let response;
 
     const fetchData = async () => {
@@ -34,7 +34,7 @@ const useFetchAllEvents = (switchEvents: any, allEvents: any, token: any, me: an
     return () => {
       isMounted = false; // Prevent updates if component unmounts
     };
-  }, []);
+  }, [switchEvents, allEvents]);
 }
 
 export default useFetchAllEvents;

@@ -80,7 +80,7 @@ const Index: NextPage = ({ token, me }: any) => {
   const [eventAdding, setEventAdding] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-  const [switchEvents, setSwitchEvents] = useState("all");
+  const [switchEvents, setSwitchEvents] = useState("my");
   const [events, setEvents] = useState([]);
   const [eventsActive, setEventsActive] = useState([]);
   const router = useRouter();
@@ -213,7 +213,7 @@ const Index: NextPage = ({ token, me }: any) => {
       // dispatch(setOriginalSlots(combined));
       // dispatch(setSlots(preparationSlots(combined)));
       // setSwitchEvents("my");
-      // setSwitchEvents("all");
+      setSwitchEvents("all");
     } else {
       showNotification(
         <span className='d-flex align-items-center'>
