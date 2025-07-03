@@ -3,13 +3,14 @@ import { useEffect } from "react";
 
 const useSwitchEvents = (events: any, allEvents: any, switchEvents: any, setEventsActive: any) => {
   useEffect(() => {
+    console.log("sw", switchEvents);
     if (switchEvents == 'all' && allEvents) {
       const eventList = allEvents.map((event: any) => ({
         id: event.id,
         name: event.name ?? event.id,
         start: dayjs(event["begin_at"]).toDate(),
         end: dayjs(event["end_at"]).toDate(),
-        color: events.some(e => event.id === e.id) ? "dark" : "primary",
+        color: events.some(e => event.id === e.id) ? "danger" : "primary",
         user: null,
         description: event.description,
         kind: event.kind,

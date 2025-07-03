@@ -80,7 +80,7 @@ const Index: NextPage = ({ token, me }: any) => {
   const [eventAdding, setEventAdding] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-  const [switchEvents, setSwitchEvents] = useState("my");
+  const [switchEvents, setSwitchEvents] = useState("all");
   const [events, setEvents] = useState([]);
   const [eventsActive, setEventsActive] = useState([]);
   const router = useRouter();
@@ -162,7 +162,7 @@ const Index: NextPage = ({ token, me }: any) => {
         location?.reload();
       }
       setRefresh(false);
-      setSwitchEvents("my");
+      // setSwitchEvents("my");
       await delay(3000);
     };
 
@@ -371,7 +371,7 @@ const Index: NextPage = ({ token, me }: any) => {
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <Page container="fluid pb-0">
+      <Page container="fluid" className="pb-0">
         <div className="row h-100" style={{
           filter: loadGeneral ? "blur(5px)" : "blur(0px)",
           pointerEvents: loadGeneral ? "none" : "auto",
@@ -388,7 +388,6 @@ const Index: NextPage = ({ token, me }: any) => {
               setUnitType={setUnitType}
               setInfoEvent={setInfoEvent}
               setEventItem={setEventItem}
-
             />
           </div>
           <div className="col-xl-9">
@@ -439,8 +438,6 @@ const Index: NextPage = ({ token, me }: any) => {
           >
             {!eventAdding ? (
               <div className="row g-4" style={{ backgroundColor: 'transparent' }}>
-                {/* Name */}
-
                 {(eventItem?.scale_team?.id && !(eventItem?.type === "defances")) ? (
                   <Evaluation token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
                 ) :

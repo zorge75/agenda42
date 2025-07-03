@@ -12,7 +12,7 @@ const Logo42 = () => {
                 display: 'flex',
                 alignItems: 'center',
                 color: 'initial',
-                width: 'maxContent',
+                width: 'max-content',
                 textDecoration: 'none',
             }}
         >

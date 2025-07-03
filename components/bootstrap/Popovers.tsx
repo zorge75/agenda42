@@ -1,9 +1,8 @@
-import React, { cloneElement, FC, HTMLAttributes, ReactElement, ReactNode, useCallback, useRef, useState } from 'react';
+import React, { cloneElement, FC, HTMLAttributes, ReactElement, ReactNode, useCallback, useEffect, useState } from 'react';
 import { usePopper } from 'react-popper';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Portal from '../../layout/Portal/Portal';
-import useEventOutside from '../../hooks/useEventOutside';
 
 type Direction =
 	| 'auto'
@@ -35,6 +34,7 @@ interface IPopoversProps extends HTMLAttributes<HTMLDivElement> {
 	isDisplayInline?: boolean;
 	modifiers?: object;
 }
+
 const Popovers: FC<IPopoversProps> = ({
 	children,
 	className,
@@ -79,35 +79,60 @@ const Popovers: FC<IPopoversProps> = ({
 	});
 
 	const [popoverOpen, setPopoverOpen] = useState(false);
-	const dropdownRef = useRef(null);
 
-	const closeMenu = useCallback((e) => {
-		if (typeof children !== 'string' && !children.props?.color && children?.props?.onClick && children?.ref) {
-			children.props.onClick();
-		}
+	const closeMenu = useCallback(() => {
 		setPopoverOpen(false);
-		e?.stopImmediatePropagation();
-		e?.stopPropagation();
 	}, []);
 
-	useEventOutside(dropdownRef, "click", e => closeMenu(e));
+	// Handle outside click detection
+	useEffect(() => {
+		if (trigger !== 'click' || !popoverOpen) return;
 
-	const ON_CLICK = () => {
-		if (trigger === 'click') setPopoverOpen(!popoverOpen);
-		if (typeof children !== 'string' && children?.props?.onClick) children.props.onClick();
-	};
+		const handleClickOutside = (event: MouseEvent) => {
+			const target = event.target as Node;
+			const isOutside =
+				referenceElement &&
+				popperElement &&
+				!referenceElement.contains(target) &&
+				!popperElement.contains(target);
 
-	const ON_MOUSE_OVER = () => {
-		if (trigger === 'hover') setPopoverOpen(true);
-		if (typeof children !== 'string' && children?.props?.onMouseOver)
+			if (isOutside) {
+				closeMenu();
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside);
+		return () => {
+			document.removeEventListener('click', handleClickOutside);
+		};
+	}, [trigger, popoverOpen, referenceElement, popperElement, closeMenu]);
+
+	const ON_CLICK = useCallback(() => {
+		if (trigger === 'click') {
+			setPopoverOpen((prev) => !prev);
+		}
+		if (typeof children !== 'string' && children?.props?.onClick) {
+			children.props.onClick();
+		}
+	}, [trigger, children]);
+
+	const ON_MOUSE_OVER = useCallback(() => {
+		if (trigger === 'hover') {
+			setPopoverOpen(true);
+		}
+		if (typeof children !== 'string' && children?.props?.onMouseOver) {
 			children.props.onMouseOver();
-	};
+		}
+	}, [trigger, children]);
 
-	const ON_MOUSE_LEAVE = () => {
-		if (trigger === 'hover') setTimeout(() => setPopoverOpen(false), delay);
-		if (typeof children !== 'string' && children?.props?.onMouseLeave)
+	const ON_MOUSE_LEAVE = useCallback(() => {
+		if (trigger === 'hover') {
+			setTimeout(() => setPopoverOpen(false), delay);
+		}
+		if (typeof children !== 'string' && children?.props?.onMouseLeave) {
 			children.props.onMouseLeave();
-	};
+		}
+	}, [trigger, delay, children]);
 
 	const PROPS = {
 		className: classNames(
@@ -123,7 +148,6 @@ const Popovers: FC<IPopoversProps> = ({
 		<div>
 			{cloneElement(
 				typeof children === 'string' ? (
-					// eslint-disable-next-line react/jsx-props-no-spreading
 					<span ref={setReferenceElement} {...PROPS}>
 						{children}
 					</span>
@@ -139,38 +163,26 @@ const Popovers: FC<IPopoversProps> = ({
 				<Portal>
 					<div
 						ref={setPopperElement}
-						role='tooltip'
+						role="tooltip"
 						className={classNames('popover', 'bs-popover-auto', className)}
 						style={styles.popper}
-						// eslint-disable-next-line react/jsx-props-no-spreading
 						{...props}
-						// eslint-disable-next-line react/jsx-props-no-spreading
-						{...attributes.popper}>
-						<div ref={setArrowElement} className='popover-arrow' style={styles.arrow} />
-						{title && <h3 className='popover-header'>{title}</h3>}
-						{desc && (
-							<div className={classNames('popover-body', bodyClassName)}>{desc}</div>
-						)}
+						{...attributes.popper}
+					>
+						<div ref={setArrowElement} className="popover-arrow" style={styles.arrow} />
+						{title && <h3 className="popover-header">{title}</h3>}
+						{desc && <div className={classNames('popover-body', bodyClassName)}>{desc}</div>}
 					</div>
 				</Portal>
 			)}
 		</div>
 	);
 };
+
 Popovers.propTypes = {
-	/**
-	 * String, HTML or React Component (`<Component {...props} />`)
-	 */
-	// @ts-ignore
 	children: PropTypes.node.isRequired,
 	title: PropTypes.string,
-	/**
-	 * String, HTML or React Component
-	 */
 	desc: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-	/**
-	 * Position of popovers
-	 */
 	placement: PropTypes.oneOf([
 		'auto',
 		'auto-start',
@@ -188,10 +200,6 @@ Popovers.propTypes = {
 		'left-start',
 		'left-end',
 	]),
-	/**
-	 * For situations where there is not enough space to place
-	 */
-	// @ts-ignore
 	flip: PropTypes.arrayOf(
 		PropTypes.oneOf([
 			'auto',
@@ -212,22 +220,13 @@ Popovers.propTypes = {
 		]),
 	),
 	trigger: PropTypes.oneOf(['click', 'hover']),
-	/**
-	 * The value entered is in milliseconds
-	 */
 	delay: PropTypes.number,
-	/**
-	 * Adds style: `display: inline-block;`
-	 */
 	isDisplayInline: PropTypes.bool,
 	className: PropTypes.string,
 	bodyClassName: PropTypes.string,
-	/**
-	 * More information, [Popper.js](https://popper.js.org/docs/v2/modifiers/)
-	 */
-	// eslint-disable-next-line react/forbid-prop-types
 	modifiers: PropTypes.object,
 };
+
 Popovers.defaultProps = {
 	title: undefined,
 	desc: null,
@@ -247,7 +246,3 @@ Popovers.defaultProps = {
 };
 
 export default Popovers;
-function useCollback(arg0: () => void) {
-	throw new Error('Function not implemented.');
-}
-

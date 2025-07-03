@@ -21,6 +21,8 @@ import { customFormats, customStyles } from "../../common/function/customStyles"
 import { MyEvent, MyWeekEvent } from "../../components/agenda/TemplatesEvent";
 import dayjs from "dayjs";
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
+import ThemeContext from "../../context/themeContext";
+import { useContext } from "react";
 
 const MasterCalendar = ({
     unitType,
@@ -40,24 +42,25 @@ const MasterCalendar = ({
     handleSelect,
     eventStyleGetter,
 }: any) => {
+    const { mobileDesign } = useContext(ThemeContext);
     const todayAt9AM = dayjs().set('hour', 7).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
     const todayAt0AM = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
 
     const localizer = dayjsLocalizer(dayjs);
     const DnDCalendar = withDragAndDrop(Calendar);
 
-    // Calendar Date Label
     const calendarDateLabel = getLabel(date, viewMode);
 
     return (
         <Card stretch style={{ minHeight: 600 }} >
-            <CardHeader>
+            <CardHeader style={mobileDesign ? {paddingBottom: 0} : {}}>
                 <CardActions>
                     <CalendarTodayButton
                         unitType={unitType}
                         date={date}
                         setDate={setDate}
                         viewMode={viewMode}
+                        central
                     />
                 </CardActions>
                 <Popovers
@@ -76,14 +79,14 @@ const MasterCalendar = ({
                 </Popovers>
                 <div className="switch_events">
                     <Button
-                        disabled={refresh || !scaleUsers}
+                        isDisable={refresh || !scaleUsers}
                         color={switchEvents == "all" ? 'primary' : 'light'}
                         onClick={() => setSwitchEvents("all")}
                     >
                         Agenda
                     </Button>
                     <Button
-                        disabled={refresh || !scaleUsers}
+                        isDisable={refresh || !scaleUsers}
                         color={switchEvents == "my" ? 'primary' : 'light'}
                         onClick={() => setSwitchEvents("my")}
                     >
@@ -105,11 +108,11 @@ const MasterCalendar = ({
                         :
                         <Button icon='Refresh' color='storybook' onClick={refreshHandler}>Update</Button>
                 }
-                <CardActions>
+                
                     <CalendarViewModeButtons viewMode={viewMode} />
-                </CardActions>
+                
             </CardHeader>
-            <CardBody isScrollable>
+            <CardBody isScrollable style={mobileDesign ? { paddingTop: 0 } : {}}>
                 <DnDCalendar
                     formats={customFormats}
                     selectable
@@ -118,7 +121,7 @@ const MasterCalendar = ({
                     events={eventsActive}
                     defaultView={Views.WEEK}
                     views={views}
-                    view={viewMode}
+                    view={mobileDesign ? Views.DAY : viewMode}
                     date={date}
                     step={15}
                     min={viewMode == Views.WORK_WEEK ? todayAt9AM : todayAt0AM}
@@ -143,6 +146,7 @@ const MasterCalendar = ({
                         },
                     }}
                     eventPropGetter={eventStyleGetter}
+                    style={mobileDesign ? { height: '66vh' } : {}}
                 />
                 <style>{customStyles}</style>
             </CardBody>

@@ -23,7 +23,6 @@ export default function useDeviceScreen() {
 	}
 
 	const [deviceScreen, setDeviceScreen] = useState(getProperties);
-
 	// @ts-ignore
 	useEffect(() => {
 		if (!isClient) {

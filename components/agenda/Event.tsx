@@ -50,9 +50,9 @@ const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
                                 <span className='display-6 fw-bold'>{dayjs(eventItem.end).format('H:mm')}</span>
                             </div>
                         </div>
-                        <Badge color='success' className="mt-4">
+                        {eventItem.location ? <Badge color='success' className="mt-4">
                             <Icon icon="LocationOn" />  {eventItem.location}
-                        </Badge>
+                        </Badge> : ""}
                     </CardBody>
                 </Card>
 

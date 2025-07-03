@@ -87,8 +87,6 @@ const useParsingEvents = (
 
             setEvents([...eventList, ...slotsList, ...defancesList]);
             setEventsActive([...eventList, ...slotsList, ...defancesList]);
-
-            setSwitchEvents("all");
         }
     }, [eventsIntra, slotsIntra, defances, defancesHistory]);
 };

@@ -6,6 +6,7 @@ import packageJson from '../../../package.json';
 import Tooltips from "../../../components/bootstrap/Tooltips";
 import RandomCats from "../../../components/RandomCats";
 import Link from "next/link";
+import SvgCustomGithub from "../../../components/icon/svg-icons/CustomGithub";
 
 const DefaultFooter = () => {
   const { darkModeStatus } = useDarkMode();
@@ -16,8 +17,8 @@ const DefaultFooter = () => {
 
         <div className="row">
           <RandomCats />
-          <div className="col">
-            <a
+          <div className="col m-auto">
+            <Link
               href="https://42.fr/"
               className={classNames("text-decoration-none", {
                 "link-dark": !darkModeStatus,
@@ -25,19 +26,25 @@ const DefaultFooter = () => {
               })}
             >
               <small className="fw-bold">École 42 Paris</small>
-            </a>
+            </Link>
           </div>
           <div className="col-auto">
-            <span className="fw-light" >
+            <div className="d-flex align-items-center" >
               <Tooltips title="Submit suggestions and bug reports in the issues."
                 placement='top'>
-                <a className="text-decoration-none text-reset"
-                  href="https://githeb.com/42paris">GitHub</a>
+                <div>
+                  <Link className="text-decoration-none text-reset" style={{zIndex: 1000}}
+                    href="https://githeb.com/42paris">
+                    <SvgCustomGithub className="m-1 mt-0" />
+                    GitHub
+                  </Link>
+                </div>
               </Tooltips>
-              <Link className="m-3 text-decoration-none text-reset" href="/changelog">
+              <Link className="m-3 text-decoration-none text-reset text-bold" href="/changelog">
                 Changelog
               </Link>
-              version {packageJson.version}</span>
+              <span>version {packageJson.version}</span>
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import PropTypes from "prop-types";
 import { Views } from "react-big-calendar";
 import dayjs from "dayjs";
@@ -10,6 +10,8 @@ import Dropdown, {
 } from "../bootstrap/Dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { setUnitType } from "../../store/slices/calendarSlice";
+import ThemeContext from "../../context/themeContext";
+import { CardActions } from "../bootstrap/Card";
 
 export const getUnitType = (
   viewMode: "month" | "week" | "work_week" | "day" | "agenda",
@@ -34,21 +36,22 @@ export const getLabel = (
   date: dayjs.ConfigType,
   viewMode: "month" | "week" | "work_week" | "day" | "agenda",
 ) => {
-  if (viewMode === Views.MONTH) return dayjs(date).format("MMMM YYYY");
+  if (viewMode === Views.MONTH)
+    return dayjs(date).format("MMMM YYYY");
   if (viewMode === Views.WEEK)
-    return `${dayjs(date).startOf("week").format("MMM D")} - ${dayjs(date)
+    return `${dayjs(date).startOf("week").format("D MMMM")} - ${dayjs(date)
       .endOf("week")
-      .format("MMM D")}`;
+      .format("D MMMM")}`;
   if (viewMode === Views.WORK_WEEK)
-    return `${dayjs(date).startOf("week").add(1, "day").format("MMM D")} - ${dayjs(
+    return `${dayjs(date).startOf("week").add(1, "day").format("D MMM")} - ${dayjs(
       date,
     )
       .endOf("week")
       .add(-1, "day")
-      .format("MMM D")}`;
+      .format("D MMM")}`;
   if (viewMode === Views.AGENDA)
     return `${dayjs(date).format("L")} - ${dayjs(date).add(1, "month").format("L")}`;
-  return dayjs(date).format("dddd, MMM D");
+  return dayjs(date).format("dddd, D MMMM");
 };
 
 export const getTodayButtonLabel = (
@@ -90,8 +93,8 @@ export const CalendarTodayButton: FC<ICalendarTodayButtonProps> = ({
         aria-label="Prev"
       />
       {/* @ts-ignore */}
-      {central ? <Button color="primary" 
-        className={dayjs(date).isSame(dayjs(), 'day') ? 'btn-light' : ''}
+      {central ? <Button color="primary"
+        className={dayjs(date).isSame(dayjs(), 'day') ? '' : 'btn-light'}
         onClick={() => setDate(dayjs(new Date()).toDate())}
       >
         Today
@@ -124,85 +127,95 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
   viewMode,
 }) => {
   const dispatch = useDispatch();
+  const { mobileDesign } = useContext(ThemeContext);
   const setViewMode = (
     viewMode: "month" | "week" | "work_week" | "day" | "agenda",
   ) => {
     dispatch(setUnitType(viewMode));
   };
 
+  console.log("viewMode", viewMode);
+
+  if (mobileDesign) {
+    setViewMode(Views.DAY);
+    return "";
+  }
+
   return (
-    <Dropdown direction="down">
-      <DropdownToggle>
-        <Button
-          color="primary"
-          icon={
-            (viewMode === Views.MONTH && "calendar_view_month") ||
-            (viewMode === Views.WEEK && "calendar_view_week") ||
-            (viewMode === Views.WORK_WEEK && "view_week") ||
-            (viewMode === Views.DAY && "calendar_view_day") ||
-            "view_agenda"
-          }
-        >
-          {(viewMode === Views.MONTH && "Month") ||
-            (viewMode === Views.WEEK && "Week") ||
-            (viewMode === Views.WORK_WEEK && "Work Week") ||
-            (viewMode === Views.DAY && "Day") ||
-            "Agenda"}
-        </Button>
-      </DropdownToggle>
-      <DropdownMenu isAlignmentEnd>
-        <DropdownItem>
+    <CardActions>
+      <Dropdown direction="down">
+        <DropdownToggle>
           <Button
-            color="link"
-            icon="calendar_view_month"
-            isActive={viewMode === Views.MONTH}
-            onClick={() => setViewMode(Views.MONTH)}
+            color="primary"
+            icon={
+              (viewMode === Views.MONTH && "calendar_view_month") ||
+              (viewMode === Views.WEEK && "calendar_view_week") ||
+              (viewMode === Views.WORK_WEEK && "view_week") ||
+              (viewMode === Views.DAY && "calendar_view_day") ||
+              "view_agenda"
+            }
           >
-            Month
+            {(viewMode === Views.MONTH && "Month") ||
+              (viewMode === Views.WEEK && "Week") ||
+              (viewMode === Views.WORK_WEEK && "Work Week") ||
+              (viewMode === Views.DAY && "Day") ||
+              "Agenda"}
           </Button>
-        </DropdownItem>
-        <DropdownItem>
-          <Button
-            color="link"
-            icon="calendar_view_week"
-            isActive={viewMode === Views.WEEK}
-            onClick={() => setViewMode(Views.WEEK)}
-          >
-            Week
-          </Button>
-        </DropdownItem>
-        <DropdownItem>
-          <Button
-            color='link'
-            icon='view_week'
-            isActive={viewMode === Views.WORK_WEEK}
-            onClick={() => setViewMode(Views.WORK_WEEK)}>
-            Work Week
-          </Button>
-        </DropdownItem>
-        <DropdownItem>
-          <Button
-            color="link"
-            icon="calendar_view_day"
-            className="d-block d-xl-none"
-            isActive={viewMode === Views.DAY}
-            onClick={() => setViewMode(Views.DAY)}
-          >
-            Day
-          </Button>
-        </DropdownItem>
-        <DropdownItem>
-          <Button
-            color="link"
-            icon="view_agenda"
-            isActive={viewMode === Views.AGENDA}
-            onClick={() => setViewMode(Views.AGENDA)}
-          >
-            Agenda
-          </Button>
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+        </DropdownToggle>
+        <DropdownMenu isAlignmentEnd>
+          <DropdownItem>
+            <Button
+              color="link"
+              icon="calendar_view_month"
+              isActive={viewMode === Views.MONTH}
+              onClick={() => setViewMode(Views.MONTH)}
+            >
+              Month
+            </Button>
+          </DropdownItem>
+          <DropdownItem>
+            <Button
+              color="link"
+              icon="calendar_view_week"
+              isActive={viewMode === Views.WEEK}
+              onClick={() => setViewMode(Views.WEEK)}
+            >
+              Week
+            </Button>
+          </DropdownItem>
+          <DropdownItem>
+            <Button
+              color='link'
+              icon='view_week'
+              isActive={viewMode === Views.WORK_WEEK}
+              onClick={() => setViewMode(Views.WORK_WEEK)}>
+              Work Week
+            </Button>
+          </DropdownItem>
+          <DropdownItem>
+            <Button
+              color="link"
+              icon="calendar_view_day"
+              className="d-block d-xl-none"
+              isActive={viewMode === Views.DAY}
+              onClick={() => setViewMode(Views.DAY)}
+            >
+              Day
+            </Button>
+          </DropdownItem>
+          <DropdownItem>
+            <Button
+              color="link"
+              icon="view_agenda"
+              isActive={viewMode === Views.AGENDA}
+              onClick={() => setViewMode(Views.AGENDA)}
+            >
+              Agenda
+            </Button>
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </CardActions>
   );
 };
 CalendarViewModeButtons.propTypes = {

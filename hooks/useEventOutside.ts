@@ -1,16 +1,26 @@
-import useEventListener from './useEventListener';
-import React from 'react';
+import { useEffect } from 'react';
 
-export default function useEventOutside(
-	ref: React.MutableRefObject<null>,
-	eventName: string,
-	handler: () => void,
-) {
-	const checkIt = (event: { target: any }) => {
-		// @ts-ignore
-		if (ref.current && !ref.current.contains(event.target)) {
-			handler();
-		}
-	};
-	useEventListener(eventName, checkIt);
-}
+const useEventOutside = (refs: any, eventType: any, callback: any) => {
+	useEffect(() => {
+		const handleEvent = (event: any) => {
+			// Ensure refs is an array; if not, convert to array or handle single ref
+			const refArray = Array.isArray(refs) ? refs : [refs];
+
+			console.log("event.target", event.target);
+			console.log("ref.current", refArray);
+
+			const isOutside = refArray.every(
+				(ref) => ref && ref.current && !ref.current.contains(event.target)
+			);
+
+			if (isOutside) {
+				callback(event);
+			}
+		};
+
+		document.addEventListener(eventType, handleEvent);
+		return () => document.removeEventListener(eventType, handleEvent);
+	}, [refs, eventType, callback]);
+};
+
+export default useEventOutside;

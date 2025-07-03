@@ -25,7 +25,7 @@ interface IThemeContextProviderProps {
 export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children }) => {
 	const deviceScreen = useDeviceScreen();
 	// @ts-ignore
-	const mobileDesign = deviceScreen?.width <= process.env.NEXT_PUBLIC_MOBILE_BREAKPOINT_SIZE;
+	const mobileDesign = deviceScreen?.width <= 786;
 
 	const [darkModeStatus, setDarkModeStatus] = useState(
 		typeof window !== 'undefined' && localStorage.getItem('facit_darkModeStatus')

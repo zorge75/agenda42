@@ -59,7 +59,7 @@ export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
             setLoad(false);
             isFetching.current = false;
         }
-    }, [dispatch, me.id, token, setLoad]); // Stable dependencies
+    }, [dispatch, me?.id, token, setLoad]); // Stable dependencies
 
     return refreshAgenda;
 };

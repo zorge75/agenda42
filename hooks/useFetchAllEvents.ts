@@ -34,7 +34,7 @@ const useFetchAllEvents = (switchEvents: any, allEvents: any, token: any, me: an
     return () => {
       isMounted = false; // Prevent updates if component unmounts
     };
-  }, [switchEvents, allEvents]);
+  }, []);
 }
 
 export default useFetchAllEvents;
