@@ -77,7 +77,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
                         </Button>
                     </Popovers>
                 </div>
-
+{/* 
                 <div className='col-auto'>
                     <Popovers trigger='hover' desc='Settings'>
                         <Button
@@ -93,7 +93,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
                             />
                         </Button>
                     </Popovers>
-                </div>
+                </div> */}
 
                 {/* <div className='col-auto'>
 					<Popovers trigger='hover' desc='Evaluations'>

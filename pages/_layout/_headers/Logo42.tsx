@@ -1,6 +1,7 @@
 import React from 'react';
 import useDarkMode from "../../../hooks/useDarkMode";
 import Link from 'next/link';
+import classNames from 'classnames';
 
 const Logo42 = () => {
     const { darkModeStatus } = useDarkMode();
@@ -23,7 +24,16 @@ const Logo42 = () => {
                     filter: !darkModeStatus ? "brightness(1) invert(1)" : "none"
                 }}
                 src="https://42.fr/wp-content/uploads/2021/05/42-Final-sigle-seul.svg"></img>
-            <h4 className="fw-bold">Agenda</h4>
+            <h4 className={
+                classNames(
+                    'fw-bold',
+                    {
+                        'text-light': darkModeStatus,
+                        'text-black': !darkModeStatus
+                    }
+                )
+            }
+            >Agenda</h4>
         </Link>
     );
 }

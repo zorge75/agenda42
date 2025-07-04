@@ -7,6 +7,7 @@ import Avatar from '../../../components/Avatar';
 import showNotification from '../../../components/extras/showNotification';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
+import Link from 'next/link';
 
 const CommonHeaderChat = () => {
     const [state, setState] = useState<boolean>(false);
@@ -41,6 +42,9 @@ const CommonHeaderChat = () => {
         setMsgCount(0);
     }, [state]);
 
+    if (!user)
+        return ("");
+
     return (
         <>
             <div
@@ -50,15 +54,23 @@ const CommonHeaderChat = () => {
                 <div className='me-3'>
                     <div className='text-end'>
                         <div className='fw-bold fs-6 mb-0'>
-                            {`${user?.first_name}`}
+                            {`${user?.displayname} ( ${user?.location ? user?.location : 'unavalible'} )`}
                         </div>
                         <div className='text-muted'>
-                            <small>{user?.location}</small>
+                            <small>I have&nbsp; 
+                                <span className="fw-bold">{user?.correction_point}</span>
+                                &nbsp;evaluation points
+                            </small>
                         </div>
                     </div>
                 </div>
                 <div className='position-relative'>
-                    <Avatar src={user?.image.versions.small} size={48} />
+                    <Link href={`https://profile.intra.42.fr/users/${user?.login}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Avatar src={user?.image.versions.small} size={48} />
+                    </Link>
                     {/* {!!msgCount && (
 						<span className='position-absolute top-15 start-85 translate-middle badge rounded-pill bg-danger'>
 							{msgCount} <span className='visually-hidden'>unread messages</span>
