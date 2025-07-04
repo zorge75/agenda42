@@ -8,6 +8,7 @@ import { getCorrectorImageUrl, getCorrectorName } from "../../common/function/ge
 import { CorrectorLocation } from "./CorrectorLocation";
 import { useState, useEffect } from "react";
 import { fetchUserWithRetry } from "../../common/function/getScaleTeams";
+import Spinner from "../bootstrap/Spinner";
 
 const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
     const [userData, setUserData] = useState<any>(null);
@@ -26,8 +27,13 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
         return `https://friends.42paris.fr/?cluster=${claster}-${etage}&p=${i.location}`;
     };
 
-    console.log("Defance", eventItem);
-    
+    if (!userData)
+        return (
+            <div className="d-flex justify-content-center mt-5">
+                <Spinner color="primary" random />
+            </div>
+        );
+
     return (
         <div>
             <h2>You are evaluated {eventItem.name.substr(2, eventItem.name.lenght)}</h2>
@@ -157,8 +163,6 @@ const Defanse = ({ eventItem, scaleUsers, me, token }: any) => {
                 }
             </div>
             <br />
-
-
         </div>
     );
 };

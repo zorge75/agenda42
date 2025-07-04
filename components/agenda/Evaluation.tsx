@@ -78,7 +78,6 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
             <br />
             <div className="col-12">
                 <Card className="mb-0 bg-l10-success" shadow="sm">
-
                     {
                         eventItem?.scale_team?.correcteds.map((profile, i) => (
                             <CardHeader className="bg-l25-success colomn_rest">
@@ -130,7 +129,7 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
                             <CardBody>
                                 <p>{eventItem?.scale_team?.feedback}</p>
                             </CardBody>
-                            : <h3 className="mt-3" style={{ textAlign: 'center'}}>Waiting feedback...</h3>
+                            : <h3 className="mt-3" style={{ textAlign: 'center' }}>Waiting feedback...</h3>
                     }
                 </Card>
             </div>

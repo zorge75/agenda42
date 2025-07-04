@@ -209,9 +209,9 @@ const Index: NextPage = ({ token, me }: any) => {
       );
       // TODO: Make update agenda page after added slot
 
-      // const combined = [...slotJson, ...slotsIntra];
-      // dispatch(setOriginalSlots(combined));
-      // dispatch(setSlots(preparationSlots(combined)));
+      const combined = [...slotJson, ...slotsIntra];
+      dispatch(setOriginalSlots(combined));
+      dispatch(setSlots(preparationSlots(combined)));
       // setSwitchEvents("my");
       setSwitchEvents("all");
     } else {

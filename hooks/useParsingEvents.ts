@@ -61,7 +61,7 @@ const useParsingEvents = (
 
             const defancesList = [...defancesHistory, ...defances]
                 .filter((i) => i.team?.project_gitlab_path?.split('/').pop())
-                .filter((i) => i.scale_team?.corrector.id == me?.id)
+                .filter((i) => (i.scale_team?.corrector.id == me?.id || i.scale_team?.correcteds[0]?.id != me?.id))
                 .map((slot: any) => ({
                     id: slot.id,
                     name: `⬇️ ${slot.team?.project_gitlab_path?.split('/').pop()}`,
@@ -84,7 +84,6 @@ const useParsingEvents = (
                     type: "defances",
                     isDraggable: false
                 }));
-
             setEvents([...eventList, ...slotsList, ...defancesList]);
             setEventsActive([...eventList, ...slotsList, ...defancesList]);
             setSwitchEvents("all");

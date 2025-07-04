@@ -46,7 +46,7 @@ export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
                 dispatch(setSlots(preparedSlots));
             }
             if (res.evaluations) {
-                dispatch(setEvals(res.evaluations));
+                dispatch(setEvals(res.evaluations)); // TODO : defancesHistory ?
                 dispatch(setDefances(res.evaluations));
             }
             // Batch additional updates
