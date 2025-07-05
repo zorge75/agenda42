@@ -88,6 +88,10 @@ const Index: NextPage = ({ token, me }: any) => {
 
   useEffect(() => {
     refreshAgenda();
+    const update = setInterval(() => {
+      refreshAgenda();
+    }, 60000 * 15);
+    return () => clearInterval(update);
   }, [refreshAgenda]);
 
   useParsingEvents(eventsIntra, slotsIntra, defances, defancesHistory, me, setEvents, setEventsActive, setSwitchEvents);
