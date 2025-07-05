@@ -4,13 +4,14 @@ import Avatar from "../Avatar";
 import Button from "../bootstrap/Button";
 import Card, { CardHeader, CardLabel, CardTitle, CardBody } from "../bootstrap/Card";
 import Progress from "../bootstrap/Progress";
-import { getCorrectorImageUrl, getCorrectorName, getLevel, getRentre } from "../../common/function/getCorrectorImageUrl";
+import { getCorrectorImageUrl, getCorrectorName, getRentre } from "../../common/function/getCorrectorImageUrl";
 import { CorrectorLocation } from "./CorrectorLocation";
-import { CorrectorLanguages } from "./CorrectorLanguages";
+import { CorrectorGrades, CorrectorLanguages } from "./CorrectorLanguages";
 import Badge from "../bootstrap/Badge";
-import { useEffect } from "react";
 
 const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
+    if (!scaleUsers || !scaleUsers)
+        return ("");
     return (
         <div>
             <h2>You are reviewing</h2>
@@ -43,7 +44,6 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
                             </CardHeader>
                             <div>
                             </div>
-
                             {
                                 (eventItem?.scale_team.comment && eventItem?.scale_team.feedback)
                                     ? <CardBody>
@@ -86,13 +86,11 @@ const Evaluation = ({ eventItem, scaleUsers, me, token }: any) => {
                                         {getCorrectorName(profile.id, scaleUsers, me) || profile.login}
                                     </CardTitle>
                                     <p>
-                                        <Badge style={{ marginRight: 10 }} color='primary'>
+                                        <CorrectorLanguages id={profile.id} users={scaleUsers} />
+                                        <Badge style={{ marginRight: 10 }} color='success'>
                                             {getRentre(profile.id, scaleUsers)}
                                         </Badge>
-                                        <Badge color='info'>
-                                            {getLevel(profile.id, scaleUsers)}
-                                        </Badge>
-                                        <CorrectorLanguages id={profile.id} users={scaleUsers} />
+                                        <CorrectorGrades id={profile.id} users={scaleUsers} />
                                     </p>
                                     <p style={{ marginTop: 5 }}>
                                         {i == 0 ? dayjs(eventItem?.scale_team.updated_at).format(

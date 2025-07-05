@@ -31,15 +31,3 @@ export const getRentre = (id: any, users: any, me: any) => {
     });
     return (name);
 };
-
-export const getLevel = (id: any, users: any, me: any) => {
-    let name = null;
-    users.map((i: any) => {
-        if (i.id == id && i.level) {
-            name = `${i.level} lvl`;
-        }
-    });
-    if (!name)
-        return "";
-    return (name);
-};

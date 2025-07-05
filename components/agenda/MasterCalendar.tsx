@@ -8,6 +8,7 @@ import {
     dayjsLocalizer,
     Views,
 } from "react-big-calendar";
+import fr from "date-fns/locale/fr";
 import { Calendar as DatePicker } from "react-date-range";
 import {
     CalendarTodayButton,
@@ -66,9 +67,10 @@ const MasterCalendar = ({
                 <Popovers
                     desc={
                         <DatePicker
+                            locale={fr}                        
                             onChange={(item) => setDate(item)}
                             date={date}
-                            color={process.env.NEXT_PUBLIC_PRIMARY_COLOR}
+                            color="#6c5dd3"
                         />
                     }
                     placement="bottom-end"
@@ -112,7 +114,7 @@ const MasterCalendar = ({
                     <CalendarViewModeButtons viewMode={viewMode} />
                 
             </CardHeader>
-            <CardBody isScrollable style={mobileDesign ? { paddingTop: 0 } : {}}>
+            <CardBody isScrollable style={{ paddingTop: 0 }}>
                 <DnDCalendar
                     formats={customFormats}
                     selectable
