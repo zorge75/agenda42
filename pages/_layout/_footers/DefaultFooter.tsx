@@ -40,7 +40,7 @@ const DefaultFooter = () => {
                   </Link>
                 </div>
               </Tooltips>
-              <Link className="m-3 text-decoration-none text-reset text-bold" href="/changelog">
+              <Link className="m-5 mb-0 mt-0 text-decoration-none text-reset text-bold" href="/changelog">
                 Changelog
               </Link>
               <span>version {packageJson.version}</span>

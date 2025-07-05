@@ -45,19 +45,9 @@ const slotsSlice = createSlice({
             state.defancesHistory = action.payload;
         },
         updateUser(state, action) {
-            console.log("action", action)
-            const cursusUser = action.payload.cursus_users?.find((i) => i.cursus_id === 21);
-
-            if (!cursusUser) return;
-
-            const { grade, level } = cursusUser;
             const user = state.scaleTeam.find((u) => u.id === action.payload.id);
-
-            user.languages = action.payload.languages;
-            if (user) {
-                user.grade = grade;
-                user.level = level;
-            }
+            user.languages = action.payload?.languages;
+            user.grade = action.payload?.cursus_users;
         },
         setLoading(state) {
             state.loading = true;
