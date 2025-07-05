@@ -25,7 +25,7 @@ const DefaultFooter = () => {
                 "link-light": darkModeStatus,
               })}
             >
-              <small className="fw-bold">École 42 Paris</small>
+              <small className="fw-bold">École 42</small>
             </Link>
           </div>
           <div className="col-auto">
