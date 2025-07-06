@@ -6,34 +6,35 @@ Manage slots, check evals history, and 42 school events from a single interface.
 ## Setup & configuration
 - Create a Oauth application on [intra](https://profile.intra.42.fr/oauth/applications)
 - Copy the file `./.env.example` to `./env/.env.local` and fill out the (secret) data
-- Make the file `./.env.prod` to build this project in production mode
+- Make the file `./.env.production` to build this project in production mode
 
 ```
-API_URI=https://aron.agenda42.fr/api/auth/callback
+API_URI=https://agenda42.fr/api/auth/callback
 CLIENT_ID=u-...
 API_TOKEN=s-...
-PORT=3002
-STATUS=development
+PORT=3000
+STATUS=production
 ```
 
-## Updating the secrets / API tokens
 ```shell
 cd agenda42
 vim .env.local
 # make changes
-docker compose down
-docker compose up -d
+
+make docker-build
+make docker-up
 
 # To get logs
 docker logs --tail 10000 -f agenda42-app
 
-# Or without compose
-docker build -t agenda42-app .
-docker run --env-file .env.production -p 3002:3002 agenda42-app
 ```
 
 # Other command
 kill -9 $(lsof -t -i:3002)
+
+sudo docker inspect naughty_gagarin | grep Pid
+sudo kill -9 XXXXX
+sudo docker rm -f naughty_gagarin
 
 
 ## Monitoring
