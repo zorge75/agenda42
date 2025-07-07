@@ -1,36 +1,39 @@
 # Nom de l'image Docker
-SERVICE_NAME=agenda42-prod
+IMAGE_NAME=agenda-app
 PORT = 3000
 
 # Lancement en mode développement avec .env.local
+# TODO: for dev he take port 3002 from package.json
 dev:
 	npx env-cmd -f .env.local npm run dev
 
-COMPOSE_FILE=docker-compose.yml
-
-# Construction de l'image avec Docker Compose
+# Construction de l'image Docker
 docker-build:
-	docker-compose -f $(COMPOSE_FILE) build $(SERVICE_NAME)
+	docker build -t $(IMAGE_NAME) .
 
-# Lancement du conteneur avec Docker Compose
-docker-up:
-	docker-compose -f $(COMPOSE_FILE) up -d $(SERVICE_NAME)
+# Lancement du conteneur Docker
+docker-run:
+	docker run --env-file .env.production -p $(PORT):$(PORT) $(IMAGE_NAME)
 
-# Arrêt du conteneur
-#docker-down:
-#	docker-compose -f $(COMPOSE_FILE) down
+# Construction et lancement du conteneur Docker
+docker-up: docker-build docker-run
 
-# Nettoyage des images (optionnel)
-#docker-clean:
-#	docker rmi $$(docker images -q agenda42-app) || true
+# Arrêt et suppression du conteneur Docker
+docker-down:
+	docker stop $$(docker ps -q --filter ancestor=$(IMAGE_NAME)) || true
+	docker rm $$(docker ps -a -q --filter ancestor=$(IMAGE_NAME)) || true
+
+# Nettoyage des images et conteneurs Docker
+docker-clean:
+	docker rmi $(IMAGE_NAME) || true
 
 # Reconstruction complète (nettoyage et construction)
-#docker-rebuild: docker-down docker-clean docker-build
+docker-rebuild: docker-down docker-clean docker-build
 
 # Logs en temps réel
 docker-logs:
-	docker-compose -f $(COMPOSE_FILE) logs -f $(SERVICE_NAME)
+	docker logs --tail 10000 -f $(SERVICE_NAME)
 
 # Accès à un shell dans le conteneur
 docker-shell:
-	docker-compose -f $(COMPOSE_FILE) exec $(SERVICE_NAME) sh
+	docker exec $(SERVICE_NAME) sh

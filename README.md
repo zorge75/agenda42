@@ -22,6 +22,9 @@ vim .env.local
 # make changes
 
 make docker-build
+make docker-pun
+
+or just
 make docker-up
 
 # To get logs
