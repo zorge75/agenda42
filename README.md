@@ -2,6 +2,8 @@
 
 The project is built on [**Next.js 14.0.4**](https://github.com/vercel/next.js) with [**TypeScript**](https://github.com/microsoft/TypeScript) for robust server-side rendering and static site generation, powered by [**React 18.2.0**](https://github.com/facebook/react) for dynamic UI components. It prominently features [**react-big-calendar**](https://github.com/jquense/react-big-calendar) for advanced calendar functionality, with state management handled by [**Redux**](https://github.com/reduxjs/redux) for efficient, scalable data flow.
 
+[Instructions for deploying](https://github.com/brgman/agenda42/blob/master/DEVELOPMENT.md) and running a local copy of the application in "developer mode". 
+
 ## 🌟 Guide for Contributing, via Fork 🌟
 
 Welcome to the project! We're super excited to have you here, and we can't wait to see your amazing contributions. Whether you're fixing a bug 🐛, adding a feature ✨, or improving documentation 📚, this guide will help you every step of the way. Let’s dive in! 🚀
@@ -11,9 +13,8 @@ Welcome to the project! We're super excited to have you here, and we can't wait 
 ### 1. **🍴 Fork the Repository**
 First, let’s create your personal copy of the project:
 
-1. Go to the repository: [Agenda42](https://github.com/brgman/agenda42.git).
-2. Click the **Fork** button in the top-right corner. This will create a copy of the repository in **your own GitHub account**.
-3. 🎉 Now you have your own version of the project to work on!
+1. Click the **Fork** button in the top-right corner. This will create a copy of the repository in **your own GitHub account**.
+2. 🎉 Now you have your own version of the project to work on!
 
 ---
 
