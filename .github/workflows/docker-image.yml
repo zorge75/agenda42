@@ -1,0 +1,64 @@
+name: Build, Run, and Publish Docker Image
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'Dockerfile'
+      - '.github/workflows/docker-image.yml'
+      - '**/*.py'
+      - '**/*.js'
+      - '**/*.ts'
+      - '**/*.go'
+      - '**/*.rs'
+      - '**/*.java'
+      - '**/*.sh'
+      - '**/*.conf'
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/*.env'
+      - '**/*.toml'
+      - '**/*.json'
+
+jobs:
+  build-run-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/brgman/agenda42:latest .
+
+      - name: Run Docker container (build/run)
+        run: |
+          # Remove container if it already exists
+          docker rm -f agenda42 || true
+          # Run container in detached mode
+          docker run --name agenda42 -d ghcr.io/brgman/agenda42:latest
+          # (Optional) Add your tests/commands here, e.g.:
+          # docker exec agenda42 pytest
+          # Wait a few seconds to ensure the container starts
+          sleep 10
+          # Show running container logs for debug (optional)
+          docker logs agenda42 || true
+          # Stop and remove after run
+          docker stop agenda42
+          docker rm agenda42
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/brgman/agenda42:latest
