@@ -1,64 +1,48 @@
-name: Build, Run, and Publish Docker Image
+name: Docker Image CI/CD
 
 on:
   push:
-    branches:
-      - master
-    paths:
-      - 'Dockerfile'
-      - '.github/workflows/docker-image.yml'
-      - '**/*.py'
-      - '**/*.js'
-      - '**/*.ts'
-      - '**/*.go'
-      - '**/*.rs'
-      - '**/*.java'
-      - '**/*.sh'
-      - '**/*.conf'
-      - '**/*.yml'
-      - '**/*.yaml'
-      - '**/*.env'
-      - '**/*.toml'
-      - '**/*.json'
+    branches: [ "master" ]
 
 jobs:
   build-run-publish:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+    runs-on: self-hosted
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - name: Extract version from package.json
+        id: pkg
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/brgman/agenda42:latest .
+          docker build \
+            -t agenda42:latest \
+            -t ghcr.io/brgman/agenda42:latest \
+            -t ghcr.io/brgman/agenda42:${{ steps.pkg.outputs.version }} \
+            .
 
-      - name: Run Docker container (build/run)
-        run: |
-          # Remove container if it already exists
-          docker rm -f agenda42 || true
-          # Run container in detached mode
-          docker run --name agenda42 -d ghcr.io/brgman/agenda42:latest
-          # (Optional) Add your tests/commands here, e.g.:
-          # docker exec agenda42 pytest
-          # Wait a few seconds to ensure the container starts
-          sleep 10
-          # Show running container logs for debug (optional)
-          docker logs agenda42 || true
-          # Stop and remove after run
-          docker stop agenda42
-          docker rm agenda42
+      - name: Remove old container
+        run: docker rm -f agenda42 || true
 
-      - name: Push Docker image
+      - name: Run new container
         run: |
-          docker push ghcr.io/brgman/agenda42:latest
+          docker run -d --name agenda42 \
+            -e API_URI=${{ secrets.API_URI }} \
+            -e API_TOKEN=${{ secrets.API_TOKEN }} \
+            -e CLIENT_ID=${{ secrets.CLIENT_ID }} \
+            -e STATUS=${{ secrets.STATUS }} \
+            -p 3000:3000 \
+            agenda42:latest
+
+      - name: Push Docker image to GitHub Container Registry (latest)
+        run: docker push ghcr.io/brgman/agenda42:latest
+
+      - name: Push Docker image to GitHub Container Registry (version)
+        run: docker push ghcr.io/brgman/agenda42:${{ steps.pkg.outputs.version }}
