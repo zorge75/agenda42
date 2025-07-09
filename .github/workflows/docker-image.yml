@@ -33,7 +33,7 @@ jobs:
 
       - name: Run new container
         run: |
-          docker run -d --name agenda42 \
+          docker run -d --restart always --name agenda42 \
             -e API_URI=${{ secrets.API_URI }} \
             -e API_TOKEN=${{ secrets.API_TOKEN }} \
             -e CLIENT_ID=${{ secrets.CLIENT_ID }} \
