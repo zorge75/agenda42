@@ -1,76 +1,121 @@
-# Agenda 42 --> [agenda42.fr](https://agenda42.fr)
+## Manage slots, check evals history, and @42paris events from a single interface.
 
-Manage slots, check evals history, and 42 school events from a single interface.
+The project is built on [**Next.js 14.0.4**](https://github.com/vercel/next.js) with [**TypeScript**](https://github.com/microsoft/TypeScript) for robust server-side rendering and static site generation, powered by [**React 18.2.0**](https://github.com/facebook/react) for dynamic UI components. It prominently features [**react-big-calendar**](https://github.com/jquense/react-big-calendar) for advanced calendar functionality, with state management handled by [**Redux**](https://github.com/reduxjs/redux) for efficient, scalable data flow.
 
-The project is built on [**Next.js 14.0.4**](https://github.com/vercel/next.js) with [**TypeScript**](https://github.com/microsoft/TypeScript) for robust server-side rendering and static site generation, powered by [**React 18.2.0**](https://github.com/facebook/react) for dynamic UI components. It prominently features [**react-big-calendar**](https://github.com/jquense/react-big-calendar) for advanced calendar functionality, with state management handled by [**Redux**](https://github.com/reduxjs/redux), [**@reduxjs/toolkit**](https://github.com/reduxjs/redux-toolkit), and [**react-redux**](https://github.com/reduxjs/react-redux) for efficient, scalable data flow.
+## 🌟 Guide for Contributing, via Fork 🌟
 
-## Developing
-## Setup & configuration
-- Create a Oauth application on [intra](https://profile.intra.42.fr/oauth/applications)
-- Copy the file `./.env.example` to `./env/.env.local` and fill out the (secret) data
-- Make the file `./.env.production` to build this project in production mode
+Welcome to the project! We're super excited to have you here, and we can't wait to see your amazing contributions. Whether you're fixing a bug 🐛, adding a feature ✨, or improving documentation 📚, this guide will help you every step of the way. Let’s dive in! 🚀
 
+---
+
+### 1. **🍴 Fork the Repository**
+First, let’s create your personal copy of the project:
+
+1. Go to the repository: [Agenda42](https://github.com/brgman/agenda42.git).
+2. Click the **Fork** button in the top-right corner. This will create a copy of the repository in **your own GitHub account**.
+3. 🎉 Now you have your own version of the project to work on!
+
+---
+
+### 2. **💻 Clone Your Fork**
+Let’s get the project onto your computer so you can start contributing:
+
+1. Copy the URL of your forked repository (e.g., `https://github.com/<your-username>/agenda42.git`).
+2. Open your terminal and type:
+   ```bash
+   git clone https://github.com/<your-username>/agenda42.git
+   ```
+3. Move into the project folder:
+   ```bash
+   cd agenda42
+   ```
+4. You’re all set to start working locally! 🎉
+
+---
+
+### 3. **🌿 Create a New Branch**
+It’s best to work in a separate branch to keep your changes organized and isolated.
+
+1. Create a new branch with a name that describes your work:
+   ```bash
+   git checkout -b feature/my-awesome-feature
+   ```
+2. Double-check that you’re in your new branch:
+   ```bash
+   git branch
+   ```
+3. You’re ready to go! 🛠️
+
+---
+
+### 4. **🛠️ Make Your Changes**
+Let your creativity shine! 🌟 Make the changes you want—whether it’s fixing a bug, adding functionality, or improving the code.
+
+1. Check what files you’ve modified:
+   ```bash
+   git status
+   ```
+2. Stage your changes to prepare them for commit:
+   ```bash
+   git add <file-name>
+   # Or add everything:
+   git add .
+   ```
+3. Commit your changes with a clear and friendly message:
+   ```bash
+   git commit -m "🌟 Added a cool new feature!"
+   ```
+
+---
+
+### 5. **📤 Push Your Changes**
+Let’s send your work to your forked repository on GitHub:
+
+```bash
+git push origin feature/my-awesome-feature
 ```
-API_URI=https://agenda42.fr/api/auth/callback
-CLIENT_ID=u-...
-API_TOKEN=s-...
-PORT=3000
-STATUS=production
-```
 
-```shell
-cd agenda42
-vim .env.local
-# make changes
+---
 
-make docker-build
-make docker-pun
+### 6. **🔄 Create a Pull Request to `master`**
+This is the exciting part—sharing your changes with the team! 🎉
 
-or just
-make docker-up
+1. Go to your forked repository on GitHub.
+2. Switch to your branch (`feature/my-awesome-feature`).
+3. Click the **Compare & pull request** button.
+4. In the Pull Request form:
+   - Make sure the **Base repository** is the original repo (`brgman/agenda42`).
+   - Set the **Base branch** to `master`.
+   - Select your **Head branch** (`feature/my-awesome-feature`).
+5. Add a title and description to explain your changes. Be creative! ✨
+6. Click **Create pull request**, and voilà! Your changes are now up for review. 🎉
 
-# To get logs
-docker logs --tail 10000 -f agenda42-app
+---
 
-```
+### 7. **🔃 Keep Your Fork Updated**
+As the project evolves, it’s important to keep your fork synchronized with the original repository:
 
-# Other command
-kill -9 $(lsof -t -i:3002)
+1. Add the original repository as `upstream`:
+   ```bash
+   git remote add upstream https://github.com/brgman/agenda42.git
+   ```
+2. Fetch updates from the original repository:
+   ```bash
+   git fetch upstream
+   ```
+3. Merge the updates into your local `master` branch:
+   ```bash
+   git checkout master
+   git merge upstream/master
+   ```
+4. Push the updated `master` to your fork:
+   ```bash
+   git push origin master
+   ```
 
-sudo docker inspect naughty_gagarin | grep Pid
-sudo kill -9 XXXXX
-sudo docker rm -f naughty_gagarin
+---
 
+### 🎉 Thank You for Contributing!
+Your contributions, no matter how big or small, make a huge difference to this project. 💖 Don’t be afraid to ask questions, share ideas, or even experiment. You’re part of something amazing, and we’re thrilled to have you on board. Let’s build something incredible together! 🚀
 
-## Monitoring
-At the (unauthenticated) route `/status/pull` you can see a summary of the pull status of every campus
-It contains the key `hoursAgo` for every campus, which is the amount of hours since the last successful pull (syncing the 42 DB of the users' completed projects) of that campus
-This value should not be higher than 2 * the pull timeout (currently 24 hours)
-
-## Configuration files
-| File path                                    | Description                                                                           | Managed by server |
-|----------------------------------------------|---------------------------------------------------------------------------------------|-------------------|
-| `.env.example`                               | Example file for api tokens, rename to `.env` to activate                             | no                |
-
-### Makefile
-```
-make dev // for development mode in the server port 3002 (npm run dev)
-```
-
-### Docker and Docker-compose
-This is in production
-```shell
-git clone https://github.com/brgman/agenda42.git
-cd agenda42
-docker compose up -d
-
-# To get logs
-docker logs --tail 10000 -f agenda42-app
-```
-
-### Locally
-- Install Nodejs >= 18.x
-- Install dependencies\
-`npm install`
-- Start development server\
-`npm run dev`
+Happy coding! 💻✨
