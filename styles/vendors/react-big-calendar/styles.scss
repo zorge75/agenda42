@@ -19,6 +19,11 @@
 	box-sizing: inherit;
 }
 
+.rbc-time-content > .rbc-time-gutter .rbc-time-slot {
+	opacity: 1 !important;
+	background-color: inherit !important;
+}
+
 .rbc-abs-full {
 	position: absolute;
 	top: 0;
