@@ -4,6 +4,7 @@ import Card, { CardHeader, CardLabel, CardTitle, CardBody } from "../bootstrap/C
 import Markdown from 'react-markdown'
 import Badge from "../bootstrap/Badge";
 import Icon from "../icon/Icon";
+import { isTilePast } from "../../helpers/helpers";
 
 const replaceBoldInLink = (link: string) => {
     return link.replace("**_", "").replace("_**", "")
@@ -22,6 +23,14 @@ function convertToMdLinks(text: string) {
     });
 }
 
+function getStatusColor(subscribedUsers: number, totalUsers: number): string {
+    if (totalUsers === 0 || !totalUsers)
+        return "dark";
+    const percent = (subscribedUsers / totalUsers) * 100;
+    if (percent >= 90) return "danger";
+    if (percent >= 50) return "brand";
+    return "success";
+}
 
 const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
     console.log("Event", eventItem);
@@ -43,7 +52,7 @@ const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
                                     <span className='display-6 fw-bold'>{dayjs(eventItem.start).format('H:mm')}</span>
                                 </div>
                                 <div className='col-lg-6'>
-                                    <div className='h4 mb-3'>
+                                    <div className='h4 mb-3 text-end'>
                                         <Badge color='dark'>
                                             {eventItem.kind}
                                         </Badge>
@@ -51,38 +60,60 @@ const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
                                     <span className='display-6 fw-bold'>{dayjs(eventItem.end).format('H:mm')}</span>
                                 </div>
                             </div>
-                            {eventItem.location ? <Badge color='success' className="mt-3" style={{ marginRight: 10 }}>
-                                <Icon icon="LocationOn" />  {eventItem.location}
-                            </Badge> : ""}
-                            <Badge color='primary'> {/* // TODO: colors form %% */}
-                                Subscribers: {eventItem.nbr_subscribers} / {eventItem.max_people || "without a maximum quantity"}
-                            </Badge>
+                            {eventItem.location ? <div className='mt-4 align-items-end'>
+                                <div className='h4 mb-3'>
+                                    <Icon icon="LocationOn" />  {eventItem.location}
+                                </div>
+                            </div> : null}
+
+                            <div className='row align-items-end event_row'>
+                                <div className='col-lg-6'>
+                                    <div className='h4'>Subscribers:</div>
+                                </div>
+                                <div className='col-lg-6'>
+                                    <div className='h4 mb-2 text-end'>
+                                        <Badge color={getStatusColor(eventItem.nbr_subscribers, eventItem.max_people)}>
+                                            {eventItem.nbr_subscribers} / {eventItem.max_people || "+"}
+                                        </Badge>
+                                    </div>
+                                </div>
+                            </div>
                         </CardBody>
                     </Card>
 
                     <div className="col mb-3 d-inline-flex justify-content-between">
-                        {(eventItem.max_people != eventItem.nbr_subscribers)
-                            ? <Button
-                                color="success"
-                                type="submit"
-                                onClick={() => unsubscribeHandler(eventItem)}
-                            >Subscribe
-                            </Button>
-                            : (eventItem.max_people == eventItem.nbr_subscribers) ?
-                                < Button
-                                    color="danger"
+
+                        {
+                            (isTilePast(eventItem.start))
+                                ?
+                                <Button
+                                    color="light"
                                     type="submit"
                                     onClick={() => unsubscribeHandler(eventItem)}
-                                >
-                                    Waitlist is abailiable ?
+                                >View in intra
                                 </Button>
-                                :
-                                <Button
-                                    color="success"
-                                    type="submit"
-                                >
-                                    Save to agenda
-                                </Button>
+                                : (eventItem.max_people != eventItem.nbr_subscribers) ?
+                                    <Button
+                                        color="storybook"
+                                        type="submit"
+                                        onClick={() => unsubscribeHandler(eventItem)}
+                                    >Subscribe
+                                    </Button>
+                                    : (eventItem.max_people == eventItem.nbr_subscribers) ?
+                                        < Button
+                                            color="danger"
+                                            type="submit"
+                                            onClick={() => unsubscribeHandler(eventItem)}
+                                        >
+                                            Waitlist is abailiable ?
+                                        </Button>
+                                        :
+                                        <Button
+                                            color="success"
+                                            type="submit"
+                                        >
+                                            Save to agenda
+                                        </Button>
                         }
                     </div >
 

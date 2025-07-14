@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export function test() {
 	return null;
 }
@@ -114,3 +116,8 @@ export const pathToRoute = (path: string): string => {
 	if (path?.length > 1 && path?.substring(1, 0) === '/') return path?.substring(1, path?.length);
 	return path;
 };
+
+
+export const isTilePast = (tileDate: string): any => {
+	return dayjs(tileDate).isBefore(dayjs());
+  }
