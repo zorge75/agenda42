@@ -80,7 +80,6 @@ const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
                                 <Button
                                     color="success"
                                     type="submit"
-                                    onClick={() => { }} {/* TODO: make handler for save event in db */}
                                 >
                                     Save to agenda
                                 </Button>
