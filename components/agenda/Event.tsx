@@ -30,65 +30,68 @@ const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
     };
     console.log("event", eventItem);
     return (
-        eventItem.scale_team != "invisible"
-            ? <>
-                <h2>{eventItem.name}</h2>
+        <>
+            {eventItem.scale_team != "invisible"
+                ? <>
+                    <h2>{eventItem.name}</h2>
 
-                <Card borderColor={"light"} borderSize="2" >
-                    <CardBody>
-                        <div className='row align-items-end event_row'>
-                            <div className='col-lg-6'>
-                                <div className='h4 mb-3'>{dayjs(eventItem.start).format('DD MMMM')}</div>
-                                <span className='display-6 fw-bold'>{dayjs(eventItem.start).format('H:mm')}</span>
-                            </div>
-                            <div className='col-lg-6'>
-                                <div className='h4 mb-3'>
-                                    <Badge color='dark'>
-                                        {eventItem.kind}
-                                    </Badge>
+                    <Card borderColor={"light"} borderSize={2} >
+                        <CardBody>
+                            <div className='row align-items-end event_row'>
+                                <div className='col-lg-6'>
+                                    <div className='h4 mb-3'>{dayjs(eventItem.start).format('DD MMMM')}</div>
+                                    <span className='display-6 fw-bold'>{dayjs(eventItem.start).format('H:mm')}</span>
                                 </div>
-                                <span className='display-6 fw-bold'>{dayjs(eventItem.end).format('H:mm')}</span>
+                                <div className='col-lg-6'>
+                                    <div className='h4 mb-3'>
+                                        <Badge color='dark'>
+                                            {eventItem.kind}
+                                        </Badge>
+                                    </div>
+                                    <span className='display-6 fw-bold'>{dayjs(eventItem.end).format('H:mm')}</span>
+                                </div>
                             </div>
-                        </div>
-                        {eventItem.location ? <Badge color='success' className="mt-3" style={{ marginRight: 10 }}>
-                            <Icon icon="LocationOn" />  {eventItem.location}
-                        </Badge> : ""}
-                        <Badge color='primary'> {/* // TODO: colors form %% */}
-                           Subscribers: {eventItem.nbr_subscribers} / {eventItem.max_people || "without a maximum quantity"}
-                        </Badge>
-                    </CardBody>
-                </Card>
+                            {eventItem.location ? <Badge color='success' className="mt-3" style={{ marginRight: 10 }}>
+                                <Icon icon="LocationOn" />  {eventItem.location}
+                            </Badge> : ""}
+                            <Badge color='primary'> {/* // TODO: colors form %% */}
+                                Subscribers: {eventItem.nbr_subscribers} / {eventItem.max_people || "without a maximum quantity"}
+                            </Badge>
+                        </CardBody>
+                    </Card>
 
-                <div className="col mb-3 d-inline-flex justify-content-between">
-                    {(eventItem.max_people != eventItem.nbr_subscribers)
-                        ? <Button
-                            color="success"
-                            type="submit"
-                            onClick={() => unsubscribeHandler(eventItem)}
-                        >Subscribe
-                        </Button>
-                        : (eventItem.max_people == eventItem.nbr_subscribers) ?
-                            < Button
-                                color="danger"
-                                type="submit"
-                                onClick={() => unsubscribeHandler(eventItem)}
-                            >
-                                Waitlist is abailiable ?
-                            </Button>
-                            :
-                            <Button
+                    <div className="col mb-3 d-inline-flex justify-content-between">
+                        {(eventItem.max_people != eventItem.nbr_subscribers)
+                            ? <Button
                                 color="success"
                                 type="submit"
-                                onClick={()=>{}} {/* TODO: make handler for save event in db */} 
-                            >
-                                Save to agenda
+                                onClick={() => unsubscribeHandler(eventItem)}
+                            >Subscribe
                             </Button>
-                    }
-                </div >
+                            : (eventItem.max_people == eventItem.nbr_subscribers) ?
+                                < Button
+                                    color="danger"
+                                    type="submit"
+                                    onClick={() => unsubscribeHandler(eventItem)}
+                                >
+                                    Waitlist is abailiable ?
+                                </Button>
+                                :
+                                <Button
+                                    color="success"
+                                    type="submit"
+                                    onClick={() => { }} {/* TODO: make handler for save event in db */}
+                                >
+                                    Save to agenda
+                                </Button>
+                        }
+                    </div >
 
-                <p className="h5"> <Markdown>{convertToMdLinks(eventItem.description)}</Markdown></p>
-            </>
-            : <div>You will evaluate someone at {dayjs(eventItem.slots_data[0].begin_at).format('H:mm')}</div>
+                    <p className="h5"> <Markdown>{convertToMdLinks(eventItem.description)}</Markdown></p>
+                </>
+                : <div>You will evaluate someone at {dayjs(eventItem.slots_data[0].begin_at).format('H:mm')}</div>
+            }
+        </>
     );
 };
 
