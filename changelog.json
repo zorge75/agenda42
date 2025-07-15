@@ -1,5 +1,12 @@
 [
     {
+        "version": "2.5.2",
+        "date": "2025-07-15",
+        "changes": [
+            "(Past free slots should not be opened)[https://github.com/brgman/agenda42/issues/33]"
+        ]
+    },
+    {
         "version": "2.4.1",
         "date": "2025-07-01",
         "changes": [

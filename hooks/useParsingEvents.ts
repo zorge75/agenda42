@@ -1,6 +1,16 @@
 import { useEffect } from 'react';
 import dayjs from "dayjs";
 
+export interface IEventType {
+    [key: string]: string;
+}
+export const ET: IEventType = {
+    EVENT: "event",
+    SLOT: "slot",
+    DEFINCE: "defince",
+    CORRECTION: "correction",
+}
+
 const useParsingEvents = (
     eventsIntra: any,
     slotsIntra: any,
@@ -46,7 +56,11 @@ const useParsingEvents = (
                             : "success",
                     user: null,
                     description: null,
-                    kind: "kind",
+                    kind: slot.scale_team == "invisible"
+                        ? ET.CORRECTION
+                        : slot.scale_team?.correcteds
+                            ? ET.CORRECTION
+                            : ET.SLOT,
                     location: "event.location",
                     max_people: "event.max_people",
                     nbr_subscribers: "event.nbr_subscribers",

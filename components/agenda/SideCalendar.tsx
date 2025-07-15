@@ -16,6 +16,7 @@ import { customFormats } from "../../common/function/customStyles";
 import { useDispatch } from "react-redux";
 import { MyEventDay } from "../../components/agenda/TemplatesEvent";
 import { CalendarTodayButton } from "../extras/calendarHelper";
+import { setEventActive } from "../../store/slices/calendarSlice";
 
 const SideCalendar = ({
     events,
@@ -25,8 +26,6 @@ const SideCalendar = ({
     eventStyleGetter,
     setDate,
     setUnitType,
-    setInfoEvent,
-    setEventItem,
 }: any) => {
     const dispatch = useDispatch();
     const localizer = dayjsLocalizer(dayjs);
@@ -69,9 +68,8 @@ const SideCalendar = ({
                     step={15}
                     scrollToTime={dayjs(date).add(-1, 'h').toISOString()}
                     defaultDate={new Date()}
-                    onSelectEvent={(event) => {
-                        setInfoEvent();
-                        setEventItem(event);
+                    onSelectEvent={(event) => { 
+                        dispatch(setEventActive(event));
                     }}
                     onSelectSlot={handleSelect}
                     onView={handleViewMode}

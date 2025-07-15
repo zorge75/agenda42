@@ -26,7 +26,7 @@ import ThemeContext from "../../context/themeContext";
 import { useCallback, useContext } from "react";
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
-import { setSwitchEvents } from "../../store/slices/calendarSlice";
+import { setEventActive, setSwitchEvents } from "../../store/slices/calendarSlice";
 
 const MasterCalendar = ({
     unitType,
@@ -39,8 +39,6 @@ const MasterCalendar = ({
     eventsActive,
     views,
     moveEvent,
-    setInfoEvent,
-    setEventItem,
     handleSelect,
     eventStyleGetter,
 }: any) => {
@@ -150,8 +148,7 @@ const MasterCalendar = ({
                     onEventResize={moveEvent}
                     draggableAccessor="isDraggable"
                     onSelectEvent={(event) => {
-                        setInfoEvent();
-                        setEventItem(event);
+                        dispatch(setEventActive(event));
                     }}
                     onSelectSlot={handleSelect}
                     components={{

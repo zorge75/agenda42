@@ -1,15 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useFormik } from 'formik';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import Icon from '../icon/Icon';
-import Input from '../bootstrap/forms/Input';
-import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle } from '../bootstrap/Modal';
-import { componentPagesMenu } from '../../menu';
-import Button from '../bootstrap/Button';
+import Modal, { ModalBody, ModalHeader, ModalTitle } from '../bootstrap/Modal';
 import { findOverlappingEvents } from '../../common/function/overlapEvents';
-import Card, { CardActions, CardBody, CardHeader, CardLabel, CardTitle } from '../bootstrap/Card';
+import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../bootstrap/Card';
 import dayjs from 'dayjs';
-import showNotification from '../extras/showNotification';
 
 const OverlappingModal = ({
     events
