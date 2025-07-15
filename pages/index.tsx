@@ -18,7 +18,7 @@ import OffCanvas, {
 } from "../components/bootstrap/OffCanvas";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
-import { setUnitType } from "../store/slices/calendarSlice";
+import { setCanvasIsOpen, setEventActiveDefault, setUnitType } from "../store/slices/calendarSlice";
 import axios from "axios";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/fr";
@@ -45,25 +45,21 @@ import useParsingEvents from "../hooks/useParsingEvents";
 import useSwitchEvents from "../hooks/useSwichEvents";
 import MasterCalendar from "../components/agenda/MasterCalendar";
 import SideCalendar from "../components/agenda/SideCalendar";
+import { delay } from "../helpers/helpers";
 
 dayjs.extend(utc);
 dayjs.locale("fr");
 
 const now = new Date();
 
-const initialEventItem: IEvent = {
-  start: undefined,
-  end: undefined,
-  name: undefined,
-  id: undefined,
-  user: undefined,
-};
-
 const Index: NextPage = ({ token, me }: any) => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { notify } = router.query;
   const [loadGeneral, setLoad] = useState(true);
   const refreshAgenda = useRefreshAgenda({ me, token, setLoad });
   const { darkModeStatus, themeStatus } = useDarkMode();
-  const dispatch = useDispatch();
+
   const settings = useSelector((state: RootState) => state.settings.settingsLoaded);
   const eventsIntra = useSelector((state: RootState) => state.events.events);
   const allEvents = useSelector((state: RootState) => state.events.all);
@@ -73,22 +69,19 @@ const Index: NextPage = ({ token, me }: any) => {
   const scaleUsers = useSelector((state: RootState) => state.slots.scaleTeam);
   const defances = useSelector((state: RootState) => state.slots.defances);
   const defancesHistory = useSelector((state: RootState) => state.slots.defancesHistory);
-  const [eventItem, setEventItem] = useState<IEvent>(initialEventItem);
+  const eventItem = useSelector((state: RootState) => state.calendar.eventActive);
+  const toggleInfoEventCanvas = useSelector((state: RootState) => state.calendar.canvasIsOpen);
+
   const [date, setDate] = useState(new Date());
-  const [toggleInfoEventCanvas, setToggleInfoEventCanvas] = useState(false);
-  const setInfoEvent = () => setToggleInfoEventCanvas(!toggleInfoEventCanvas);
   const [eventAdding, setEventAdding] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
   const [events, setEvents] = useState([]);
   const [eventsActive, setEventsActive] = useState([]);
-  const router = useRouter();
-  const { notify } = router.query;
 
   useParsingEvents(eventsIntra, slotsIntra, defances, defancesHistory, me, setEvents, setEventsActive);
   useFetchAllEvents(allEvents, token, me, setAllEvents);
   useSwitchEvents(events, allEvents, setEventsActive);
-  useNotification(events, notify, settings, setEventItem, setToggleInfoEventCanvas);
+  useNotification(events, notify, settings);
 
   // Calendar Unit Type
   const unitType = getUnitType(viewMode);
@@ -132,7 +125,7 @@ const Index: NextPage = ({ token, me }: any) => {
                 icon='Info'
                 size='lg'
                 className='me-1'
-                />
+              />
               <span>Updated Successfully</span>
             </span>,
             'Agenda update',
@@ -231,7 +224,7 @@ const Index: NextPage = ({ token, me }: any) => {
 
   useEffect(() => {
     if (eventAdding) {
-      setInfoEvent();
+      dispatch(setCanvasIsOpen());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventAdding]);
@@ -278,9 +271,9 @@ const Index: NextPage = ({ token, me }: any) => {
           },
         ]);
       }
-      setToggleInfoEventCanvas(false);
+      dispatch(setCanvasIsOpen());
       setEventAdding(false);
-      setEventItem(initialEventItem);
+      dispatch(setEventActiveDefault());
       formik.setValues({
         eventName: "",
         eventStart: "",
@@ -385,8 +378,6 @@ const Index: NextPage = ({ token, me }: any) => {
               eventStyleGetter={eventStyleGetter}
               setDate={setDate}
               setUnitType={setUnitType}
-              setInfoEvent={setInfoEvent}
-              setEventItem={setEventItem}
             />
           </div>
           <div className="col-xl-9">
@@ -401,8 +392,6 @@ const Index: NextPage = ({ token, me }: any) => {
               eventsActive={eventsActive}
               views={views}
               moveEvent={moveEvent}
-              setInfoEvent={setInfoEvent}
-              setEventItem={setEventItem}
               handleSelect={handleSelect}
               eventStyleGetter={eventStyleGetter}
             />
@@ -411,7 +400,7 @@ const Index: NextPage = ({ token, me }: any) => {
 
         <OffCanvas
           setOpen={(status: boolean) => {
-            setToggleInfoEventCanvas(status);
+            dispatch(setCanvasIsOpen());
             setEventAdding(status);
           }}
           isOpen={toggleInfoEventCanvas}
@@ -419,7 +408,7 @@ const Index: NextPage = ({ token, me }: any) => {
         >
           <OffCanvasHeader
             setOpen={(status: boolean) => {
-              setToggleInfoEventCanvas(status);
+              dispatch(setCanvasIsOpen());
               setEventAdding(status);
             }}
             className="p-4"

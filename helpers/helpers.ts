@@ -120,4 +120,6 @@ export const pathToRoute = (path: string): string => {
 
 export const isTilePast = (tileDate: string): any => {
 	return dayjs(tileDate).isBefore(dayjs());
-  }
+  };
+
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

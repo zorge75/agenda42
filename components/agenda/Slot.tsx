@@ -6,10 +6,10 @@ import { preparationSlots } from "../../common/function/preparationSlots";
 import showNotification from "../extras/showNotification";
 import Icon from "../icon/Icon";
 import { RootState } from "../../store";
+import { delay } from "../../helpers/helpers";
 
 const Slot = ({ eventItem, token, originalSlotsIntra }: any) => {
     const dispatch = useDispatch();
-    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     const slotRemoveMod = useSelector((state: RootState) => state.settings.slotRemoveMod);
 
     const unsubscribeHandler = async (event: any) => {
@@ -144,7 +144,6 @@ const Slot = ({ eventItem, token, originalSlotsIntra }: any) => {
         const nowMinusOneHour = dayjs().subtract(-30, 'minutes');
         return !dayjs(date).isAfter(nowMinusOneHour);
     }
-
 
     return (
         <>
