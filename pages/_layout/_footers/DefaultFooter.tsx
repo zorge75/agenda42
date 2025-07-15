@@ -32,7 +32,7 @@ const DefaultFooter = () => {
             <div className="d-flex align-items-center" >
               <Tooltips title="Submit suggestions and bug reports in the issues."
                 placement='top'>
-                <div>
+                <div className="m-3 mb-0 mt-0">
                   <Link className="text-decoration-none text-reset" style={{zIndex: 1000}}
                     href="https://githeb.com/42paris">
                     <SvgCustomGithub className="m-1 mt-0" />
@@ -40,9 +40,9 @@ const DefaultFooter = () => {
                   </Link>
                 </div>
               </Tooltips>
-              <Link className="m-5 mb-0 mt-0 text-decoration-none text-reset text-bold" href="/changelog">
+              {/* <Link className="m-5 mb-0 mt-0 text-decoration-none text-reset text-bold" href="/changelog">
                 Changelog
-              </Link>
+              </Link> */}
               <span>version {packageJson.version}</span>
             </div>
           </div>
