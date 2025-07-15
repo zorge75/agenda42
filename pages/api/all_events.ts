@@ -1,4 +1,11 @@
 import axios from "axios";
+import axiosRetry from "axios-retry";
+
+axiosRetry(axios, {
+    retries: 3,
+    retryDelay: (retryCount: any) => Math.pow(2, retryCount) * 1000, // exponential backoff
+    retryCondition: (error: any) => error.response?.status === 429,
+});
 
 export default async function handler(req: any, res: any) {
     const { id } = req.query;
@@ -18,6 +25,8 @@ export default async function handler(req: any, res: any) {
         );
         res.status(200).json(response.data);
     } catch (error: any) {
-        res.status(error.response?.status || 500).json({ message: error.response.data.error });
+        const status = error.response?.status || 500;
+        let message = error.response?.data?.error || "Internal server error";
+        res.status(status).json({ message });
     }
 }

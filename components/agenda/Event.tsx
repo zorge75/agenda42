@@ -32,12 +32,11 @@ function getStatusColor(subscribedUsers: number, totalUsers: number): string {
     return "success";
 }
 
-const Event = ({ eventItem, token, originalSlotsIntra, }: any) => {
-    console.log("Event", eventItem);
+const Event = ({ eventItem }: any) => {
     const unsubscribeHandler = async (event: any) => {
         window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
     };
-    console.log("event", eventItem);
+    
     return (
         <>
             {eventItem.scale_team != "invisible"
