@@ -6,9 +6,6 @@ const useEventOutside = (refs: any, eventType: any, callback: any) => {
 			// Ensure refs is an array; if not, convert to array or handle single ref
 			const refArray = Array.isArray(refs) ? refs : [refs];
 
-			console.log("event.target", event.target);
-			console.log("ref.current", refArray);
-
 			const isOutside = refArray.every(
 				(ref) => ref && ref.current && !ref.current.contains(event.target)
 			);

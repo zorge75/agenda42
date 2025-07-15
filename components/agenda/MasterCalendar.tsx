@@ -135,7 +135,7 @@ const MasterCalendar = ({
                     toolbar={false}
                     localizer={localizer}
                     events={eventsActive}
-                    defaultView={Views.WEEK}
+                    onView={() => Views.WEEK}
                     views={views}
                     view={mobileDesign ? Views.DAY : viewMode}
                     date={date}

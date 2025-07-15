@@ -134,8 +134,6 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
     dispatch(setUnitType(viewMode));
   };
 
-  console.log("viewMode", viewMode);
-
   if (mobileDesign) {
     setViewMode(Views.DAY);
     return "";
