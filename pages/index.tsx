@@ -40,12 +40,18 @@ import { removeCreateSlotHandler } from "../common/function/recre_slot_handler";
 import { IEvent } from "../components/agenda/TemplatesEvent";
 import { useRefreshAgenda } from "../common/function/useRefreshAgenda";
 import useNotification from "../hooks/useNotification";
-import useFetchAllEvents from "../hooks/useFetchAllEvents";
 import useParsingEvents from "../hooks/useParsingEvents";
 import useSwitchEvents from "../hooks/useSwichEvents";
 import MasterCalendar from "../components/agenda/MasterCalendar";
 import SideCalendar from "../components/agenda/SideCalendar";
 import { delay } from "../helpers/helpers";
+import axiosRetry from "axios-retry";
+
+axiosRetry(axios, {
+    retries: 3,
+    retryDelay: (retryCount: any) => Math.pow(2, retryCount) * 1000, // exponential backoff
+    retryCondition: (error: any) => error.response?.status === 429,
+});
 
 dayjs.extend(utc);
 dayjs.locale("fr");
@@ -78,8 +84,15 @@ const Index: NextPage = ({ token, me }: any) => {
   const [events, setEvents] = useState([]);
   const [eventsActive, setEventsActive] = useState([]);
 
+  useEffect(() => {
+    refreshAgenda();
+    const update = setInterval(() => {
+      refreshHandler();
+    }, 60000 * 15);
+    return () => clearInterval(update);
+  }, [refreshAgenda]);
+
   useParsingEvents(eventsIntra, slotsIntra, defances, defancesHistory, me, setEvents, setEventsActive);
-  useFetchAllEvents(allEvents, token, me, setAllEvents);
   useSwitchEvents(events, allEvents, setEventsActive);
   useNotification(events, notify, settings);
 
@@ -155,14 +168,6 @@ const Index: NextPage = ({ token, me }: any) => {
 
     await attemptRefresh();
   };
-
-  useEffect(() => {
-    refreshAgenda();
-    const update = setInterval(() => {
-      refreshHandler();
-    }, 60000 * 15);
-    return () => clearInterval(update);
-  }, [refreshAgenda]);
 
   const handleSelect = async ({ start, end }: { start: any; end: any }) => {
     console.log("handleSelect")
