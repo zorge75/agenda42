@@ -96,7 +96,7 @@ const Event = ({ eventItem }: any) => {
                                         color="storybook"
                                         type="submit"
                                         onClick={() => unsubscribeHandler(eventItem)}
-                                    >Subscribe
+                                    >Open in Intra
                                     </Button>
                                     : (eventItem.max_people == eventItem.nbr_subscribers) ?
                                         < Button

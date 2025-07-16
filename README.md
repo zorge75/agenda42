@@ -85,6 +85,8 @@ git push origin feature/my-awesome-feature
 ### 6. **🔄 Create a Pull Request to `master`**
 This is the exciting part—sharing your changes with the team! 🎉
 
+**Steps 1 through 5 might be automatic if you run the link from the terminal.** 🤖 
+
 1. Go to your forked repository on GitHub.
 2. Switch to your branch (`feature/my-awesome-feature`).
 3. Click the **Compare & pull request** button.
@@ -93,6 +95,7 @@ This is the exciting part—sharing your changes with the team! 🎉
    - Set the **Base branch** to `master`.
    - Select your **Head branch** (`feature/my-awesome-feature`).
 5. Add a title and description to explain your changes. Be creative! ✨
+
 6. Click **Create pull request**, and voilà! Your changes are now up for review. 🎉
 
 ---
