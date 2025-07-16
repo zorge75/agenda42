@@ -34,7 +34,7 @@ const DefaultFooter = () => {
                 placement='top'>
                 <div className="m-3 mb-0 mt-0">
                   <Link className="text-decoration-none text-reset" style={{zIndex: 1000}}
-                    href="https://github.com/42paris">
+                    href="https://github.com/brgman/agenda42">
                     <SvgCustomGithub className="m-1 mt-0" />
                     GitHub
                   </Link>

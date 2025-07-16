@@ -1,10 +1,12 @@
 # Nom de l'image Docker
 IMAGE_NAME=agenda-app
+DEV_PORT = 3002
 PORT = 3000
 
 # Lancement en mode développement avec .env.local
 # TODO: for dev he take port 3002 from package.json
 dev:
+	npx kill-port $(DEV_PORT)
 	npx env-cmd -f .env.local npm run dev
 
 # Construction de l'image Docker

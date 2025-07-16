@@ -1,7 +1,6 @@
 import React, { FC, ReactNode, useContext } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import Content from '../Content/Content';
 import WrapperOverlay from './WrapperOverlay';
 import HeaderRoutes from '../Header/HeaderRoutes';
 import FooterRoutes from '../Footer/FooterRoutes';
@@ -42,7 +41,7 @@ const Wrapper: FC<IWrapper> = ({ children }) => {
 		<>
 			<WrapperContainer>
 				<HeaderRoutes/>
-				<Content>{children}</Content>
+					<main className='content'>{children}</main>
 				<FooterRoutes />
 			</WrapperContainer>
 			<WrapperOverlay />

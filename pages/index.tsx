@@ -290,7 +290,6 @@ const Index: NextPage = ({ token, me }: any) => {
       try {
         await delay(1000);
         const users = await getScaleTeams(slotsIntra, token);
-        console.log("Users fetched, dispatching:", users.length);
         dispatch(setScaleTeams(users));
       } catch (err) {
         console.error("Failed to fetch scale users:", err);
@@ -491,7 +490,7 @@ export async function getServerSideProps({ req, locale }: any) {
     return {
       props: {
         token,
-        userData: response.data,
+        me: response.data,
       },
     };
   } catch (error: any) {

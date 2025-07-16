@@ -7,11 +7,10 @@ export async function getUserSettings(userId: any): Promise<void> {
 
         if (!response.ok) {
             console.log(`Failed to fetch evaluation for user ${userId}: ${response}`);
-            return ("null");
+            return;
         }
 
         const data = await response.json();
-        console.log("Fetched evaluation data:", data);
         return data;
     } catch (error) {
         console.error("Error fetching evaluation:", error instanceof Error ? error.message : "Unknown error");
