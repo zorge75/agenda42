@@ -1,22 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Head from "next/head";
 import PageWrapper from "../layout/PageWrapper/PageWrapper";
 import Page from "../layout/Page/Page";
 import Spinner from "../components/bootstrap/Spinner";
-import { GetStaticProps } from "next/types";
-import { useRouter } from "next/router";
 
-const Page404 = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push('/');
-    });
-
-    return () => clearTimeout(timer);
-  }, [router]);
-  
+const Page404 = () => { 
   return (
     <PageWrapper>
       <Head>
