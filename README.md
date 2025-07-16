@@ -96,7 +96,10 @@ This is the exciting part—sharing your changes with the team! 🎉
    - Select your **Head branch** (`feature/my-awesome-feature`).
 5. Add a title and description to explain your changes. Be creative! ✨
 
+
 6. Click **Create pull request**, and voilà! Your changes are now up for review. 🎉
+
+_Don't panic, the classic red **Review required** badge — totally normal, your code will be reviewed._ 🚀
 
 ---
 
