@@ -8,7 +8,7 @@ import { getNextEvaluation } from "./getNextEvaluation";
 import { getUserSettings } from "./getUserSettings";
 import { preparationSlots } from "./preparationSlots";
 import { setUser } from "../../store/slices/userSlice";
-import { setEvents } from "../../store/slices/eventsSlice";
+import { setAllEvents, setEvents } from "../../store/slices/eventsSlice";
 
 export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
     const dispatch = useDispatch();
@@ -23,7 +23,7 @@ export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
         isFetching.current = true;
         try {
             setLoad(true);
-            const response = await fetch(`/api/refresh_agenda?id=${me.id}`, {
+            const response = await fetch(`/api/refresh_agenda?id=${me.id}&campusId=1`, {
                 headers: { Authorization: `Bearer ${token}` },
                 cache: 'no-store', // Prevent stale data if needed
             });
@@ -52,6 +52,7 @@ export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
             // Batch additional updates
             res.defancesHistory && dispatch(setDefancesHistory(res.defancesHistory));
             res.events && dispatch(setEvents(res.events));
+            res.campusEvents && dispatch(setAllEvents(res.campusEvents));
         } catch (error) {
             console.error('Refresh Agenda Error:', error);
             // Optionally rethrow or handle error for UI feedback
