@@ -185,6 +185,5 @@ export const getScaleTeams = async (data: any, token: any) => {
         return acc;
     }, []);
 
-    console.log("Processed users:", uniqueScaleUsers.length);
     return uniqueScaleUsers;
 };

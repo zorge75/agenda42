@@ -220,5 +220,4 @@ CalendarViewModeButtons.propTypes = {
   // @ts-ignore
   viewMode: PropTypes.oneOf(["month", "week", "work_week", "day", "agenda"])
     .isRequired,
-  setViewMode: PropTypes.func.isRequired,
 };

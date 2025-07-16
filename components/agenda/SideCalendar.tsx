@@ -64,7 +64,6 @@ const SideCalendar = ({
                     defaultView={Views.WEEK}
                     views={views}
                     view={Views.DAY}
-                    date={date}
                     step={15}
                     scrollToTime={dayjs(date).add(-1, 'h').toISOString()}
                     defaultDate={new Date()}
