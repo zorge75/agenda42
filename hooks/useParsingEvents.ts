@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from 'react'; 
 import dayjs from "dayjs";
 
 export interface IEventType {
