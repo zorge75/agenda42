@@ -36,7 +36,7 @@ const Event = ({ eventItem }: any) => {
     const unsubscribeHandler = async (event: any) => {
         window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
     };
-    
+
     return (
         <>
             {eventItem.scale_team != "invisible"
@@ -72,7 +72,7 @@ const Event = ({ eventItem }: any) => {
                                 <div className='col-lg-6'>
                                     <div className='h4 mb-2 text-end'>
                                         <Badge color={getStatusColor(eventItem.nbr_subscribers, eventItem.max_people)}>
-                                            {eventItem.nbr_subscribers} / {eventItem.max_people || "+"}
+                                            {eventItem.nbr_subscribers} {eventItem.max_people ? "/" : null} / {eventItem.max_people || null}
                                         </Badge>
                                     </div>
                                 </div>
@@ -104,7 +104,7 @@ const Event = ({ eventItem }: any) => {
                                             type="submit"
                                             onClick={() => unsubscribeHandler(eventItem)}
                                         >
-                                            Waitlist is abailiable ?
+                                            Waitlist is available ?
                                         </Button>
                                         :
                                         <Button
