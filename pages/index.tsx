@@ -491,7 +491,7 @@ export async function getServerSideProps({ req, locale }: any) {
     return {
       props: {
         token,
-        userData: response.data,
+        me: response.data,
       },
     };
   } catch (error: any) {

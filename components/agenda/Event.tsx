@@ -67,12 +67,12 @@ const Event = ({ eventItem }: any) => {
 
                             <div className='row align-items-end event_row'>
                                 <div className='col-lg-6'>
-                                    <div className='h4'>Subscribers:</div>
+                                    <div className='h5'>Subscribers:</div>
                                 </div>
                                 <div className='col-lg-6'>
-                                    <div className='h4 mb-2 text-end'>
+                                    <div className='h4 mb-2 mt-4 text-end'>
                                         <Badge color={getStatusColor(eventItem.nbr_subscribers, eventItem.max_people)}>
-                                            {eventItem.nbr_subscribers} {eventItem.max_people ? "/" : null} / {eventItem.max_people || null}
+                                            {eventItem.nbr_subscribers} {eventItem.max_people ? "/" : null} {eventItem.max_people || null}
                                         </Badge>
                                     </div>
                                 </div>

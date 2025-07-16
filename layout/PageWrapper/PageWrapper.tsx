@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { ISubHeaderProps } from '../SubHeader/SubHeader';
 import { IPageProps } from '../Page/Page';
-import AuthContext from '../../context/authContext';
 import Mounted from '../../components/Mounted';
 
 interface IPageWrapperProps {
@@ -16,11 +15,9 @@ interface IPageWrapperProps {
 }
 const PageWrapper = forwardRef<HTMLDivElement, IPageWrapperProps>(
 	({ isProtected, className, children }, ref) => {
-		const { user } = useContext(AuthContext);
-
 		// const navigate = useNavigate();
 		useEffect(() => {
-			if (isProtected && user === '') {
+			if (isProtected) {
 				// navigate(`../${demoPages.login.path}`);
 			}
 			return () => {};
