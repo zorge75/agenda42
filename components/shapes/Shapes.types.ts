@@ -2,6 +2,11 @@ import { HTMLAttributes, ReactNode } from "react";
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   total: number;
+  duration?: number; // Duration of this animation
+}
+
+export interface ScreenProps extends HTMLAttributes<HTMLDivElement> {
+  total: number;
   duration?: number; // Duration of this animation 
   Component: ReactNode | ReactNode[];
 }
