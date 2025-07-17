@@ -1,3 +1,4 @@
+import React from 'react';
 import { ShapeProps } from "./Shapes.types";
 import { generateRandomShapeSize } from "./Shapes.utils";
 
