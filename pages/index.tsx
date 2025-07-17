@@ -434,7 +434,7 @@ const Index: NextPage = ({ token, me }: any) => {
                   (eventItem?.type === "defances")
                     ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
                     : (eventItem?.name != "Available")
-                      ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
+                      ? <Event  eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
                       : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
                 }
               </div>

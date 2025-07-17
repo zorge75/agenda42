@@ -74,7 +74,7 @@ const UsersOfEvent = ({ id, token }: any) => {
             >
                 {
                     refresh || users.length <= 0
-                        ? <Spinner />
+                        ? <Spinner isSmall />
                         : "Users registered for this event"
                 }
             </Button>
