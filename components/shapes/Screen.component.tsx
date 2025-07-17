@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Props, StyleConfig } from "./Shapes.types";
+import { ScreenProps, StyleConfig } from "./Shapes.types";
 import { createStyles } from "./Shapes.utils";
 import styles from "./Shapes.module.css";
 
@@ -21,8 +21,8 @@ const createItem = (
         : React.cloneElement(Component as React.ReactElement, { key: `component-${index}` });
 
     return (
-        <div key={index} className={styles.glitter} style={createStyles(styleConfig)}>
-            <span className={styles.glitterContent}>{componentContent}</span>
+        <div key={index} className={styles.shapes} style={createStyles(styleConfig)}>
+            <span className={styles.shapesContent}>{componentContent}</span>
         </div>
     );
 };
@@ -44,7 +44,7 @@ const removeItem = (
     return items.filter((_, index) => index !== indexToRemove);
 };
 
-export const Screen: React.FC<Props> = ({ total, duration, Component, ...props }) => {
+export const Screen: React.FC<ScreenProps> = ({ total, duration, Component, ...props }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [items, setItems] = useState<React.ReactNode[]>([]);
 
@@ -89,7 +89,7 @@ export const Screen: React.FC<Props> = ({ total, duration, Component, ...props }
                     console.log("removed: total:", prevItems.length - 1);
                     return removeItem(prevItems, prevItems.length - 1);
                 });
-            }, 500);
+            }, 100);
 
             return () => clearInterval(intervalId);
         }, duration ? duration + 2000 : 2000);
@@ -99,7 +99,7 @@ export const Screen: React.FC<Props> = ({ total, duration, Component, ...props }
     return (
         <div
             ref={containerRef}
-            className={`${styles.glitterScreen} ${props.className || ""}`}
+            className={`${styles.shapesScreen} ${props.className || ""}`}
             {...props}
         >
             {items}

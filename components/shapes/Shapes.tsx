@@ -21,10 +21,9 @@ const createDefaultComponents = (total: number): React.ReactNode[] => {
 export const Shapes: React.FC<Props> = ({
   total = 42,
   duration = 5000,
-  Component,
   ...props
 }) => {
-  const components = Component || createDefaultComponents(total);
+  const components = createDefaultComponents(total);
   return <Screen total={total} duration={duration} Component={components} {...props} />;
 };
 
