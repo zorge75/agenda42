@@ -1,12 +1,15 @@
 import dayjs from "dayjs";
 import Button from "../bootstrap/Button";
-import Card, { CardHeader, CardLabel, CardTitle, CardBody } from "../bootstrap/Card";
+import Card, { CardBody } from "../bootstrap/Card";
 import Markdown from 'react-markdown'
 import Badge from "../bootstrap/Badge";
 import Icon from "../icon/Icon";
-import { delay, isTilePast } from "../../helpers/helpers";
-import { useEffect, useState } from "react";
+import { isTilePast } from "../../helpers/helpers";
 import UsersOfEvent from "./UsersOfEvent";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { TColor } from "../../type/color-type";
+import Shapes from "../shapes/Shapes";
 
 const replaceBoldInLink = (link: string) => {
     return link.replace("**_", "").replace("_**", "")
@@ -25,16 +28,18 @@ function convertToMdLinks(text: string) {
     });
 }
 
-function getStatusColor(subscribedUsers: number, totalUsers: number): string {
+function getStatusColor(subscribedUsers: number, totalUsers: number): TColor | undefined {
     if (totalUsers === 0 || !totalUsers)
         return "dark";
     const percent = (subscribedUsers / totalUsers) * 100;
     if (percent >= 90) return "danger";
-    if (percent >= 50) return "brand";
+    if (percent >= 50) return "brand" as TColor;
     return "success";
 }
 
-const Event = ({ eventItem, token }: any) => {
+const Event = ({ eventItem }: any) => {
+    const events = useSelector((state: RootState) => state.events.events);
+    const isSubscribed = events.some(e => eventItem.id === e.id);
     const unsubscribeHandler = async (event: any) => {
         window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
     };
@@ -46,6 +51,7 @@ const Event = ({ eventItem, token }: any) => {
                     <h2>{eventItem.name}</h2>
 
                     <Card borderColor={"light"} borderSize={2} >
+                        {eventItem.kind == "event" ? <Shapes total={eventItem.nbr_subscribers} duration={10000} /> : null }
                         <CardBody>
                             <div className='row align-items-end event_row'>
                                 <div className='col-lg-6'>
@@ -82,7 +88,17 @@ const Event = ({ eventItem, token }: any) => {
                         </CardBody>
                     </Card>
 
-                    {eventItem.nbr_subscribers > 5 ? <UsersOfEvent id={eventItem.id} /> : null}
+                    {
+                        eventItem.nbr_subscribers > 5 || isSubscribed
+                            ? <UsersOfEvent id={eventItem.id} />
+                            : <Button
+                                isDisable
+                                color="dark"
+                                isLight
+                                className="mb-3"
+                            >Register for the event to view list of students
+                            </Button>
+                    }
 
                     <div className="col mb-3 d-inline-flex justify-content-between">
 

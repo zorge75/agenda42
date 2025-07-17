@@ -1,0 +1,60 @@
+.shapesScreen {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 1000px; /* Increased perspective for a deeper 3D effect */
+  transform: translateZ(0);
+  z-index: 2; /* Slightly higher z-index for prominence */
+}
+
+.shapes {
+  position: absolute;
+  top: calc(-50px); /* Start above the screen */
+  left: var(--posX);
+  animation: var(--speed) sparkle ease-in-out infinite var(--delay);
+  transform: scale(var(--size)) rotate(var(--rotate));
+  opacity: 0.9; /* Slight transparency for a glowing effect */
+}
+
+.shapesContent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform-style: preserve-3d;
+  animation: shimmer calc(var(--speed) / 3) ease-in-out alternate infinite;
+  backface-visibility: hidden; /* Hide backface for a cleaner sparkle */
+}
+
+@keyframes sparkle {
+  0% {
+    transform: translate3d(var(--posXDirection), 0, 0) scale(var(--size));
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(var(--posXDirection), calc(var(--containerheight, 100vh) / 2), 100px)
+      rotate(calc(var(--rotate) * 1.5));
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(var(--posXDirection), calc(var(--containerheight, 100vh) + 30px), 0)
+      rotate(calc(var(--rotate) * 2));
+    opacity: 0; /* Fade out for a sparkling effect */
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: rotate(calc(var(--rotate) * 0.3)) rotateX(0deg) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(calc(var(--rotate) * -0.3)) rotateX(180deg) scale(1.2);
+    opacity: 1; /* Brighten at peak for shimmer */
+  }
+}
