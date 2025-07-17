@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Props } from "./Shapes.types";
 import { Screen } from "./Screen.component";
 import { Circle } from "./Circle.component";

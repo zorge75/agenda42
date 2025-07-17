@@ -39,6 +39,7 @@ function getStatusColor(subscribedUsers: number, totalUsers: number): TColor | u
 
 const Event = ({ eventItem }: any) => {
     const events = useSelector((state: RootState) => state.events.events);
+    const isException = [33210].some(e => eventItem.id === e);
     const isSubscribed = events.some(e => eventItem.id === e.id);
     const unsubscribeHandler = async (event: any) => {
         window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
@@ -89,14 +90,14 @@ const Event = ({ eventItem }: any) => {
                     </Card>
 
                     {
-                        eventItem.nbr_subscribers > 50 || isSubscribed
+                        !isException
                             ? <UsersOfEvent id={eventItem.id} />
                             : <Button
                                 isDisable
                                 color="dark"
                                 isLight
                                 className="mb-3"
-                            >Register for the event to view list of students
+                            >Not availaible for this event
                             </Button>
                     }
 
