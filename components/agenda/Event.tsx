@@ -4,7 +4,9 @@ import Card, { CardHeader, CardLabel, CardTitle, CardBody } from "../bootstrap/C
 import Markdown from 'react-markdown'
 import Badge from "../bootstrap/Badge";
 import Icon from "../icon/Icon";
-import { isTilePast } from "../../helpers/helpers";
+import { delay, isTilePast } from "../../helpers/helpers";
+import { useEffect, useState } from "react";
+import UsersOfEvent from "./UsersOfEvent";
 
 const replaceBoldInLink = (link: string) => {
     return link.replace("**_", "").replace("_**", "")
@@ -32,7 +34,7 @@ function getStatusColor(subscribedUsers: number, totalUsers: number): string {
     return "success";
 }
 
-const Event = ({ eventItem }: any) => {
+const Event = ({ eventItem, token }: any) => {
     const unsubscribeHandler = async (event: any) => {
         window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
     };
@@ -80,6 +82,8 @@ const Event = ({ eventItem }: any) => {
                         </CardBody>
                     </Card>
 
+                    <UsersOfEvent id={eventItem.id} />
+
                     <div className="col mb-3 d-inline-flex justify-content-between">
 
                         {
@@ -96,7 +100,7 @@ const Event = ({ eventItem }: any) => {
                                         color="storybook"
                                         type="submit"
                                         onClick={() => unsubscribeHandler(eventItem)}
-                                    >Open in Intra
+                                    >Open event in Intra
                                     </Button>
                                     : (eventItem.max_people == eventItem.nbr_subscribers) ?
                                         < Button
