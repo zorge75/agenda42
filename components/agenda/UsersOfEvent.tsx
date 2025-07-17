@@ -60,18 +60,23 @@ const UsersOfEvent = ({ id, token }: any) => {
              getUsersOfEvent();
       }, [])
 
-    if (refresh || !users)
+      if (!refresh && users.length == 0)
         return ("");
 
     return (
         <>
             <Button
+                isDisable={refresh || users.length <= 0}
                 color="dark"
                 isLight
                 onClick={() => setIsOpen(!isOpen)}
                 className="mb-3"
             >
-                Users registered for this event
+                {
+                    refresh || users.length <= 0
+                        ? <Spinner />
+                        : "Users registered for this event"
+                }
             </Button>
             <Collapse
                 tag="div"
@@ -121,6 +126,14 @@ const UsersOfEvent = ({ id, token }: any) => {
                             </Card>
                     ))
                 }
+                <Button
+                    color="dark"
+                    isLight
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="mb-3 w-100"
+                >
+                    Hide users
+                </Button>
             </Collapse>
         </>
     );

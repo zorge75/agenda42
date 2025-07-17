@@ -82,7 +82,7 @@ const Event = ({ eventItem, token }: any) => {
                         </CardBody>
                     </Card>
 
-                    <UsersOfEvent id={eventItem.id} />
+                    {eventItem.nbr_subscribers > 5 ? <UsersOfEvent id={eventItem.id} /> : null}
 
                     <div className="col mb-3 d-inline-flex justify-content-between">
 
