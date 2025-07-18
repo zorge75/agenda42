@@ -12,6 +12,7 @@ import useDarkMode from "../../hooks/useDarkMode";
 import Link from "next/dist/client/link";
 import showNotification from "../extras/showNotification";
 import Icon from "../icon/Icon";
+import Tooltips from "../bootstrap/Tooltips";
 
 const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
     const me = useSelector((state: RootState) => state.user.me);
@@ -149,19 +150,19 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
 
                             <div className='d-flex row align-items-end event_row m-3 mt-0'>
                                 <div className='col-lg-6 p-1'>
-                                    // TODO: add buttom for remove from friends 
+                                    <Tooltips title="• BETA feature 'Friends list' • Friendship confirmation in development mode." placement='right'>
                                     <Button
                                         style={{marginRight: 15}}
                                         className='h4'
-                                        icon="Add"
+                                            icon="People"
                                         color="light"
                                         type="submit"
                                         onClick={() => addFriendHandler(user.id, user.login, user.first_name)}
-                                    >
-                                    </Button>
+                                        />
+                                        </Tooltips>
                                     <Button
                                         className='h4'
-                                        icon="People"
+                                        icon="Link"
                                         color="light"
                                         type="submit"
                                         onClick={() => userInIntraHandler(user.id)}

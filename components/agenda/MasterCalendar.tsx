@@ -110,7 +110,7 @@ const MasterCalendar = ({
                         color={switchEvents == "my" ? 'primary' : 'light'}
                         onClick={() => dispatch(setSwitchEvents("my"))}
                     >
-                        Focusing
+                        {friends ? "Events" : "My events"}
                     </Button>
 
                     {
