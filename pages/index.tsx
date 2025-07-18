@@ -38,7 +38,7 @@ import Settings from "../components/settings";
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
 import { removeCreateSlotHandler } from "../common/function/recre_slot_handler";
 import { IEvent } from "../components/agenda/TemplatesEvent";
-import { useRefreshAgenda } from "../common/function/useRefreshAgenda";
+import { useRefreshAgenda } from "../hooks/useRefreshAgenda";
 import useNotification from "../hooks/useNotification";
 import useParsingEvents from "../hooks/useParsingEvents";
 import useSwitchEvents from "../hooks/useSwichEvents";
@@ -48,9 +48,9 @@ import { delay } from "../helpers/helpers";
 import axiosRetry from "axios-retry";
 
 axiosRetry(axios, {
-    retries: 3,
-    retryDelay: (retryCount: any) => Math.pow(2, retryCount) * 1000, // exponential backoff
-    retryCondition: (error: any) => error.response?.status === 429,
+  retries: 3,
+  retryDelay: (retryCount: any) => Math.pow(2, retryCount) * 1000, // exponential backoff
+  retryCondition: (error: any) => error.response?.status === 429,
 });
 
 dayjs.extend(utc);
@@ -106,12 +106,16 @@ const Index: NextPage = ({ token, me }: any) => {
     const maxRetries = 3; // Maximum number of retry attempts
     let retryCount = 0;
 
+    function getActiveIds(array: any) {
+      return array.filter(item => item.active === true).map(item => item.id);
+    }
+
     const attemptRefresh = async () => {
       setRefresh(true);
-
+      console.log("me", me)
       try {
         const res = await fetch(
-          "/api/refresh_agenda?id=" + me.id,
+          "/api/refresh_agenda?id=" + me.id + `&campusId=${getActiveIds(me.campus)}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -248,7 +252,7 @@ const Index: NextPage = ({ token, me }: any) => {
       className: classNames({
         [`bg-l${darkModeStatus ? "o25" : "10"}-${color} text-${color}`]: color,
         "border border-success": isActiveEvent,
-        [`bg-l${darkModeStatus ? "o25" : "10"}-${darkModeStatus ? "light" : "dark"} text-${darkModeStatus ? "light" : "dark"}`]: isPastEvent,
+        [`bg-l${darkModeStatus ? "o25" : "10"}-${darkModeStatus ? "light" : "dark"} text-${color}`]: isPastEvent,
         "isDraggable": event.isDraggable && !isPastEvent,
         "nonDraggable": !event.isDraggable || isPastEvent,
       }),
@@ -398,6 +402,8 @@ const Index: NextPage = ({ token, me }: any) => {
               moveEvent={moveEvent}
               handleSelect={handleSelect}
               eventStyleGetter={eventStyleGetter}
+              token={token}
+              setLoad={setLoad}
             />
           </div>
         </div>
@@ -434,7 +440,7 @@ const Index: NextPage = ({ token, me }: any) => {
                   (eventItem?.type === "defances")
                     ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
                     : (eventItem?.name != "Available")
-                      ? <Event  eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
+                      ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
                       : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
                 }
               </div>

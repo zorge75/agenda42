@@ -157,7 +157,7 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
               (viewMode === Views.WEEK && "Week") ||
               (viewMode === Views.WORK_WEEK && "Work Week") ||
               (viewMode === Views.DAY && "Day") ||
-              "Agenda"}
+              "Spreadsheet"}
           </Button>
         </DropdownToggle>
         <DropdownMenu isAlignmentEnd>
@@ -208,7 +208,7 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
               isActive={viewMode === Views.AGENDA}
               onClick={() => setViewMode(Views.AGENDA)}
             >
-              Agenda
+              Spreadsheet
             </Button>
           </DropdownItem>
         </DropdownMenu>

@@ -1,13 +1,16 @@
 import dayjs from "dayjs";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
+import { setUnitType } from "../store/slices/calendarSlice";
 
 const useSwitchEvents = (events: any, allEvents: any, setEventsActive: any) => {
   const switchEvents = useSelector((state: RootState) => state.calendar.focusing);
-  
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (switchEvents == 'all' && allEvents) {
+      dispatch(setUnitType("week"));
       const eventList = allEvents.map((event: any) => ({
         id: event.id,
         name: event.name ?? event.id,
@@ -32,6 +35,7 @@ const useSwitchEvents = (events: any, allEvents: any, setEventsActive: any) => {
       ));
     }
     else {
+      dispatch(setUnitType("agenda"));
       setEventsActive([
         ...events
       ]);

@@ -5,6 +5,7 @@ import slotsReducer from './slices/slotsSlice';
 import eventsReducer from './slices/eventsSlice';
 import calendarReducer from './slices/calendarSlice';
 import settingsReducer from './slices/settingsReducer';
+import friendsReducer from './slices/friendsReducer';
 
 const rootReducer = combineReducers({
     settings: settingsReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     slots: slotsReducer,
     events: eventsReducer,
     calendar: calendarReducer,
+    friends: friendsReducer,
 });
 
 export default rootReducer;

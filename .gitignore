@@ -1,7 +1,6 @@
 ### NextJS ###
 # dependencies
 /node_modules
-/agenda42.sqlite
 /.pnp
 .pnp.js
 

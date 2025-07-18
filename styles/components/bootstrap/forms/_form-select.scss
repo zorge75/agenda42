@@ -12,6 +12,11 @@
 		}
 	}
 
+	&:focus {
+		box-shadow: none;
+		border: none;
+	}
+
 	// Disabled and read-only inputs
 	//
 	// HTML5 says that controls under a fieldset > legend:first-child won't be
