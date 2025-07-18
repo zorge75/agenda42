@@ -38,7 +38,7 @@ import Settings from "../components/settings";
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
 import { removeCreateSlotHandler } from "../common/function/recre_slot_handler";
 import { IEvent } from "../components/agenda/TemplatesEvent";
-import { useRefreshAgenda } from "../common/function/useRefreshAgenda";
+import { useRefreshAgenda } from "../hooks/useRefreshAgenda";
 import useNotification from "../hooks/useNotification";
 import useParsingEvents from "../hooks/useParsingEvents";
 import useSwitchEvents from "../hooks/useSwichEvents";
@@ -48,9 +48,9 @@ import { delay } from "../helpers/helpers";
 import axiosRetry from "axios-retry";
 
 axiosRetry(axios, {
-    retries: 3,
-    retryDelay: (retryCount: any) => Math.pow(2, retryCount) * 1000, // exponential backoff
-    retryCondition: (error: any) => error.response?.status === 429,
+  retries: 3,
+  retryDelay: (retryCount: any) => Math.pow(2, retryCount) * 1000, // exponential backoff
+  retryCondition: (error: any) => error.response?.status === 429,
 });
 
 dayjs.extend(utc);
@@ -398,6 +398,7 @@ const Index: NextPage = ({ token, me }: any) => {
               moveEvent={moveEvent}
               handleSelect={handleSelect}
               eventStyleGetter={eventStyleGetter}
+              token={token}
             />
           </div>
         </div>
@@ -434,7 +435,7 @@ const Index: NextPage = ({ token, me }: any) => {
                   (eventItem?.type === "defances")
                     ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
                     : (eventItem?.name != "Available")
-                      ? <Event  eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
+                      ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
                       : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
                 }
               </div>

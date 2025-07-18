@@ -27,6 +27,7 @@ import { useCallback, useContext } from "react";
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { setEventActive, setSwitchEvents } from "../../store/slices/calendarSlice";
+import FocusingSelector from "./FocusingSelecter";
 
 const MasterCalendar = ({
     unitType,
@@ -41,6 +42,7 @@ const MasterCalendar = ({
     moveEvent,
     handleSelect,
     eventStyleGetter,
+    token,
 }: any) => {
     const dispatch = useDispatch();
     const { mobileDesign, darkModeStatus } = useContext(ThemeContext);
@@ -108,6 +110,15 @@ const MasterCalendar = ({
                     >
                         Focusing
                     </Button>
+
+
+                    {
+                        (switchEvents == "my")
+                        ?
+                        <FocusingSelector token={token} />
+                            : null
+                    }
+
 
                     {/* <Button
                                       disabled={refresh || !scaleUsers}

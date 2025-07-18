@@ -1,14 +1,14 @@
 
 import { useRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { setEvals } from "../../store/slices/evalsSlice";
-import { setSavedSettings } from "../../store/slices/settingsReducer";
-import { setOriginalSlots, setSlots, setDefances, setDefancesHistory } from "../../store/slices/slotsSlice";
-import { getNextEvaluation } from "./getNextEvaluation";
-import { getUserSettings } from "./getUserSettings";
-import { preparationSlots } from "./preparationSlots";
-import { setUser } from "../../store/slices/userSlice";
-import { setAllEvents, setEvents } from "../../store/slices/eventsSlice";
+import { setEvals } from "../store/slices/evalsSlice";
+import { setSavedSettings } from "../store/slices/settingsReducer";
+import { setOriginalSlots, setSlots, setDefances, setDefancesHistory } from "../store/slices/slotsSlice";
+import { getNextEvaluation } from "../common/function/getNextEvaluation";
+import { getUserSettings } from "../common/function/getUserSettings";
+import { preparationSlots } from "../common/function/preparationSlots";
+import { setUser } from "../store/slices/userSlice";
+import { setAllEvents, setEvents } from "../store/slices/eventsSlice";
 
 export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
     const dispatch = useDispatch();

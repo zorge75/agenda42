@@ -52,6 +52,14 @@
 	// 	display: none;
 	// }
 
+	.switch_events {
+		display: flex;
+
+		.form-select {
+			border-radius: 0 1rem 1rem 0;
+		}
+	}
+
 	.switch_events button {
 		border-radius: 0;
 	}

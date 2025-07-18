@@ -79,14 +79,12 @@ export const Screen: React.FC<ScreenProps> = ({ total, duration, Component, ...p
         };
         setItems(generateItems(total, Component, defaultStyleConfig));
         const timer = setTimeout(() => {
-            console.log("start removing");
             const intervalId = setInterval(() => {
                 setItems((prevItems) => {
                     if (prevItems.length === 0) {
                         clearInterval(intervalId);
                         return prevItems;
                     }
-                    console.log("removed: total:", prevItems.length - 1);
                     return removeItem(prevItems, prevItems.length - 1);
                 });
             }, 100);

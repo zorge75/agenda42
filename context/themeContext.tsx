@@ -28,13 +28,13 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 	const mobileDesign = deviceScreen?.width <= 786;
 
 	const [darkModeStatus, setDarkModeStatus] = useState(
-		typeof window !== 'undefined' && localStorage.getItem('facit_darkModeStatus')
-			? localStorage.getItem('facit_darkModeStatus') === 'true'
+		typeof window !== 'undefined' && localStorage.getItem('fact_darkModeStatus')
+			? localStorage.getItem('fact_darkModeStatus') === 'true'
 			: process.env.NEXT_PUBLIC_DARK_MODE === 'true',
 	);
 
 	useEffect(() => {
-		localStorage.setItem('facit_darkModeStatus', darkModeStatus.toString());
+		localStorage.setItem('fact_darkModeStatus', darkModeStatus.toString());
 	}, [darkModeStatus]);
 
 	const [fullScreenStatus, setFullScreenStatus] = useState(false);
@@ -43,14 +43,14 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 	const [rightMenuStatus, setRightMenuStatus] = useState(false);
 
 	const [asideStatus, setAsideStatus] = useState(
-		typeof window !== 'undefined' && localStorage.getItem('facit_asideStatus')
-			? localStorage.getItem('facit_asideStatus') === 'true'
+		typeof window !== 'undefined' && localStorage.getItem('fact_asideStatus')
+			? localStorage.getItem('fact_asideStatus') === 'true'
 			: // @ts-ignore
-				deviceScreen?.width >=
-					Number(process.env.NEXT_PUBLIC_ASIDE_MINIMIZE_BREAKPOINT_SIZE),
+			deviceScreen?.width >=
+			Number(process.env.NEXT_PUBLIC_ASIDE_MINIMIZE_BREAKPOINT_SIZE),
 	);
 	useEffect(() => {
-		localStorage.setItem('facit_asideStatus', asideStatus?.toString());
+		localStorage.setItem('fact_asideStatus', asideStatus?.toString());
 	}, [asideStatus]);
 
 	const [rightPanel, setRightPanel] = useState(false);
@@ -58,7 +58,7 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 	useEffect(() => {
 		// @ts-ignore
 		if (deviceScreen?.width >= process.env.NEXT_PUBLIC_ASIDE_MINIMIZE_BREAKPOINT_SIZE) {
-			if (localStorage.getItem('facit_asideStatus') === 'true') setAsideStatus(true);
+			if (localStorage.getItem('fact_asideStatus') === 'true') setAsideStatus(true);
 			setLeftMenuStatus(false);
 			setRightMenuStatus(false);
 		}
