@@ -248,7 +248,7 @@ const Index: NextPage = ({ token, me }: any) => {
       className: classNames({
         [`bg-l${darkModeStatus ? "o25" : "10"}-${color} text-${color}`]: color,
         "border border-success": isActiveEvent,
-        "opacity-50": isPastEvent,
+        [`bg-l${darkModeStatus ? "o25" : "10"}-${darkModeStatus ? "light" : "dark"} text-${darkModeStatus ? "light" : "dark"}`]: isPastEvent,
         "isDraggable": event.isDraggable && !isPastEvent,
         "nonDraggable": !event.isDraggable || isPastEvent,
       }),

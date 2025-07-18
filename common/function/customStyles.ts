@@ -24,7 +24,7 @@ export const customStyles = `
 
 export const customFormats = {
   firstDayOfWeek: () => 0,
-  timeGutterFormat: "H:mm", // Simple string format: "8:00", "9:00", etc.
+  timeGutterFormat: "H:mm",
   eventTimeRangeFormat: (
     { start, end }: { start: Date; end: Date },
     culture: string,
