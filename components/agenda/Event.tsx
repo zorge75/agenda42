@@ -39,6 +39,7 @@ function getStatusColor(subscribedUsers: number, totalUsers: number): TColor | u
 
 const Event = ({ eventItem }: any) => {
     const events = useSelector((state: RootState) => state.events.events);
+    const me = useSelector((state: RootState) => state.user.me);
     const isException = [33210].some(e => eventItem.id === e);
     const isSubscribed = events.some(e => eventItem.id === e.id);
     const unsubscribeHandler = async (event: any) => {
@@ -91,7 +92,7 @@ const Event = ({ eventItem }: any) => {
 
                     {
                         !isException
-                            ? <UsersOfEvent id={eventItem.id} size={eventItem.nbr_subscribers} />
+                            ? <UsersOfEvent id={eventItem.id} size={eventItem.nbr_subscribers} myId={me.id} />
                             : <Button
                                 isDisable
                                 color="dark"

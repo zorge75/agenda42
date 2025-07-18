@@ -10,33 +10,34 @@ import Select from "../bootstrap/forms/Select";
 import { useEffect, useState } from "react";
 import { useRefreshFriends } from "../../hooks/useRefreshFriends";
 
-const FocusingSelector = ({ token }: any) => {
-    // const dispatch = useDispatch();
+const FocusingSelector = ({ token, setLoad, friends }: any) => {
     const [selected, setSelected] = useState(0);
-    const [loadGeneral, setLoad] = useState(true);
-    const refreshAgenda = useRefreshFriends(selected, token, setLoad);
+    const refreshFriends = useRefreshFriends(selected, token, setLoad);
+    const {id, login} = useSelector((state: RootState) => state.user.me);
 
     useEffect(() => {
-        refreshAgenda();
-    }, [refreshAgenda, selected]);
+        if (selected && friends)
+            refreshFriends();
+    }, [refreshFriends, selected]);
 
-    console.log("selected", selected);
+    if (!friends)
+        return;
+
+    const list = [
+        { text: login, value: id },
+        ...friends.map(i => ({
+            text: i.friend_login,
+            value: i.friend_id | 0
+        }))
+      ];
 
     return (
         <>
             <Select
                 ariaLabel={""}
+                color='primary'
                 id="focusing_selector"
-                list={[
-                    {
-                        text: 'Me',
-                        value: 0
-                    },
-                    {
-                        text: 'Friend',
-                        value: 129057
-                    }
-                ]}
+                list={list}
                 onChange={(item: any) => setSelected(item.target.value)}
             />
         </>

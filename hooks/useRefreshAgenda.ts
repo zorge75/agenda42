@@ -3,9 +3,10 @@ import { useRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { setEvals } from "../store/slices/evalsSlice";
 import { setSavedSettings } from "../store/slices/settingsReducer";
+import { setSavedFriends } from "../store/slices/friendsReducer";
 import { setOriginalSlots, setSlots, setDefances, setDefancesHistory } from "../store/slices/slotsSlice";
 import { getNextEvaluation } from "../common/function/getNextEvaluation";
-import { getUserSettings } from "../common/function/getUserSettings";
+import { getUserFriends, getUserSettings } from "../common/function/getUserSettings";
 import { preparationSlots } from "../common/function/preparationSlots";
 import { setUser } from "../store/slices/userSlice";
 import { setAllEvents, setEvents } from "../store/slices/eventsSlice";
@@ -37,7 +38,10 @@ export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
             dispatch(setUser(me));
 
             const settingsData = await getUserSettings(me.id);
+            const friendsData = await getUserFriends(me.id);
             dispatch(setSavedSettings(settingsData));
+            dispatch(setSavedFriends(friendsData));
+            console.log("friendsData", friendsData);
 
             if (res.slots) {
                 const preparedSlots = preparationSlots(res.slots);

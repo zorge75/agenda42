@@ -43,10 +43,12 @@ const MasterCalendar = ({
     handleSelect,
     eventStyleGetter,
     token,
+    setLoad,
 }: any) => {
     const dispatch = useDispatch();
     const { mobileDesign, darkModeStatus } = useContext(ThemeContext);
     const switchEvents = useSelector((state: RootState) => state.calendar.focusing);
+    const friends = useSelector((state: RootState) => state.friends.list);
 
     const todayAt9AM = dayjs().set('hour', 7).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
     const todayAt0AM = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
@@ -111,14 +113,12 @@ const MasterCalendar = ({
                         Focusing
                     </Button>
 
-
                     {
-                        (switchEvents == "my")
+                        (switchEvents == "my" && friends)
                         ?
-                        <FocusingSelector token={token} />
+                            <FocusingSelector token={token} setLoad={setLoad} friends={friends} />
                             : null
                     }
-
 
                     {/* <Button
                                       disabled={refresh || !scaleUsers}

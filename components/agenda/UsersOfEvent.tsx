@@ -10,14 +10,52 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import useDarkMode from "../../hooks/useDarkMode";
 import Link from "next/dist/client/link";
+import showNotification from "../extras/showNotification";
+import Icon from "../icon/Icon";
 
-const UsersOfEvent = ({ id, size = 30, token }: any) => {
+const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
     const me = useSelector((state: RootState) => state.user.me);
+    const friends = useSelector((state: RootState) => state.friends.list);
+
     const { darkModeStatus } = useDarkMode();
+
+    const addFriendHandler = async (id: string, login: string, name: string) => {
+        await fetch("/api/friends", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user_id: myId,
+                friend_id: id,
+                friend_login: login,
+                friend_name: name
+            }),
+        }).then(async (response) => {
+            if (!response.ok) {
+                console.log(`Failed to create settings: ${response.statusText}`);
+                showNotification(
+                    <span className="d-flex align-items-center">
+                        <Icon icon="error" size="lg" className="me-1" />
+                        <span>🐱 Friends not saved</span>
+                    </span>, ""
+                );
+            }
+            showNotification(
+                <span className="d-flex align-items-center">
+                    <Icon icon="success" size="lg" className="me-1" />
+                    <span>🐱 Friends saved 🐱</span>
+                </span>, ""
+            );
+            return { success: true };
+        })
+    };
+    
     const userInIntraHandler = async (id: string) => {
         window.open(`https://profile.intra.42.fr/users/${id}`, "_blank");
-    };
-      const [refresh, setRefresh] = useState(false);
+    }
+
+    const [refresh, setRefresh] = useState(false);
     const [users, setUsers] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -110,14 +148,24 @@ const UsersOfEvent = ({ id, size = 30, token }: any) => {
                                 </CardHeader>
 
                             <div className='d-flex row align-items-end event_row m-3 mt-0'>
-                                <div className='col-lg-6'>
+                                <div className='col-lg-6 p-1'>
+                                    // TODO: add buttom for remove from friends 
+                                    <Button
+                                        style={{marginRight: 15}}
+                                        className='h4'
+                                        icon="Add"
+                                        color="light"
+                                        type="submit"
+                                        onClick={() => addFriendHandler(user.id, user.login, user.first_name)}
+                                    >
+                                    </Button>
                                     <Button
                                         className='h4'
                                         icon="People"
                                         color="light"
                                         type="submit"
                                         onClick={() => userInIntraHandler(user.id)}
-                                    >View in intra
+                                    >intra
                                     </Button>
                                 </div>
                                 <div className='col-lg-6'>

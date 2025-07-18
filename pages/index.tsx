@@ -106,12 +106,16 @@ const Index: NextPage = ({ token, me }: any) => {
     const maxRetries = 3; // Maximum number of retry attempts
     let retryCount = 0;
 
+    function getActiveIds(array: any) {
+      return array.filter(item => item.active === true).map(item => item.id);
+    }
+
     const attemptRefresh = async () => {
       setRefresh(true);
-
+      console.log("me", me)
       try {
         const res = await fetch(
-          "/api/refresh_agenda?id=" + me.id,
+          "/api/refresh_agenda?id=" + me.id + `&campusId=${getActiveIds(me.campus)}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -399,6 +403,7 @@ const Index: NextPage = ({ token, me }: any) => {
               handleSelect={handleSelect}
               eventStyleGetter={eventStyleGetter}
               token={token}
+              setLoad={setLoad}
             />
           </div>
         </div>
