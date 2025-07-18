@@ -123,3 +123,11 @@ export const isTilePast = (tileDate: string): any => {
   };
 
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export const isMyPiscine = (me: any, user: any): boolean => {
+	if (!me || !user)
+		return false;
+	if (user.pool_month === me.pool_month && user.pool_year === me.pool_year)
+		return true;
+	return false;
+};

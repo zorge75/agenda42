@@ -593,12 +593,14 @@ $brand: #ffcd02 !default;
 $brand-two: #323232 !default;
 $transparent: transparent !default;
 $storybook: #ff4785 !default;
+$piscine: #ff9602 !default;
 
 $custom-colors: (
 	'brand': $brand,
 	'brand-two': $brand-two,
 	'transparent': $transparent,
 	'storybook': $storybook,
+	'piscine': $piscine,
 );
 
 // Merge the maps

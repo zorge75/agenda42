@@ -1,13 +1,19 @@
 import Button from "../bootstrap/Button";
 import Card, { CardHeader, CardLabel, CardTitle, CardBody, CardSubTitle } from "../bootstrap/Card";
-import { delay } from "../../helpers/helpers";
+import { delay, isMyPiscine } from "../../helpers/helpers";
 import { useEffect, useState } from "react";
 import Collapse from "../bootstrap/Collapse";
 import Avatar from "../Avatar";
 import Badge from "../bootstrap/Badge";
 import Spinner from "../bootstrap/Spinner";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import useDarkMode from "../../hooks/useDarkMode";
+import Link from "next/dist/client/link";
 
-const UsersOfEvent = ({ id, token }: any) => {
+const UsersOfEvent = ({ id, size = 30, token }: any) => {
+    const me = useSelector((state: RootState) => state.user.me);
+    const { darkModeStatus } = useDarkMode();
     const userInIntraHandler = async (id: string) => {
         window.open(`https://profile.intra.42.fr/users/${id}`, "_blank");
     };
@@ -25,7 +31,7 @@ const UsersOfEvent = ({ id, token }: any) => {
             console.log("*", users.length, refresh, isOpen)
     
             const res = await fetch(
-              "/api/users_of_event?id=" + id,
+                "/api/users_of_event?id=" + id + "&size=" + size,
               {
                 headers: { Authorization: `Bearer ${token}` },
               }
@@ -67,8 +73,8 @@ const UsersOfEvent = ({ id, token }: any) => {
         <>
             <Button
                 isDisable={refresh || users.length <= 0}
-                color="dark"
-                isLight
+                color={darkModeStatus ? "light" : "dark"}
+                isLight={darkModeStatus ? false : true}
                 onClick={() => setIsOpen(!isOpen)}
                 className="mb-3"
             >
@@ -116,7 +122,10 @@ const UsersOfEvent = ({ id, token }: any) => {
                                 </div>
                                 <div className='col-lg-6'>
                                     <div className='h4 text-end'>
-                                        <Badge isLight color='primary'>
+                                        <Badge 
+                                            isLight={darkModeStatus ? false : true}
+                                            color={isMyPiscine(me, user) ? 'piscine' : 'primary'}
+                                            >
                                             {user.pool_month} {user.pool_year}
                                         </Badge>
                                     </div>
@@ -125,6 +134,15 @@ const UsersOfEvent = ({ id, token }: any) => {
                                 
                             </Card>
                     ))
+                }
+                {
+                    users.length === 100
+                        ? <Link style={{
+                            margin: '40px auto',
+                            display: 'flex',
+                            width: 'max-content',
+                        }} href="https://github.com/brgman/agenda42/issues/66">Loaded just 100 last students...</Link>
+                        : null
                 }
                 <Button
                     color="dark"

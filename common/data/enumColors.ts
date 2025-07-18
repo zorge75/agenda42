@@ -39,6 +39,10 @@ const COLORS: IColors = {
 		name: 'light',
 		code: String(process.env.NEXT_PUBLIC_LIGHT_COLOR),
 	},
+	PISCINE: {
+		name: 'piscine',
+		code: '#ffcd02'
+	}
 };
 
 export function getColorNameWithIndex(index: number) {

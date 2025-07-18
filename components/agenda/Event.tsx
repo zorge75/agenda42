@@ -52,7 +52,7 @@ const Event = ({ eventItem }: any) => {
                     <h2>{eventItem.name}</h2>
 
                     <Card borderColor={"light"} borderSize={2} >
-                        {eventItem.kind == "event" ? <Shapes total={eventItem.nbr_subscribers} /> : null }
+                        {eventItem.kind == "event" ? <Shapes total={eventItem.nbr_subscribers * 2} /> : null }
                         <CardBody>
                             <div className='row align-items-end event_row'>
                                 <div className='col-lg-6'>
@@ -91,7 +91,7 @@ const Event = ({ eventItem }: any) => {
 
                     {
                         !isException
-                            ? <UsersOfEvent id={eventItem.id} />
+                            ? <UsersOfEvent id={eventItem.id} size={eventItem.nbr_subscribers} />
                             : <Button
                                 isDisable
                                 color="dark"
