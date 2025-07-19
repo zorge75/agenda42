@@ -135,3 +135,7 @@ export const isMyPiscine = (me: any, user: any): boolean => {
 export const userInIntraHandler = async (id: string) => {
 	window.open(`https://profile.intra.42.fr/users/${id}`, "_blank");
 }
+
+export const getName = (me: any) => {
+	return (me.usual_first_name || me.first_name);
+}

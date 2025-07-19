@@ -3,7 +3,7 @@ import OffCanvas, { OffCanvasHeader, OffCanvasTitle, OffCanvasBody } from "../bo
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { setModalPiscineStatus } from "../../store/slices/settingsReducer";
-import { delay, userInIntraHandler } from "../../helpers/helpers";
+import { delay, getName, userInIntraHandler } from "../../helpers/helpers";
 import Card, { CardHeader, CardLabel, CardTitle } from "../bootstrap/Card";
 import Avatar from "../Avatar";
 import Button from "../bootstrap/Button";
@@ -28,7 +28,6 @@ const Piscine: FC<any> = ({ token }: any) => {
     const [users, setUsers] = useState([]);
     const [success, setSuccess] = useState<number[]>([]);
     const [update, setUpdate] = useState(false);
-
 
     const getMyPiscine = async () => {
         const maxRetries = 3; // Maximum number of retry attempts
@@ -152,7 +151,7 @@ const Piscine: FC<any> = ({ token }: any) => {
                                             <CardHeader style={{ borderRadius: 20 }} >
                                                 <CardLabel>
                                                     <CardTitle>
-                                                        {user.usual_first_name || user.first_name}
+                                                        {getName(user)}
                                                     </CardTitle>
                                                     <div style={{ display: 'table-caption', marginTop: 10 }}>
                                                         <Badge
@@ -183,7 +182,7 @@ const Piscine: FC<any> = ({ token }: any) => {
                                                         color={isIdInSuccess ? "success" : "light"}
                                                         isDisable={update}
                                                         type="submit"
-                                                        onClick={() => addFriendHandler(user.id, user.login, user.first_name, user.image.versions.medium, user.pool_month, user.pool_year)}
+                                                        onClick={() => addFriendHandler(user.id, user.login, getName(user), user.image.versions.medium, user.pool_month, user.pool_year)}
                                                     />
                                                     <Button
                                                         className='h4'

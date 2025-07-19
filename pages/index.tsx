@@ -61,6 +61,7 @@ dayjs.locale("fr");
 const now = new Date();
 
 const Index: NextPage = ({ token, me }: any) => {
+  console.log("me", me)
   const dispatch = useDispatch();
   const router = useRouter();
   const { notify } = router.query;
