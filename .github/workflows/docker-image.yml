@@ -44,7 +44,6 @@ jobs:
             -e CLIENT_ID=${{ secrets.CLIENT_ID }} \
             -e STATUS=${{ secrets.STATUS }} \
             -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
-            -v agenda42-data:/app/data \
             agenda42:latest
 
       - name: Push Docker image to GitHub Container Registry (latest)
