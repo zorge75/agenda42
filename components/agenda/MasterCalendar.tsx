@@ -99,20 +99,22 @@ const MasterCalendar = ({
                 </Popovers>
                 <div className="switch_events">
                     <Button
+                        style={{ minWidth: 50 }}
                         icon="CalendarToday"
                         isDisable={refresh || !scaleUsers}
                         color={switchEvents == "all" ? 'primary' : 'light'}
                         onClick={() => dispatch(setSwitchEvents("all"))}
                     />
                     <Button
-                        icon="FilterAlt"
+                        style={{ minWidth: 50 }}
+                        icon={friends.length ? "Group" : "FilterAlt"}
                         isDisable={refresh || !scaleUsers}
                         color={switchEvents == "my" ? 'primary' : 'light'}
                         onClick={() => dispatch(setSwitchEvents("my"))}
                     />
 
                     {
-                        (switchEvents == "my" && friends)
+                        (switchEvents == "my" && friends.length)
                         ?
                             <FocusingSelector token={token} setLoad={setLoad} friends={friends} />
                             : null

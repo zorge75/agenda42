@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import OffCanvas, { OffCanvasHeader, OffCanvasTitle, OffCanvasBody } from "../bootstrap/OffCanvas";
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
-import { setModalStatus } from "../../store/slices/settingsReducer";
+import { setModalSettingsStatus } from "../../store/slices/settingsReducer";
 import FormGroup from "../bootstrap/forms/FormGroup";
 // import { Badge, Input, Label } from "../icon/material-icons";
 import { setDate } from "date-fns";
@@ -29,7 +29,7 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
     const dispatch = useDispatch();
 
     const setSettings = (status: boolean) => {
-        dispatch(setModalStatus(status));
+        dispatch(setModalSettingsStatus(status));
     }
 
     const setDiscortId = (data: any) => {
@@ -39,10 +39,6 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
         else
             return ("");
     }
-
-    // TODO: get user settings
-    // if exist - method PATCH
-    // else use   method POST
 
     const formik = useFormik({
         initialValues: {
@@ -113,7 +109,8 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
                 // onSubmit={formik.handleSubmit}
                 className="p-4"
             >
-
+otkazat'sya ot ispolizovaniya friends
+- udalit' knopki esli activno
                 <div className='row'>
                     <div className='col-md-8'>
 

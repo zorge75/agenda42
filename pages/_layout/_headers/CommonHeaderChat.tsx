@@ -54,12 +54,12 @@ const CommonHeaderChat = () => {
                 <div className='me-3'>
                     <div className='text-end'>
                         <div className='fw-bold fs-6 mb-0'>
-                            {`${user?.usual_full_name} ( ${user?.location ? user?.location : 'unavailable'} )`}
+                            {user?.usual_full_name}
                         </div>
                         <div className='text-muted'>
                             <small>I have&nbsp; 
                                 <span className="fw-bold">{user?.correction_point}</span>
-                                &nbsp;evaluation points
+                                &nbsp;eval. points
                             </small>
                         </div>
                     </div>

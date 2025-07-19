@@ -1,26 +1,32 @@
 import Button from "../bootstrap/Button";
 import Card, { CardHeader, CardLabel, CardTitle, CardBody, CardSubTitle } from "../bootstrap/Card";
-import { delay, isMyPiscine } from "../../helpers/helpers";
+import { delay, isMyPiscine, userInIntraHandler } from "../../helpers/helpers";
 import { useEffect, useState } from "react";
 import Collapse from "../bootstrap/Collapse";
 import Avatar from "../Avatar";
 import Badge from "../bootstrap/Badge";
 import Spinner from "../bootstrap/Spinner";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import useDarkMode from "../../hooks/useDarkMode";
 import Link from "next/dist/client/link";
 import showNotification from "../extras/showNotification";
 import Icon from "../icon/Icon";
 import Tooltips from "../bootstrap/Tooltips";
+import { addFriendToList } from "../../store/slices/friendsReducer";
 
 const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
+    const dispatch = useDispatch();
+
     const me = useSelector((state: RootState) => state.user.me);
     const friends = useSelector((state: RootState) => state.friends.list);
+    const [success, setSuccess] = useState<number[]>([]);
+    const [update, setUpdate] = useState(false);
 
     const { darkModeStatus } = useDarkMode();
 
-    const addFriendHandler = async (id: string, login: string, name: string) => {
+    const addFriendHandler = async (id: number, login: string, name: string, image: string, month: string, year: string) => {
+        setUpdate(true);
         await fetch("/api/friends", {
             method: "POST",
             headers: {
@@ -30,82 +36,83 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                 user_id: myId,
                 friend_id: id,
                 friend_login: login,
-                friend_name: name
+                friend_name: name,
+                friend_image: image,
+                pool_month: month,
+                pool_year: year,
             }),
         }).then(async (response) => {
+            setUpdate(false);
             if (!response.ok) {
                 console.log(`Failed to create settings: ${response.statusText}`);
-                showNotification(
-                    <span className="d-flex align-items-center">
-                        <Icon icon="error" size="lg" className="me-1" />
-                        <span>🐱 Friends not saved</span>
-                    </span>, ""
-                );
+            } else {
+                setSuccess((i: number[]) => [...i, id]);
+                dispatch(addFriendToList(
+                    {
+                        user_id: myId,
+                        friend_id: id,
+                        friend_login: login,
+                        friend_name: name,
+                        friend_image: image,
+                        pool_month: month,
+                        pool_year: year,
+                    }
+                ));
             }
-            showNotification(
-                <span className="d-flex align-items-center">
-                    <Icon icon="success" size="lg" className="me-1" />
-                    <span>🐱 Friends saved 🐱</span>
-                </span>, ""
-            );
             return { success: true };
         })
     };
-    
-    const userInIntraHandler = async (id: string) => {
-        window.open(`https://profile.intra.42.fr/users/${id}`, "_blank");
-    }
 
     const [refresh, setRefresh] = useState(false);
     const [users, setUsers] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
 
-      const getUsersOfEvent = async () => {
+    const getUsersOfEvent = async () => {
         const maxRetries = 3; // Maximum number of retry attempts
         let retryCount = 0;
-    
+
         const attemptRefresh = async () => {
-          setRefresh(true);
+            setRefresh(true);
 
             console.log("*", users.length, refresh, isOpen)
-    
+
             const res = await fetch(
                 "/api/users_of_event?id=" + id + "&size=" + size,
-              {
-                headers: { Authorization: `Bearer ${token}` },
-              }
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
             );
-    
+
             const response = await res.json();
-    
+
             if (res.ok) {
                 setUsers(response);
-              // Success case
+                // Success case
             } else if (res.status === 429 && retryCount < maxRetries) {
-              // Handle 429 error with retry
-              retryCount++;
-              const retryAfter = res.headers.get('Retry-After')
-                ? parseInt(res.headers.get('Retry-After')) * 1000
-                : 5000 * retryCount; // Default to 5s, 10s, 15s
-    
-              console.log(`Rate limited. Retrying after ${retryAfter / 1000} seconds...`);
-              await delay(retryAfter);
-             // return await attemptRefresh(); // Recursive retry
+                // Handle 429 error with retry
+                retryCount++;
+                const retryAfter = res.headers.get('Retry-After')
+                    ? parseInt(res.headers.get('Retry-After')) * 1000
+                    : 5000 * retryCount; // Default to 5s, 10s, 15s
+
+                console.log(`Rate limited. Retrying after ${retryAfter / 1000} seconds...`);
+                await delay(retryAfter);
+                // return await attemptRefresh(); // Recursive retry
             } else {
                 return;
             }
-          setRefresh(false);
-          await delay(3000);
+            setRefresh(false);
+            await delay(3000);
         };
-    
+
         await attemptRefresh();
-      };
+    };
 
-        useEffect(() => {
-             getUsersOfEvent();
-      }, [])
+    useEffect(() => {
+        getUsersOfEvent();
+    }, [])
 
-      if (!refresh && users.length == 0)
+    if (!refresh && users.length == 0)
         return ("");
 
     return (
@@ -128,61 +135,63 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                 isOpen={isOpen}
             >
                 {
-                    users.map(({user}) => (
-                        <Card isCompact >
-                            
+                    users.map(({ user, key }) => {
+                        const isIdInSuccess = success && success.includes(user.id);
+                        return (
+                            <Card isCompact key={key} >
+
                                 <CardHeader
                                     style={{ borderRadius: 20 }}
                                 >
-                                
+
                                     <CardLabel
-                                       
                                     >
-                                        
                                         <CardTitle>
                                             {user.usual_full_name}
                                         </CardTitle>
-                                    <p className="mt-2" >{user.email}</p>
-                                        
+                                        <p className="mt-2" >{user.email}</p>
+
                                     </CardLabel>
                                     <Avatar src={user.image.versions.medium} size={64} />
                                 </CardHeader>
 
-                            <div className='d-flex row align-items-end event_row m-3 mt-0'>
-                                <div className='col-lg-6 p-1'>
-                                    <Tooltips title="• BETA feature 'Friends list' • Friendship confirmation in development mode." placement='right'>
-                                    <Button
-                                        style={{marginRight: 15}}
-                                        className='h4'
-                                            icon="People"
-                                        color="light"
-                                        type="submit"
-                                        onClick={() => addFriendHandler(user.id, user.login, user.first_name)}
-                                        />
+                                <div className='d-flex row align-items-end event_row m-3 mt-0'>
+                                    <div className='col-lg-6 p-1'>
+                                        <Tooltips title="• Beta feature 'Friends list' • Friendship confirmation in development mode." placement='right'>
+                                            <Button
+                                                style={{ marginRight: 15 }}
+                                                className='h4'
+                                                icon={update ? "Refresh" : isIdInSuccess ? "Done" : "Add"}
+                                                color={isIdInSuccess ? "success" : "light"}
+                                                isDisable={update}
+                                                type="submit"
+                                                onClick={() => addFriendHandler(user.id, user.login, user.first_name, user.image.versions.medium, user.pool_month, user.pool_year)}
+                                            />
                                         </Tooltips>
-                                    <Button
-                                        className='h4'
-                                        icon="Link"
-                                        color="light"
-                                        type="submit"
-                                        onClick={() => userInIntraHandler(user.id)}
-                                    >intra
-                                    </Button>
-                                </div>
-                                <div className='col-lg-6'>
-                                    <div className='h4 text-end'>
-                                        <Badge 
-                                            isLight={darkModeStatus ? false : true}
-                                            color={isMyPiscine(me, user) ? 'piscine' : 'primary'}
+                                        <Button
+                                            className='h4'
+                                            icon="Link"
+                                            color="light"
+                                            type="submit"
+                                            onClick={() => userInIntraHandler(user.id)}
+                                        >intra
+                                        </Button>
+                                    </div>
+                                    <div className='col-lg-6'>
+                                        <div className='h4 text-end'>
+                                            <Badge
+                                                isLight={darkModeStatus ? false : true}
+                                                color={isMyPiscine(me, user) ? 'piscine' : 'primary'}
                                             >
-                                            {user.pool_month} {user.pool_year}
-                                        </Badge>
+                                                {user.pool_month} {user.pool_year}
+                                            </Badge>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                                
+
                             </Card>
-                    ))
+                        )
+                    })
                 }
                 {
                     users.length === 100

@@ -46,6 +46,8 @@ import MasterCalendar from "../components/agenda/MasterCalendar";
 import SideCalendar from "../components/agenda/SideCalendar";
 import { delay } from "../helpers/helpers";
 import axiosRetry from "axios-retry";
+import Piscine from "../components/piscine";
+import Friends from "../components/friends";
 
 axiosRetry(axios, {
   retries: 3,
@@ -67,6 +69,10 @@ const Index: NextPage = ({ token, me }: any) => {
   const { darkModeStatus, themeStatus } = useDarkMode();
 
   const settings = useSelector((state: RootState) => state.settings.settingsLoaded);
+  const piscineIsOpen = useSelector((state: RootState) => state.settings.piscineIsOpen);
+  const friendsIsOpen = useSelector((state: RootState) => state.settings.friendsIsOpen);
+  friendsIsOpen
+
   const eventsIntra = useSelector((state: RootState) => state.events.events);
   const allEvents = useSelector((state: RootState) => state.events.all);
   const slotsIntra = useSelector((state: RootState) => state.slots.slots);
@@ -364,7 +370,7 @@ const Index: NextPage = ({ token, me }: any) => {
   return (
     <PageWrapper>
       <Head>
-        <title>Agenda42</title>
+        <title>Agenda {me.location}</title>
         <meta property="og:title" content="Agenda42" />
         <meta property="og:description" content="This is a description of my awesome app.Simplify your life with Agenda42! Manage all your events and evaluations in a single, easy-to-use calendar. Whether it’s scheduling appointments, tracking availability, or organizing tasks, Agenda42 keeps everything in one place for seamless planning and productivity." />
         <meta property="og:url" content="https://agenda42.fr" />
@@ -450,6 +456,8 @@ const Index: NextPage = ({ token, me }: any) => {
           </OffCanvasBody>
         </OffCanvas>
         {settings ? <Settings settingsLoaded={settings} /> : null}
+        {piscineIsOpen ? <Piscine token={token} /> : null}
+        {friendsIsOpen ? <Friends /> : null}
         <OverlappingModal events={events} />
       </Page>
     </PageWrapper>
