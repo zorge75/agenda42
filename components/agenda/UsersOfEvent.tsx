@@ -157,8 +157,7 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
 
                                 <div className='d-flex row align-items-end event_row m-3 mt-0'>
                                     <div className='col-lg-6 p-1'>
-                                        <Tooltips title="• Beta feature 'Friends list' • Friendship confirmation in development mode." placement='right'>
-                                            <Button
+                                        <Button
                                                 style={{ marginRight: 15 }}
                                                 className='h4'
                                                 icon={update ? "Refresh" : isIdInSuccess ? "Done" : "Add"}
@@ -167,7 +166,6 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                                                 type="submit"
                                                 onClick={() => addFriendHandler(user.id, user.login, user.first_name, user.image.versions.medium, user.pool_month, user.pool_year)}
                                             />
-                                        </Tooltips>
                                         <Button
                                             className='h4'
                                             icon="Link"

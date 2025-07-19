@@ -12,3 +12,9 @@
 @import 'react-modern-calendar-datepicker';
 @import './react-date-range/styles';
 @import 'rc-tree';
+
+@media (max-width: 575.98px) {
+    .no-mobile-grid {
+        padding: 0;
+        margin: 0;
+    } }

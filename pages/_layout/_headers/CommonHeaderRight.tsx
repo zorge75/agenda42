@@ -91,7 +91,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
                     </Popovers>
                 </div>
 				<div className='col-auto'>
-					<Popovers trigger='hover' desc='My piscine'>
+					<Popovers trigger='hover' desc='Piscine'>
 						<Button
 							// eslint-disable-next-line react/jsx-props-no-spreading
 							{...styledBtn}
@@ -115,7 +115,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 							className='btn-only-icon'>
 							<Icon
 								icon={darkModeStatus ? 'Group' : 'Group'}
-								color={darkModeStatus ? 'light' : 'dark'}
+								color={darkModeStatus ? 'light' : 'secondary'}
 								className='btn-icon'
 							/>
 						</Button>

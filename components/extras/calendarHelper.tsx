@@ -50,7 +50,7 @@ export const getLabel = (
       .add(-1, "day")
       .format("D MMM")}`;
   if (viewMode === Views.AGENDA)
-    return `${dayjs(date).format("L")} - ${dayjs(date).add(1, "month").format("L")}`;
+    return `${dayjs(date).format("D MMM")} - ${dayjs(date).add(1, "month").format("D MMM YYYY")}`;
   return dayjs(date).format("dddd, D MMMM");
 };
 
