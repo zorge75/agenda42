@@ -164,7 +164,7 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                                                 color={isIdInSuccess ? "success" : "light"}
                                                 isDisable={update}
                                                 type="submit"
-                                                onClick={() => addFriendHandler(user.id, user.login, user.first_name, user.image.versions.medium, user.pool_month, user.pool_year)}
+                                            onClick={() => addFriendHandler(user.id, user.login, getName(user), user.image.versions.medium, user.pool_month, user.pool_year)}
                                             />
                                         <Button
                                             className='h4'
