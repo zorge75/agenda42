@@ -131,3 +131,7 @@ export const isMyPiscine = (me: any, user: any): boolean => {
 		return true;
 	return false;
 };
+
+export const userInIntraHandler = async (id: string) => {
+	window.open(`https://profile.intra.42.fr/users/${id}`, "_blank");
+}

@@ -107,14 +107,14 @@ const MasterCalendar = ({
                     />
                     <Button
                         style={{ minWidth: 50 }}
-                        icon={friends ? "Group" : "FilterAlt"}
+                        icon={friends.length ? "Group" : "FilterAlt"}
                         isDisable={refresh || !scaleUsers}
                         color={switchEvents == "my" ? 'primary' : 'light'}
                         onClick={() => dispatch(setSwitchEvents("my"))}
                     />
 
                     {
-                        (switchEvents == "my" && friends)
+                        (switchEvents == "my" && friends.length)
                         ?
                             <FocusingSelector token={token} setLoad={setLoad} friends={friends} />
                             : null

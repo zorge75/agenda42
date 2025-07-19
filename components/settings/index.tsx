@@ -40,10 +40,6 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
             return ("");
     }
 
-    // TODO: get user settings
-    // if exist - method PATCH
-    // else use   method POST
-
     const formik = useFormik({
         initialValues: {
             discordId: setDiscortId(settingsLoaded),

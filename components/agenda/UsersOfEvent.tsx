@@ -1,20 +1,23 @@
 import Button from "../bootstrap/Button";
 import Card, { CardHeader, CardLabel, CardTitle, CardBody, CardSubTitle } from "../bootstrap/Card";
-import { delay, isMyPiscine } from "../../helpers/helpers";
+import { delay, isMyPiscine, userInIntraHandler } from "../../helpers/helpers";
 import { useEffect, useState } from "react";
 import Collapse from "../bootstrap/Collapse";
 import Avatar from "../Avatar";
 import Badge from "../bootstrap/Badge";
 import Spinner from "../bootstrap/Spinner";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import useDarkMode from "../../hooks/useDarkMode";
 import Link from "next/dist/client/link";
 import showNotification from "../extras/showNotification";
 import Icon from "../icon/Icon";
 import Tooltips from "../bootstrap/Tooltips";
+import { addFriendToList } from "../../store/slices/friendsReducer";
 
 const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
+    const dispatch = useDispatch();
+
     const me = useSelector((state: RootState) => state.user.me);
     const friends = useSelector((state: RootState) => state.friends.list);
     const [success, setSuccess] = useState<number[]>([]);
@@ -22,7 +25,7 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
 
     const { darkModeStatus } = useDarkMode();
 
-    const addFriendHandler = async (id: number, login: string, name: string) => {
+    const addFriendHandler = async (id: number, login: string, name: string, image: string, month: string, year: string) => {
         setUpdate(true);
         await fetch("/api/friends", {
             method: "POST",
@@ -33,7 +36,10 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                 user_id: myId,
                 friend_id: id,
                 friend_login: login,
-                friend_name: name
+                friend_name: name,
+                friend_image: image,
+                pool_month: month,
+                pool_year: year,
             }),
         }).then(async (response) => {
             setUpdate(false);
@@ -41,14 +47,21 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                 console.log(`Failed to create settings: ${response.statusText}`);
             } else {
                 setSuccess((i: number[]) => [...i, id]);
+                dispatch(addFriendToList(
+                    {
+                        user_id: myId,
+                        friend_id: id,
+                        friend_login: login,
+                        friend_name: name,
+                        friend_image: image,
+                        pool_month: month,
+                        pool_year: year,
+                    }
+                ));
             }
             return { success: true };
         })
     };
-
-    const userInIntraHandler = async (id: string) => {
-        window.open(`https://profile.intra.42.fr/users/${id}`, "_blank");
-    }
 
     const [refresh, setRefresh] = useState(false);
     const [users, setUsers] = useState([]);
@@ -122,19 +135,17 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                 isOpen={isOpen}
             >
                 {
-                    users.map(({ user }) => {
+                    users.map(({ user, key }) => {
                         const isIdInSuccess = success && success.includes(user.id);
                         return (
-                            <Card isCompact >
+                            <Card isCompact key={key} >
 
                                 <CardHeader
                                     style={{ borderRadius: 20 }}
                                 >
 
                                     <CardLabel
-
                                     >
-
                                         <CardTitle>
                                             {user.usual_full_name}
                                         </CardTitle>
@@ -154,7 +165,7 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                                                 color={isIdInSuccess ? "success" : "light"}
                                                 isDisable={update}
                                                 type="submit"
-                                                onClick={() => addFriendHandler(user.id, user.login, user.first_name)}
+                                                onClick={() => addFriendHandler(user.id, user.login, user.first_name, user.image.versions.medium, user.pool_month, user.pool_year)}
                                             />
                                         </Tooltips>
                                         <Button

@@ -24,7 +24,7 @@ import useDarkMode from '../../../hooks/useDarkMode';
 import Popovers from '../../../components/bootstrap/Popovers';
 import Spinner from '../../../components/bootstrap/Spinner';
 import useMounted from '../../../hooks/useMounted';
-import { setModalPiscineStatus, setModalSettingsStatus } from '../../../store/slices/settingsReducer';
+import { setModalFriendsStatus, setModalPiscineStatus, setModalSettingsStatus } from '../../../store/slices/settingsReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 
@@ -35,6 +35,8 @@ interface ICommonHeaderRightProps {
 const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterChildren }) => {
     const settingsIsOpen = useSelector((state: RootState) => state.settings.settingsIsOpen);
 	const piscineIsOpen = useSelector((state: RootState) => state.settings.piscineIsOpen);
+	const friendsIsOpen = useSelector((state: RootState) => state.settings.friendsIsOpen);
+	const friends = useSelector((state: RootState) => state.friends.list);
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -57,6 +59,10 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
     const setSettings = (status: boolean) => {
         dispatch(setModalSettingsStatus(status));
     }
+
+	const setFriends = (status: boolean) => {
+		dispatch(setModalFriendsStatus(status));
+	}
 
 	const setPiscine = (status: boolean) => {
 		dispatch(setModalPiscineStatus(status));
@@ -100,12 +106,12 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 						</Button>
 					</Popovers>
 				</div>
-				<div className='col-auto'>
+				{friends?.length ? <div className='col-auto'>
 					<Popovers trigger='hover' desc='Friends'>
 						<Button
 							// eslint-disable-next-line react/jsx-props-no-spreading
 							{...styledBtn}
-							// onClick={() => setSettings(!settingsIsOpen)}
+							onClick={() => setFriends(!friendsIsOpen)}
 							className='btn-only-icon'>
 							<Icon
 								icon={darkModeStatus ? 'Group' : 'Group'}
@@ -114,7 +120,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 							/>
 						</Button>
 					</Popovers>
-				</div>
+				</div>: null}
                 <div className='col-auto'>
                     <Popovers trigger='hover' desc='Settings'>
                         <Button

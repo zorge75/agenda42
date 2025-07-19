@@ -47,6 +47,7 @@ import SideCalendar from "../components/agenda/SideCalendar";
 import { delay } from "../helpers/helpers";
 import axiosRetry from "axios-retry";
 import Piscine from "../components/piscine";
+import Friends from "../components/friends";
 
 axiosRetry(axios, {
   retries: 3,
@@ -69,6 +70,8 @@ const Index: NextPage = ({ token, me }: any) => {
 
   const settings = useSelector((state: RootState) => state.settings.settingsLoaded);
   const piscineIsOpen = useSelector((state: RootState) => state.settings.piscineIsOpen);
+  const friendsIsOpen = useSelector((state: RootState) => state.settings.friendsIsOpen);
+  friendsIsOpen
 
   const eventsIntra = useSelector((state: RootState) => state.events.events);
   const allEvents = useSelector((state: RootState) => state.events.all);
@@ -453,7 +456,8 @@ const Index: NextPage = ({ token, me }: any) => {
           </OffCanvasBody>
         </OffCanvas>
         {settings ? <Settings settingsLoaded={settings} /> : null}
-        {piscineIsOpen ? <Piscine isLoaded={piscineIsOpen} /> : null}
+        {piscineIsOpen ? <Piscine token={token} /> : null}
+        {friendsIsOpen ? <Friends /> : null}
         <OverlappingModal events={events} />
       </Page>
     </PageWrapper>
