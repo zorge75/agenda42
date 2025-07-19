@@ -44,6 +44,8 @@ const Friends: FC<any> = ({ token }: any) => {
             } else {
                 setSuccess((i: number[]) => [...i, id]);
                 dispatch(removeFriendFromList(id))
+                if (users.length == 1)
+                    setModal(false);
             }
             return { success: true };
         })
@@ -64,7 +66,7 @@ const Friends: FC<any> = ({ token }: any) => {
                 setOpen={(status: boolean) => { setModal(status) }}
                 className="p-4"
             >
-                <OffCanvasTitle id="canvas-title">
+                <OffCanvasTitle id="canvas-title" className="h2">
                     Friends
                 </OffCanvasTitle>
             </OffCanvasHeader>
@@ -106,7 +108,7 @@ const Friends: FC<any> = ({ token }: any) => {
                                             icon="Link"
                                             color="light"
                                             type="submit"
-                                            onClick={() => userInIntraHandler(user.id)}
+                                            onClick={() => userInIntraHandler(user.friend_id)}
                                         >intra
                                         </Button>
                                     </div>

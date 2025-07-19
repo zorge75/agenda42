@@ -128,22 +128,22 @@ const Piscine: FC<any> = ({ token }: any) => {
                 setOpen={(status: boolean) => { setModal(status) }}
                 className="p-4"
             >
-                <OffCanvasTitle id="canvas-title">
-                    My pool: {me.pool_month} {me.pool_year}
+                <OffCanvasTitle id="canvas-title" className="h2">
+                    Pool: {me.pool_month} {me.pool_year}
                 </OffCanvasTitle>
             </OffCanvasHeader>
+            <Button
+                className='h4 m-4'
+                icon={signSort ? "Sort" : "Star"}
+                color="light"
+                onClick={() => setSignSort(!signSort)}
+            >Sort with parameter 'updated_at'
+            </Button>
             <OffCanvasBody tag="form" className="p-4" >
                 {
                     refresh
                         ? <Spinner random />
                         : <>
-                            <Button
-                                className='h4'
-                                icon="Sort"
-                                color="light"
-                                onClick={() => setSignSort(!signSort)}
-                            >update_at: {signSort ? "-" : "+"}
-                            </Button>
                             {
                                 users.map(user => {
                                     const isIdInSuccess = success && success.includes(user.id);

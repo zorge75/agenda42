@@ -377,7 +377,7 @@ const Index: NextPage = ({ token, me }: any) => {
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <Page container="fluid" className="pb-0">
+      <Page container="fluid" className="pb-0 no-mobile-grid">
         <div className="row h-100" style={{
           filter: loadGeneral ? "blur(5px)" : "blur(0px)",
           pointerEvents: loadGeneral ? "none" : "auto",
@@ -394,7 +394,7 @@ const Index: NextPage = ({ token, me }: any) => {
               setUnitType={setUnitType}
             />
           </div>
-          <div className="col-xl-9">
+          <div className="col-xl-9 no-mobile-grid">
             <MasterCalendar
               unitType={unitType}
               date={date}

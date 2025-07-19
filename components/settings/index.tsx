@@ -100,7 +100,7 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
                 }}
                 className="p-4"
             >
-                <OffCanvasTitle id="canvas-title">
+                <OffCanvasTitle id="canvas-title" className="h2">
                     Personal settings
                 </OffCanvasTitle>
             </OffCanvasHeader>
