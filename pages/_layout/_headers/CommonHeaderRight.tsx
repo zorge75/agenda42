@@ -77,13 +77,43 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
                         </Button>
                     </Popovers>
                 </div>
-{/* 
+				<div className='col-auto'>
+					<Popovers trigger='hover' desc='My piscine'>
+						<Button
+							// eslint-disable-next-line react/jsx-props-no-spreading
+							{...styledBtn}
+							// onClick={() => setSettings(!settingsIsOpen)}
+							className='btn-only-icon'
+						>
+							<Icon
+								icon={darkModeStatus ? 'Water' : 'Water'}
+								color={darkModeStatus ? 'light' : 'info'}
+								className='btn-icon'
+							/>
+						</Button>
+					</Popovers>
+				</div>
+				<div className='col-auto'>
+					<Popovers trigger='hover' desc='Friends'>
+						<Button
+							// eslint-disable-next-line react/jsx-props-no-spreading
+							{...styledBtn}
+							// onClick={() => setSettings(!settingsIsOpen)}
+							className='btn-only-icon'>
+							<Icon
+								icon={darkModeStatus ? 'Group' : 'Group'}
+								color={darkModeStatus ? 'light' : 'dark'}
+								className='btn-icon'
+							/>
+						</Button>
+					</Popovers>
+				</div>
                 <div className='col-auto'>
                     <Popovers trigger='hover' desc='Settings'>
                         <Button
                             // eslint-disable-next-line react/jsx-props-no-spreading
                             {...styledBtn}
-                            onClick={() => setSettings(!settingsIsOpen)}
+                            // onClick={() => setSettings(!settingsIsOpen)}
                             className='btn-only-icon'
                             data-tour='dark-mode'>
                             <Icon
@@ -93,7 +123,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
                             />
                         </Button>
                     </Popovers>
-                </div> */}
+                </div>
 
                 {/* <div className='col-auto'>
 					<Popovers trigger='hover' desc='Evaluations'>

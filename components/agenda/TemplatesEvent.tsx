@@ -19,7 +19,7 @@ export const MyWeekEvent = (data: { event: IEvent }) => {
     const { event } = data;
     return (
         <div className="row g-2">
-            <div className="col-12 text-truncate">
+            <div className="col-12 h6" style={{fontSize: '0.8rem'}}>
                 {event?.icon && <Icon icon={event?.icon} size="lg" className="me-2" />}
                 {event?.name}
             </div>

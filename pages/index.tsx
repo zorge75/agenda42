@@ -364,7 +364,7 @@ const Index: NextPage = ({ token, me }: any) => {
   return (
     <PageWrapper>
       <Head>
-        <title>Agenda42</title>
+        <title>Agenda {me.location}</title>
         <meta property="og:title" content="Agenda42" />
         <meta property="og:description" content="This is a description of my awesome app.Simplify your life with Agenda42! Manage all your events and evaluations in a single, easy-to-use calendar. Whether it’s scheduling appointments, tracking availability, or organizing tasks, Agenda42 keeps everything in one place for seamless planning and productivity." />
         <meta property="og:url" content="https://agenda42.fr" />

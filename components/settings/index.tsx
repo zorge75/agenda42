@@ -113,7 +113,8 @@ const Settings: FC<any> = ({ settingsLoaded }: any) => {
                 // onSubmit={formik.handleSubmit}
                 className="p-4"
             >
-
+otkazat'sya ot ispolizovaniya friends
+- udalit' knopki esli activno
                 <div className='row'>
                     <div className='col-md-8'>
 
