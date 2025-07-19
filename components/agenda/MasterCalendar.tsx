@@ -99,19 +99,17 @@ const MasterCalendar = ({
                 </Popovers>
                 <div className="switch_events">
                     <Button
+                        icon="CalendarToday"
                         isDisable={refresh || !scaleUsers}
                         color={switchEvents == "all" ? 'primary' : 'light'}
                         onClick={() => dispatch(setSwitchEvents("all"))}
-                    >
-                        Agenda
-                    </Button>
+                    />
                     <Button
+                        icon="FilterAlt"
                         isDisable={refresh || !scaleUsers}
                         color={switchEvents == "my" ? 'primary' : 'light'}
                         onClick={() => dispatch(setSwitchEvents("my"))}
-                    >
-                        {friends ? "Events" : "My events"}
-                    </Button>
+                    />
 
                     {
                         (switchEvents == "my" && friends)
@@ -130,10 +128,10 @@ const MasterCalendar = ({
                 </div>
                 {
                     (refresh || !scaleUsers)
-                        ?
+                                ?
                         <div className="spinner"> <Spinner random inButton /></div>
                         :
-                        <Button icon='Refresh' color='storybook' onClick={refreshHandler}>Update</Button>
+                        <Button icon='Refresh' color='storybook' onClick={refreshHandler} />
                 }
 
                 <CalendarViewModeButtons viewMode={viewMode} />
