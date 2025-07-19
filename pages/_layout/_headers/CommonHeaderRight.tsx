@@ -24,7 +24,7 @@ import useDarkMode from '../../../hooks/useDarkMode';
 import Popovers from '../../../components/bootstrap/Popovers';
 import Spinner from '../../../components/bootstrap/Spinner';
 import useMounted from '../../../hooks/useMounted';
-import { setModalStatus } from '../../../store/slices/settingsReducer';
+import { setModalPiscineStatus, setModalSettingsStatus } from '../../../store/slices/settingsReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 
@@ -34,6 +34,8 @@ interface ICommonHeaderRightProps {
 }
 const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterChildren }) => {
     const settingsIsOpen = useSelector((state: RootState) => state.settings.settingsIsOpen);
+	const piscineIsOpen = useSelector((state: RootState) => state.settings.piscineIsOpen);
+
     const dispatch = useDispatch();
     const router = useRouter();
     const { darkModeStatus, setDarkModeStatus } = useDarkMode();
@@ -53,8 +55,13 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
     const { setIsOpen } = useTour();
 
     const setSettings = (status: boolean) => {
-        dispatch(setModalStatus(status));
+        dispatch(setModalSettingsStatus(status));
     }
+
+	const setPiscine = (status: boolean) => {
+		dispatch(setModalPiscineStatus(status));
+	}
+
     return (
         <HeaderRight>
             <div className='row g-3'>
@@ -82,7 +89,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 						<Button
 							// eslint-disable-next-line react/jsx-props-no-spreading
 							{...styledBtn}
-							// onClick={() => setSettings(!settingsIsOpen)}
+							onClick={() => setPiscine(!piscineIsOpen)}
 							className='btn-only-icon'
 						>
 							<Icon
@@ -113,7 +120,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
                         <Button
                             // eslint-disable-next-line react/jsx-props-no-spreading
                             {...styledBtn}
-                            // onClick={() => setSettings(!settingsIsOpen)}
+                            onClick={() => setSettings(!settingsIsOpen)}
                             className='btn-only-icon'
                             data-tour='dark-mode'>
                             <Icon
