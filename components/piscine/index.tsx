@@ -209,7 +209,7 @@ const Piscine: FC<any> = ({ token }: any) => {
 
                                             </CardHeader>
 
-                                            <div className='d-flex row align-items-end event_row m-3 mt-0'>
+                                            <div className='card-aside d-flex row align-items-end event_row m-3 mt-0'>
                                                 <div className='col-lg-6 p-1'>
                                                     <Button
                                                         style={{ marginRight: 15 }}
