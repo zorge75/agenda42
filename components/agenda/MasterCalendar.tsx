@@ -71,7 +71,7 @@ const MasterCalendar = ({
     }, []);
 
     return (
-        <Card stretch style={{ minHeight: 600 }} >
+        <Card stretch className="no-mobile-grid" >
             <CardHeader style={mobileDesign ? { paddingBottom: 0 } : {}}>
                 <CardActions style={{marginRight: 20}}>
                     <CalendarTodayButton
@@ -139,7 +139,7 @@ const MasterCalendar = ({
                 <CalendarViewModeButtons viewMode={viewMode} />
 
             </CardHeader>
-            <CardBody isScrollable style={{ paddingTop: 0 }}>
+            <CardBody isScrollable >
                 <DnDCalendar
                     formats={customFormats}
                     selectable
