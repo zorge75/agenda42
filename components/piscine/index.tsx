@@ -3,7 +3,7 @@ import OffCanvas, { OffCanvasHeader, OffCanvasTitle, OffCanvasBody } from "../bo
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { setModalPiscineStatus } from "../../store/slices/settingsReducer";
-import { delay, getName, userInIntraHandler } from "../../helpers/helpers";
+import { delay, getMaxPage, getName, userInIntraHandler } from "../../helpers/helpers";
 import Card, { CardHeader, CardLabel, CardTitle } from "../bootstrap/Card";
 import Avatar from "../Avatar";
 import Button from "../bootstrap/Button";
@@ -11,11 +11,15 @@ import Spinner from "../bootstrap/Spinner";
 import Badge from "../bootstrap/Badge";
 import useDarkMode from "../../hooks/useDarkMode";
 import { addFriendToList } from "../../store/slices/friendsReducer";
+import dayjs from "dayjs";
 
 const Piscine: FC<any> = ({ token }: any) => {
     const piscineIsOpen = useSelector((state: RootState) => state.settings.piscineIsOpen);
     const me = useSelector((state: RootState) => state.user.me);
     const { darkModeStatus } = useDarkMode();
+    const [page, setPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(0);
+    let isFetching = false;
 
     const dispatch = useDispatch();
 
@@ -25,47 +29,45 @@ const Piscine: FC<any> = ({ token }: any) => {
 
     const [refresh, setRefresh] = useState(false);
     const [signSort, setSignSort] = useState(false);
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<any[]>([]);
     const [success, setSuccess] = useState<number[]>([]);
     const [update, setUpdate] = useState(false);
 
     const getMyPiscine = async () => {
-        const maxRetries = 3; // Maximum number of retry attempts
+        if (isFetching) return;
+        isFetching = true;
+
+        const maxRetries = 3;
         let retryCount = 0;
 
         const attemptRefresh = async () => {
             setRefresh(true);
+            try {
+                const res = await fetch(
+                    `/api/piscine?year=${me.pool_year}&page=${page}&month=${me.pool_month}&signSort=${signSort ? "" : "-"}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                const response = await res.json();
+                const pageNumbers = getMaxPage(response.links);
 
-            const res = await fetch(
-                `/api/piscine`
-                + `?year=${me.pool_year}`
-                + `&month=${me.pool_month}`
-                + `&signSort=${signSort ? "" : "-"}`,
-                {
-                    headers: { Authorization: `Bearer ${token}` },
+                if (!maxPage) setMaxPage(pageNumbers);
+
+                if (res.ok) {
+                    setUsers((last) => [...last, ...response.data]);
+                    setPage(page + 1);
+                } else if (res.status === 429 && retryCount < maxRetries) {
+                    retryCount++;
+                    const retryAfter = res.headers.get('Retry-After')
+                        ? parseInt(res.headers.get('Retry-After')) * 1000
+                        : 5000 * retryCount;
+                    console.log(`Rate limited. Retrying after ${retryAfter / 1000} seconds...`);
+                    await delay(retryAfter);
+                    return await attemptRefresh();
                 }
-            );
-
-            const response = await res.json();
-
-            if (res.ok) {
-                setUsers(response);
-                console.log("piscine", response);
-                // Success case
-            } else if (res.status === 429 && retryCount < maxRetries) {
-                // Handle 429 error with retry
-                retryCount++;
-                const retryAfter = res.headers.get('Retry-After')
-                    ? parseInt(res.headers.get('Retry-After')) * 1000
-                    : 5000 * retryCount; // Default to 5s, 10s, 15s
-
-                console.log(`Rate limited. Retrying after ${retryAfter / 1000} seconds...`);
-                await delay(retryAfter);
-                // return await attemptRefresh(); // Recursive retry
-            } else {
-                return;
+            } finally {
+                setRefresh(false);
+                isFetching = false; // Reset flag
             }
-            setRefresh(false);
             await delay(3000);
         };
 
@@ -128,19 +130,28 @@ const Piscine: FC<any> = ({ token }: any) => {
                 className="p-4"
             >
                 <OffCanvasTitle id="canvas-title" className="h2">
-                    Pool: {me.pool_month} {me.pool_year}
+                    <span style={{ marginRight: 10 }}>Pool:</span>
+                    <Badge
+                        isLight={darkModeStatus ? false : true}
+                        color={'piscine'}
+                    >
+                        {me.pool_month} {me.pool_year}
+                    </Badge>
                 </OffCanvasTitle>
             </OffCanvasHeader>
             <Button
                 className='h4 m-4'
-                icon={signSort ? "Sort" : "Star"}
+                icon={signSort ? "ArrowUpward" : "ArrowDownward"}
                 color="light"
-                onClick={() => setSignSort(!signSort)}
-            >Sort with parameter 'updated_at'
+                onClick={() => {
+                    setSignSort(!signSort);
+                    setUsers([])
+                }}
+            >sort with parameter 'updated_at'
             </Button>
             <OffCanvasBody tag="form" className="p-4" >
                 {
-                    refresh
+                    (refresh && !users.length)
                         ? <Spinner random />
                         : <>
                             {
@@ -151,22 +162,45 @@ const Piscine: FC<any> = ({ token }: any) => {
                                             <CardHeader style={{ borderRadius: 20 }} >
                                                 <CardLabel>
                                                     <CardTitle>
+                                                        <span style={{marginRight: 20}}>
                                                         {getName(user)}
+                                                            </span>
+                                                        <Badge
+                                                            isLight={darkModeStatus ? false : true}
+                                                            color={user.location ? 'success' : 'dark'}
+                                                        >
+                                                          {
+                                                            user.location
+                                                            ? user.location
+                                                            : dayjs(user.updated_at).fromNow()
+                                                          }
+                                                        </Badge>
                                                     </CardTitle>
-                                                    <div style={{ display: 'table-caption', marginTop: 10 }}>
-                                                        <Badge
-                                                            isLight={darkModeStatus ? false : true}
-                                                            className="mb-2"
-                                                            color='primary'
+                                                    <div style={{ marginTop: 10 }}>
+                                                        <span style={{ marginRight: 10 }}>
+                                                            <Badge
+                                                                isLight={darkModeStatus ? false : true}
+                                                                color='success'
+                                                            >
+                                                                {user.login}
+                                                            </Badge>
+                                                        </span>
+                                                        <span style={{ marginRight: 10 }}>
+                                                            <Badge
+                                                                isLight={darkModeStatus ? false : true}
+                                                                className="mb-2"
+                                                                color='brand'
+                                                            >
+                                                                {user.wallet} ₳
+                                                            </Badge>
+                                                        </span>
+                                                        {!user['active?'] ? <Badge
+                                                            
+                                                            color='info'
                                                         >
-                                                            Wallet:     {user.wallet} ₳
-                                                        </Badge>
-                                                        <Badge
-                                                            isLight={darkModeStatus ? false : true}
-                                                            color='success'
-                                                        >
-                                                            {user.login}
-                                                        </Badge>
+                                                            freeze / bh
+                                                        </Badge> : null}
+                                                        
                                                     </div>
                                                 </CardLabel>
                                                 <Avatar src={user.image.versions.medium} size={64} />
@@ -208,6 +242,19 @@ const Piscine: FC<any> = ({ token }: any) => {
                                     )
                                 })
                             }
+
+                            {
+                                maxPage !== page 
+                                ? (
+                                        <Button
+                                            style={{ width: '100%' }}
+                                            className='h4'
+                                            icon={"Download"}
+                                            color={"success"}
+                                            isDisable={refresh}
+                                            onClick={() => getMyPiscine()}
+                                        >Page {page} from {maxPage}</Button>
+                                ) : null}
                         </>
                 }
             </OffCanvasBody>

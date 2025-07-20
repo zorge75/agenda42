@@ -55,6 +55,7 @@ $utilities: map.merge(
 				dark: tint-color($dark, 90%),
 				brand: tint-color($brand, 90%),
 				brand-two: tint-color($brand-two, 90%),
+								piscine: tint-color($piscine, 90%),
 			),
 		),
 		'background-light 25%': (
@@ -72,6 +73,7 @@ $utilities: map.merge(
 				dark: tint-color($dark, 75%),
 				brand: tint-color($brand, 75%),
 				brand-two: tint-color($brand-two, 75%),
+								piscine: tint-color($piscine, 75%),
 			),
 		),
 		'background-light 50%': (
@@ -89,6 +91,7 @@ $utilities: map.merge(
 				dark: tint-color($dark, 50%),
 				brand: tint-color($brand, 50%),
 				brand-two: tint-color($brand-two, 50%),
+								piscine: tint-color($piscine, 50%),
 			),
 		),
 		'background-light 75%': (
@@ -105,6 +108,7 @@ $utilities: map.merge(
 				light: tint-color($light, 25%),
 				dark: tint-color($dark, 25%),
 				brand: tint-color($brand, 25%),
+								piscine: tint-color($piscine, 25%),
 				brand-two: tint-color($brand-two, 25%),
 			),
 		),
@@ -122,6 +126,7 @@ $utilities: map.merge(
 				light: tint-color($light, 10%),
 				dark: tint-color($dark, 10%),
 				brand: tint-color($brand, 10%),
+								piscine: tint-color($piscine, 10%),
 				brand-two: tint-color($brand-two, 10%),
 			),
 		),
@@ -146,6 +151,7 @@ $utilities: map.merge(
 				dark: rgba-to-rgb(rgba($dark, 0.9), $dark),
 				brand: rgba-to-rgb(rgba($brand, 0.9), $dark),
 				brand-two: rgba-to-rgb(rgba($brand-two, 0.9), $dark),
+				piscine: rgba-to-rgb(rgba($piscine, 0.9), $piscine),
 			),
 		),
 		'background-like-opacity 75%': (
@@ -163,6 +169,7 @@ $utilities: map.merge(
 				dark: rgba-to-rgb(rgba($dark, 0.75), $dark),
 				brand: rgba-to-rgb(rgba($brand, 0.75), $dark),
 				brand-two: rgba-to-rgb(rgba($brand-two, 0.75), $dark),
+				piscine: rgba-to-rgb(rgba($piscine, 0.75), $piscine),
 			),
 		),
 		'background-like-opacity 50%': (
@@ -180,6 +187,7 @@ $utilities: map.merge(
 				dark: rgba-to-rgb(rgba($dark, 0.5), $dark),
 				brand: rgba-to-rgb(rgba($brand, 0.5), $dark),
 				brand-two: rgba-to-rgb(rgba($brand-two, 0.5), $dark),
+				piscine: rgba-to-rgb(rgba($piscine, 0.5), $piscine),
 			),
 		),
 		'background-like-opacity 25%': (
@@ -197,6 +205,7 @@ $utilities: map.merge(
 				dark: rgba-to-rgb(rgba($dark, 0.25), $dark),
 				brand: rgba-to-rgb(rgba($brand, 0.25), $dark),
 				brand-two: rgba-to-rgb(rgba($brand-two, 0.25), $dark),
+				piscine: rgba-to-rgb(rgba($piscine, 0.25), $piscine),
 			),
 		),
 		'background-like-opacity 10%': (
@@ -214,6 +223,7 @@ $utilities: map.merge(
 				dark: rgba-to-rgb(rgba($dark, 0.1), $dark),
 				brand: rgba-to-rgb(rgba($brand, 0.1), $dark),
 				brand-two: rgba-to-rgb(rgba($brand-two, 0.1), $dark),
+				piscine: rgba-to-rgb(rgba($piscine, 0.1), $piscine),
 			),
 		),
 	)

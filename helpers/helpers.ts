@@ -139,3 +139,12 @@ export const userInIntraHandler = async (id: string) => {
 export const getName = (me: any) => {
 	return (me.usual_first_name || me.first_name);
 }
+
+export const getMaxPage = (str: string): number => {
+	if (!str)
+		return 0;
+	const regex = /page=(\d+)/g;
+	const matches = [...str?.matchAll(regex)];
+	const pageNumbers = matches.map(match => parseInt(match[1]));
+	return (pageNumbers[0]);
+}
