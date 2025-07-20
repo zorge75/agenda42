@@ -14,6 +14,7 @@ import { addFriendToList } from "../../store/slices/friendsReducer";
 import dayjs from "dayjs";
 
 const Piscine: FC<any> = ({ token }: any) => {
+    const friends = useSelector((state: RootState) => state.friends.list);
     const piscineIsOpen = useSelector((state: RootState) => state.settings.piscineIsOpen);
     const me = useSelector((state: RootState) => state.user.me);
     const { darkModeStatus } = useDarkMode();
@@ -157,8 +158,9 @@ const Piscine: FC<any> = ({ token }: any) => {
                             {
                                 users.map(user => {
                                     const isIdInSuccess = success && success.includes(user.id);
+                                    const isFriend = friends.find(i => i.friend_id == user.id);
                                     return (
-                                        <Card isCompact >
+                                        <Card isCompact className={isFriend ? "friend" : ""} >
                                             <CardHeader style={{ borderRadius: 20 }} >
                                                 <CardLabel>
                                                     <CardTitle>
@@ -212,9 +214,9 @@ const Piscine: FC<any> = ({ token }: any) => {
                                                     <Button
                                                         style={{ marginRight: 15 }}
                                                         className='h4'
-                                                        icon={update ? "Refresh" : isIdInSuccess ? "Done" : "Add"}
-                                                        color={isIdInSuccess ? "success" : "light"}
-                                                        isDisable={update}
+                                                        icon={update ? "Refresh" : (isFriend || isIdInSuccess) ? "Group": "Add"}
+                                                        color={(isIdInSuccess || isFriend) ? "success" : "light"}
+                                                        isDisable={update || isFriend}
                                                         type="submit"
                                                         onClick={() => addFriendHandler(user.id, user.login, getName(user), user.image.versions.medium, user.pool_month, user.pool_year)}
                                                     />

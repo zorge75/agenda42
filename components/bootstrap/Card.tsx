@@ -568,6 +568,7 @@ const Card = forwardRef<HTMLDivElement, ICardProps>(
 						})}
 					</>
 				)}
+				<section><div className="over" /></section>
 			</TagWrapper>
 		);
 	},
