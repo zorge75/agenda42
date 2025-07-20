@@ -14,6 +14,7 @@ import showNotification from "../extras/showNotification";
 import Icon from "../icon/Icon";
 import Tooltips from "../bootstrap/Tooltips";
 import { addFriendToList } from "../../store/slices/friendsReducer";
+import Shapes from "../shapes/Shapes";
 
 const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
     const dispatch = useDispatch();
@@ -137,8 +138,11 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                 {
                     users.map(({ user, key }) => {
                         const isIdInSuccess = success && success.includes(user.id);
+                        const isFriend = friends.find(i => i.friend_id == user.id);
                         return (
-                            <Card isCompact key={key} >
+                            <Card isCompact key={key}
+                                className={isFriend ? "friend" : ""}
+                            >
 
                                 <CardHeader
                                     style={{ borderRadius: 20 }}
@@ -150,22 +154,21 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                                             {user.usual_full_name}
                                         </CardTitle>
                                         <p className="mt-2" >{user.email}</p>
-
                                     </CardLabel>
                                     <Avatar src={user.image.versions.medium} size={64} />
                                 </CardHeader>
 
-                                <div className='d-flex row align-items-end event_row m-3 mt-0'>
+                                <div className='card-aside d-flex row align-items-end event_row m-3 mt-0'>
                                     <div className='col-lg-6 p-1'>
                                         <Button
-                                                style={{ marginRight: 15 }}
-                                                className='h4'
-                                                icon={update ? "Refresh" : isIdInSuccess ? "Done" : "Add"}
-                                                color={isIdInSuccess ? "success" : "light"}
-                                                isDisable={update}
-                                                type="submit"
+                                            style={{ marginRight: 15 }}
+                                            className='h4'
+                                            icon={update ? "Refresh" : (isFriend || isIdInSuccess) ? "Group": "Add"}
+                                            color={(isIdInSuccess || isFriend) ? "success" : "light"}
+                                            isDisable={update || isFriend}
+                                            type="submit"
                                             onClick={() => addFriendHandler(user.id, user.login, getName(user), user.image.versions.medium, user.pool_month, user.pool_year)}
-                                            />
+                                        />
                                         <Button
                                             className='h4'
                                             icon="Link"
@@ -186,7 +189,6 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                                         </div>
                                     </div>
                                 </div>
-
                             </Card>
                         )
                     })

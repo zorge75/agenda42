@@ -10,9 +10,7 @@ const DashboardHeader = () => {
             <HeaderLeft>
                 {process.env.NODE_ENV == 'production' ? <Logo42 /> : process.env.NODE_ENV}
             </HeaderLeft>
-            <CommonHeaderRight 
-            afterChildren={<CommonHeaderChat />} 
-            />
+            <CommonHeaderRight afterChildren={<CommonHeaderChat />} />
         </Header>
     );
 };

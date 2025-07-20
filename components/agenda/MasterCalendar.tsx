@@ -73,7 +73,7 @@ const MasterCalendar = ({
     return (
         <Card stretch style={{ minHeight: 600 }} >
             <CardHeader style={mobileDesign ? { paddingBottom: 0 } : {}}>
-                <CardActions>
+                <CardActions style={{marginRight: 20}}>
                     <CalendarTodayButton
                         unitType={unitType}
                         date={date}

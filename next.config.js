@@ -53,6 +53,10 @@ const nextConfig = withInterceptStdout(
           source: "/api/preview",
           destination: "/api/preview",
         },
+        {
+          source: '/auth',
+          destination: '/',
+        },
       ];
     },
     env: {

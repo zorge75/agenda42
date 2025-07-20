@@ -37,6 +37,10 @@ function getStatusColor(subscribedUsers: number, totalUsers: number): TColor | u
     return "success";
 }
 
+function hasBDE(eventItem: string) {
+    return eventItem.includes("BDE") || eventItem.includes("IPA");
+  }
+
 const Event = ({ eventItem }: any) => {
     const events = useSelector((state: RootState) => state.events.events);
     const me = useSelector((state: RootState) => state.user.me);
@@ -53,7 +57,7 @@ const Event = ({ eventItem }: any) => {
                     <h2>{eventItem.name}</h2>
 
                     <Card borderColor={"light"} borderSize={2} >
-                        {eventItem.kind == "event" ? <Shapes total={eventItem.nbr_subscribers * 2} /> : null }
+                        {(eventItem.kind == "event" || hasBDE(eventItem.description)) ? <Shapes total={eventItem.nbr_subscribers * 2} /> : null }
                         <CardBody>
                             <div className='row align-items-end event_row'>
                                 <div className='col-lg-6'>
