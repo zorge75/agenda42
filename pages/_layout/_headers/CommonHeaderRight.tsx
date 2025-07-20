@@ -24,7 +24,7 @@ import useDarkMode from '../../../hooks/useDarkMode';
 import Popovers from '../../../components/bootstrap/Popovers';
 import Spinner from '../../../components/bootstrap/Spinner';
 import useMounted from '../../../hooks/useMounted';
-import { setModalFriendsStatus, setModalPiscineStatus, setModalSettingsStatus } from '../../../store/slices/settingsReducer';
+import { setModalFriendsStatus, setModalPiscineStatus, setModalSettingsStatus, setModalWavingHandStatus } from '../../../store/slices/settingsReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 
@@ -36,6 +36,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
     const settingsIsOpen = useSelector((state: RootState) => state.settings.settingsIsOpen);
 	const piscineIsOpen = useSelector((state: RootState) => state.settings.piscineIsOpen);
 	const friendsIsOpen = useSelector((state: RootState) => state.settings.friendsIsOpen);
+	const wavingHandIsOpen = useSelector((state: RootState) => state.settings.wavingHandIsOpen);
 	const friends = useSelector((state: RootState) => state.friends.list);
 
     const dispatch = useDispatch();
@@ -68,28 +69,47 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 		dispatch(setModalPiscineStatus(status));
 	}
 
+	const setWavingHand = (status: boolean) => {
+		dispatch(setModalWavingHandStatus(status));
+	}
+
     return (
         <HeaderRight>
             <div className='row g-3'>
                 {beforeChildren}
-
-                {/* Dark Mode */}
-                <div className='col-auto'>
-                    <Popovers trigger='hover' desc='Dark / Light mode'>
-                        <Button
-                            // eslint-disable-next-line react/jsx-props-no-spreading
-                            {...styledBtn}
-                            onClick={() => setDarkModeStatus(!darkModeStatus)}
-                            className='btn-only-icon'
-                            data-tour='dark-mode'>
-                            <Icon
-                                icon={darkModeStatus ? 'DarkMode' : 'LightMode'}
-                                color={darkModeStatus ? 'info' : 'warning'}
-                                className='btn-icon'
-                            />
-                        </Button>
-                    </Popovers>
-                </div>
+				<div className='col-auto'>
+					<Popovers trigger='hover' desc='Waving Hands'>
+						<Button
+							// eslint-disable-next-line react/jsx-props-no-spreading
+							{...styledBtn}
+							onClick={() => setWavingHand(!wavingHandIsOpen)}
+							className='btn-only-icon'
+						>
+							<Icon
+								icon="WavingHand"
+								color={darkModeStatus ? 'light' : 'dark'}
+								className='btn-icon'
+							/>
+						</Button>
+					</Popovers>
+				</div>
+				{/* Dark Mode */}
+				<div className='col-auto'>
+					<Popovers trigger='hover' desc='Dark / Light mode'>
+						<Button
+							// eslint-disable-next-line react/jsx-props-no-spreading
+							{...styledBtn}
+							onClick={() => setDarkModeStatus(!darkModeStatus)}
+							className='btn-only-icon'
+							data-tour='dark-mode'>
+							<Icon
+								icon={darkModeStatus ? 'DarkMode' : 'LightMode'}
+								color={darkModeStatus ? 'info' : 'warning'}
+								className='btn-icon'
+							/>
+						</Button>
+					</Popovers>
+				</div>
 				<div className='col-auto'>
 					<Popovers trigger='hover' desc='Piscine'>
 						<Button
@@ -115,12 +135,14 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 							className='btn-only-icon'>
 							<Icon
 								icon={darkModeStatus ? 'Group' : 'Group'}
-								color={darkModeStatus ? 'light' : 'secondary'}
+								color={darkModeStatus ? 'light' : 'dark'}
 								className='btn-icon'
 							/>
 						</Button>
 					</Popovers>
-				</div>: null}
+				</div> : null}
+				
+				
                 {/* <div className='col-auto'>
                     <Popovers trigger='hover' desc='Settings'>
                         <Button

@@ -23,11 +23,13 @@ import { MyEvent, MyWeekEvent } from "../../components/agenda/TemplatesEvent";
 import dayjs from "dayjs";
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import ThemeContext from "../../context/themeContext";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { setEventActive, setSwitchEvents } from "../../store/slices/calendarSlice";
 import FocusingSelector from "./FocusingSelecter";
+import showNotification from "../extras/showNotification";
+import Icon from "../icon/Icon";
 
 const MasterCalendar = ({
     unitType,
@@ -49,6 +51,7 @@ const MasterCalendar = ({
     const { mobileDesign, darkModeStatus } = useContext(ThemeContext);
     const switchEvents = useSelector((state: RootState) => state.calendar.focusing);
     const friends = useSelector((state: RootState) => state.friends.list);
+    const wavingList = useSelector((state: RootState) => state.friends.wavingList);
 
     const todayAt9AM = dayjs().set('hour', 7).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
     const todayAt0AM = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
@@ -69,6 +72,31 @@ const MasterCalendar = ({
         }
         return {};
     }, []);
+
+      useEffect(() => {
+        wavingList.map(waving => {
+          if (waving.status == "send") {
+           return showNotification(
+              <span className='d-flex align-items-center'>
+                <Icon
+                  icon='WavingHand'
+                  size='lg'
+                  className='me-1'
+                />
+                <span>Hey, it's {waving.author_name},</span>
+              </span>,
+               <p>
+                   I'm waving at you because I saw you at the
+                   <span style={{ margin: 3 }}>{waving.event_title}</span>
+                   event!
+                   <br/>
+                   <p>Open all hands if you read this message.</p>
+               </p>,
+               'default'
+           );
+          }
+        })
+      }, [wavingList])
 
     return (
         <Card stretch className="no-mobile-grid" >

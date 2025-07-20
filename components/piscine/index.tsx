@@ -17,6 +17,7 @@ const Piscine: FC<any> = ({ token }: any) => {
     const friends = useSelector((state: RootState) => state.friends.list);
     const piscineIsOpen = useSelector((state: RootState) => state.settings.piscineIsOpen);
     const me = useSelector((state: RootState) => state.user.me);
+    const [successWavingHand, setSuccessWavingHand] = useState<number[]>([]);
     const { darkModeStatus } = useDarkMode();
     const [page, setPage] = useState(1);
     const [maxPage, setMaxPage] = useState(0);
@@ -113,6 +114,33 @@ const Piscine: FC<any> = ({ token }: any) => {
         })
     };
 
+    const addWavingHandHandler = async (destinator_id: number, event_title: string, status: string, author_image_url: string, author_name: string, author_login: string) => {
+        setUpdate(true);
+        await fetch("/api/waving_hand", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                author_id: me.id,
+                destinator_id,
+                event_title,
+                status,
+                author_image_url,
+                author_name,
+                author_login
+            }),
+        }).then(async (response) => {
+            setUpdate(false);
+            if (!response.ok) {
+                console.log(`Failed to create settings: ${response.statusText}`);
+            } else {
+                setSuccessWavingHand((i: number[]) => [...i, destinator_id]);
+            }
+            return { success: true };
+        })
+    };
+
     useEffect(() => {
         getMyPiscine();
     }, [signSort])
@@ -158,6 +186,7 @@ const Piscine: FC<any> = ({ token }: any) => {
                             {
                                 users.map(user => {
                                     const isIdInSuccess = success && success.includes(user.id);
+                                    const isIdInSuccessWavingHand = success && successWavingHand.includes(user.id);
                                     const isFriend = friends.find(i => i.friend_id == user.id);
                                     return (
                                         <Card isCompact className={isFriend ? "friend" : ""} >
@@ -221,13 +250,20 @@ const Piscine: FC<any> = ({ token }: any) => {
                                                         onClick={() => addFriendHandler(user.id, user.login, getName(user), user.image.versions.medium, user.pool_month, user.pool_year)}
                                                     />
                                                     <Button
+                                                        style={{ marginRight: 15 }}
                                                         className='h4'
                                                         icon="Link"
                                                         color="light"
                                                         type="submit"
                                                         onClick={() => userInIntraHandler(user.id)}
-                                                    >intra
+                                                    >
                                                     </Button>
+                                                        <Button
+                                                            className='h4'
+                                                            icon={update ? "Refresh" : "WavingHand"}
+                                                            color={isIdInSuccessWavingHand ? "success" : "brand"}
+                                                            onClick={() => addWavingHandHandler(user.id, "", "send", user.image.versions.medium, getName(user), user.login)}
+                                                        />
                                                 </div>
                                                 <div className='col-lg-6'>
                                                     <div className='h4 text-end'>

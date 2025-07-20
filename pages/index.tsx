@@ -48,6 +48,7 @@ import { delay } from "../helpers/helpers";
 import axiosRetry from "axios-retry";
 import Piscine from "../components/piscine";
 import Friends from "../components/friends";
+import WavingHand from "../components/waving_hand";
 
 axiosRetry(axios, {
   retries: 3,
@@ -71,7 +72,7 @@ const Index: NextPage = ({ token, me }: any) => {
   const settings = useSelector((state: RootState) => state.settings.settingsLoaded);
   const piscineIsOpen = useSelector((state: RootState) => state.settings.piscineIsOpen);
   const friendsIsOpen = useSelector((state: RootState) => state.settings.friendsIsOpen);
-  friendsIsOpen
+  const wavingHandIsOpen = useSelector((state: RootState) => state.settings.wavingHandIsOpen);
 
   const eventsIntra = useSelector((state: RootState) => state.events.events);
   const allEvents = useSelector((state: RootState) => state.events.all);
@@ -107,6 +108,8 @@ const Index: NextPage = ({ token, me }: any) => {
 
   // View modes; Month, Week, Work Week, Day and Agenda
   const views = getViews();
+
+
 
   const refreshHandler = async () => {
     const maxRetries = 3; // Maximum number of retry attempts
@@ -457,6 +460,7 @@ const Index: NextPage = ({ token, me }: any) => {
         {settings ? <Settings settingsLoaded={settings} /> : null}
         {piscineIsOpen ? <Piscine token={token} /> : null}
         {friendsIsOpen ? <Friends /> : null}
+        {wavingHandIsOpen ? <WavingHand /> : null}
         <OverlappingModal events={events} />
       </Page>
     </PageWrapper>

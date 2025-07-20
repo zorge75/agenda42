@@ -1,5 +1,5 @@
 import Button from "../bootstrap/Button";
-import Card, { CardHeader, CardLabel, CardTitle, CardBody, CardSubTitle } from "../bootstrap/Card";
+import Card, { CardHeader, CardLabel, CardTitle } from "../bootstrap/Card";
 import { delay, getName, isMyPiscine, userInIntraHandler } from "../../helpers/helpers";
 import { useEffect, useState } from "react";
 import Collapse from "../bootstrap/Collapse";
@@ -10,18 +10,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import useDarkMode from "../../hooks/useDarkMode";
 import Link from "next/dist/client/link";
-import showNotification from "../extras/showNotification";
-import Icon from "../icon/Icon";
-import Tooltips from "../bootstrap/Tooltips";
 import { addFriendToList } from "../../store/slices/friendsReducer";
-import Shapes from "../shapes/Shapes";
 
-const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
+const UsersOfEvent = ({ myId, id, size = 30, token, eventTitle }: any) => {
     const dispatch = useDispatch();
 
     const me = useSelector((state: RootState) => state.user.me);
     const friends = useSelector((state: RootState) => state.friends.list);
     const [success, setSuccess] = useState<number[]>([]);
+    const [successWavingHand, setSuccessWavingHand] = useState<number[]>([]);
     const [update, setUpdate] = useState(false);
 
     const { darkModeStatus } = useDarkMode();
@@ -63,6 +60,33 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
             return { success: true };
         })
     };
+
+     const addWavingHandHandler = async (destinator_id: number, event_title: string, status: string, author_image_url: string, author_name: string, author_login: string) => {
+            setUpdate(true);
+            await fetch("/api/waving_hand", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    author_id: me.id, 
+                    destinator_id, 
+                    event_title, 
+                    status, 
+                    author_image_url, 
+                    author_name, 
+                    author_login
+                }),
+            }).then(async (response) => {
+                setUpdate(false);
+                if (!response.ok) {
+                    console.log(`Failed to create settings: ${response.statusText}`);
+                } else {
+                    setSuccessWavingHand((i: number[]) => [...i, destinator_id]);
+                }
+                return { success: true };
+            })
+        };
 
     const [refresh, setRefresh] = useState(false);
     const [users, setUsers] = useState([]);
@@ -138,6 +162,7 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                 {
                     users.map(({ user, key }) => {
                         const isIdInSuccess = success && success.includes(user.id);
+                        const isIdInSuccessWavingHand = success && successWavingHand.includes(user.id);
                         const isFriend = friends.find(i => i.friend_id == user.id);
                         return (
                             <Card isCompact key={key}
@@ -166,16 +191,22 @@ const UsersOfEvent = ({ myId, id, size = 30, token }: any) => {
                                             icon={update ? "Refresh" : (isFriend || isIdInSuccess) ? "Group": "Add"}
                                             color={(isIdInSuccess || isFriend) ? "success" : "light"}
                                             isDisable={update || isFriend}
-                                            type="submit"
                                             onClick={() => addFriendHandler(user.id, user.login, getName(user), user.image.versions.medium, user.pool_month, user.pool_year)}
                                         />
                                         <Button
                                             className='h4'
+                                            style={{ marginRight: 15 }}
                                             icon="Link"
                                             color="light"
-                                            type="submit"
                                             onClick={() => userInIntraHandler(user.id)}
-                                        >intra
+                                        >
+                                        </Button>
+                                        <Button
+                                            className='h4'
+                                            icon={update ? "Refresh" : "WavingHand"}
+                                            color={isIdInSuccessWavingHand ? "success" : "brand"}
+                                            onClick={() => addWavingHandHandler(user.id, eventTitle, "send", user.image.versions.medium, getName(user), user.login)}
+                                        >
                                         </Button>
                                     </div>
                                     <div className='col-lg-6'>
