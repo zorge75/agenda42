@@ -1,6 +1,6 @@
 import Button from "../bootstrap/Button";
 import Card, { CardHeader, CardLabel, CardTitle, CardBody, CardSubTitle } from "../bootstrap/Card";
-import { delay, isMyPiscine, userInIntraHandler } from "../../helpers/helpers";
+import { delay, getName, isMyPiscine, userInIntraHandler } from "../../helpers/helpers";
 import { useEffect, useState } from "react";
 import Collapse from "../bootstrap/Collapse";
 import Avatar from "../Avatar";

@@ -121,7 +121,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 						</Button>
 					</Popovers>
 				</div>: null}
-                <div className='col-auto'>
+                {/* <div className='col-auto'>
                     <Popovers trigger='hover' desc='Settings'>
                         <Button
                             // eslint-disable-next-line react/jsx-props-no-spreading
@@ -136,7 +136,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
                             />
                         </Button>
                     </Popovers>
-                </div>
+                </div> */}
 
                 {/* <div className='col-auto'>
 					<Popovers trigger='hover' desc='Evaluations'>
