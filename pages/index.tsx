@@ -61,7 +61,6 @@ dayjs.locale("fr");
 const now = new Date();
 
 const Index: NextPage = ({ token, me }: any) => {
-  console.log("me", me)
   const dispatch = useDispatch();
   const router = useRouter();
   const { notify } = router.query;
@@ -119,7 +118,6 @@ const Index: NextPage = ({ token, me }: any) => {
 
     const attemptRefresh = async () => {
       setRefresh(true);
-      console.log("me", me)
       try {
         const res = await fetch(
           "/api/refresh_agenda?id=" + me.id + `&campusId=${getActiveIds(me.campus)}`,
