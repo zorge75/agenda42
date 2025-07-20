@@ -5,6 +5,7 @@ interface UserState {
     settingsIsOpen: boolean;
     piscineIsOpen: boolean;
     friendsIsOpen: boolean;
+    wavingHandIsOpen: boolean;
     settingsLoaded: any;
 }
 
@@ -13,6 +14,7 @@ const initialState: UserState = {
     settingsIsOpen: false,
     friendsIsOpen: false,
     piscineIsOpen: false,
+    wavingHandIsOpen: false,
     settingsLoaded: null,
 };
 
@@ -32,11 +34,14 @@ const userSlice = createSlice({
         setModalFriendsStatus(state, action: PayloadAction<any>) {
             state.friendsIsOpen = action.payload;
         },
+        setModalWavingHandStatus(state, action: PayloadAction<any>) {
+            state.wavingHandIsOpen = action.payload;
+        },
         setSavedSettings(state, action: PayloadAction<any>) {
             state.settingsLoaded = action.payload;
         },
     },
 });
 
-export const { setSlotsMod, setModalPiscineStatus, setModalSettingsStatus, setModalFriendsStatus, setSavedSettings } = userSlice.actions;
+export const { setSlotsMod, setModalPiscineStatus, setModalSettingsStatus, setModalFriendsStatus, setModalWavingHandStatus, setSavedSettings } = userSlice.actions;
 export default userSlice.reducer;

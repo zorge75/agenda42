@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
     list: any;
+    wavingList: any;
 }
 
 const initialState: UserState = {
     list: [],
+    wavingList: [],
 };
 
 const userSlice = createSlice({
@@ -14,6 +16,9 @@ const userSlice = createSlice({
     reducers: {
         setSavedFriends(state, action: PayloadAction<any>) {
             state.list = action.payload?.data;
+        },
+        setSavedWavingHand(state, action: PayloadAction<any>) {
+            state.wavingList = action.payload?.data;
         },
         addFriendToList(state, payload: PayloadAction<any>) {
             state.list = [...state.list, payload.payload]
@@ -24,5 +29,5 @@ const userSlice = createSlice({
     },
 });
 
-export const { setSavedFriends, addFriendToList, removeFriendFromList  } = userSlice.actions;
+export const { setSavedFriends, addFriendToList, removeFriendFromList, setSavedWavingHand  } = userSlice.actions;
 export default userSlice.reducer;

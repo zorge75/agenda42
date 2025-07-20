@@ -51,8 +51,6 @@ const Friends: FC<any> = ({ token }: any) => {
         })
     };
 
-    const [signSort, setSignSort] = useState(false);
-
     if (!me)
         return;
 
@@ -75,54 +73,41 @@ const Friends: FC<any> = ({ token }: any) => {
                     users.map((user, key) => {
                         const isIdInSuccess = success && success.includes(user.id);
                         return (
-                            <Card isCompact key={key} >
+                            <Card isCompact key={key} style={{ paddingBottom: 12 }} >
                                 <CardHeader style={{ borderRadius: 20 }} >
                                     <CardLabel>
                                         <CardTitle>
+                                            <Button
+                                                style={{ marginRight: 20, marginBottom: 10 }}
+                                                className='h4'
+                                                icon={update ? "Refresh" : isIdInSuccess ? "Done" : "Close"}
+                                                color={isIdInSuccess ? "success" : "danger"}
+                                                isDisable={update}
+                                                type="submit"
+                                                onClick={() => removeFriendHandler(user.friend_id)}
+                                            />
                                             <span style={{ marginRight: 10 }}>{user.friend_name}</span>
+                                            <br />
                                             <Badge
+                                                style={{ marginRight: 10 }}
                                                 isLight={darkModeStatus ? false : true}
                                                 color='success'
                                             >
                                                 {user.friend_login}
                                             </Badge>
-                                        </CardTitle>
-                                        <br />
-
-                                    </CardLabel>
-                                    {user?.friend_image && <Avatar src={user?.friend_image} size={64} />}
-                                </CardHeader>
-                                <div className='d-flex row align-items-end event_row m-3 mt-0'>
-                                    <div className='col-lg-6 p-1'>
-                                        <Button
-                                            style={{ marginRight: 15 }}
-                                            className='h4'
-                                            icon={update ? "Refresh" : isIdInSuccess ? "Done" : "Close"}
-                                            color={isIdInSuccess ? "success" : "danger"}
-                                            isDisable={update}
-                                            type="submit"
-                                            onClick={() => removeFriendHandler(user.friend_id)}
-                                        />
-                                        <Button
-                                            className='h4'
-                                            icon="Link"
-                                            color="light"
-                                            type="submit"
-                                            onClick={() => userInIntraHandler(user.friend_id)}
-                                        >intra
-                                        </Button>
-                                    </div>
-                                    <div className='col-lg-6'>
-                                        <div className='h4 text-end'>
                                             <Badge
+                                                style={{ marginRight: 10 }}
                                                 isLight={darkModeStatus ? false : true}
-                                                color='primary'
+                                                color='success'
                                             >
                                                 {user?.pool_month} {user?.pool_year}
                                             </Badge>
-                                        </div>
-                                    </div>
-                                </div>
+                                        </CardTitle>
+                                       
+                                    </CardLabel>
+                                    
+                                        {user?.friend_image && <Avatar src={user?.friend_image} size={64} />}
+                                </CardHeader>
                             </Card>
                         )
                     })
