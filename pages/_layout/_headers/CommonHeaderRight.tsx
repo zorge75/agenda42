@@ -38,6 +38,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 	const friendsIsOpen = useSelector((state: RootState) => state.settings.friendsIsOpen);
 	const wavingHandIsOpen = useSelector((state: RootState) => state.settings.wavingHandIsOpen);
 	const friends = useSelector((state: RootState) => state.friends.list);
+	const me = useSelector((state: RootState) => state.user.me);
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -72,6 +73,9 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 	const setWavingHand = (status: boolean) => {
 		dispatch(setModalWavingHandStatus(status));
 	}
+
+	if (!me)
+		return (null);
 
     return (
         <HeaderRight>
@@ -143,208 +147,8 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 					</Popovers>
 				</div> : null}
 				
-				
-                {/* <div className='col-auto'>
-                    <Popovers trigger='hover' desc='Settings'>
-                        <Button
-                            // eslint-disable-next-line react/jsx-props-no-spreading
-                            {...styledBtn}
-                            onClick={() => setSettings(!settingsIsOpen)}
-                            className='btn-only-icon'
-                            data-tour='dark-mode'>
-                            <Icon
-                                icon={darkModeStatus ? 'Settings' : 'Settings'}
-                                color={darkModeStatus ? 'light' : 'dark'}
-                                className='btn-icon'
-                            />
-                        </Button>
-                    </Popovers>
-                </div> */}
-
-                {/* <div className='col-auto'>
-					<Popovers trigger='hover' desc='Evaluations'>
-						<Button
-							// eslint-disable-next-line react/jsx-props-no-spreading
-							{...styledBtn}
-							onClick={() => setDarkModeStatus(!darkModeStatus)}
-							className='btn-only-icon'
-							data-tour='dark-mode'>
-							<Icon
-								icon={darkModeStatus ? 'FormatListBulleted' : 'FormatListBulleted'}
-								color={darkModeStatus ? 'light' : 'dark'}
-								className='btn-icon'
-							/>
-						</Button>
-					</Popovers>
-				</div> */}
-
-
-
-                {/*	Full Screen */}
-                {/* <div className='col-auto'>
-					<Popovers trigger='hover' desc='Fullscreen'>
-						<Button
-							// eslint-disable-next-line react/jsx-props-no-spreading
-							{...styledBtn}
-							icon={fullScreenStatus ? 'FullscreenExit' : 'Fullscreen'}
-							onClick={() => setFullScreenStatus(!fullScreenStatus)}
-							aria-label='Toggle dark mode'
-						/>
-					</Popovers>
-				</div> */}
-
-                {/* Lang Selector */}
-                {/* <div className='col-auto'>
-					<Dropdown>
-						<DropdownToggle hasIcon={false}>
-							{typeof getLangWithKey(router.locale as ILang['key']['lng'])?.icon ===
-							'undefined' ? (
-								<Button
-									// eslint-disable-next-line react/jsx-props-no-spreading
-									{...styledBtn}
-									className='btn-only-icon'
-									aria-label='Change language'
-									data-tour='lang-selector'>
-									<Spinner isSmall inButton='onlyIcon' isGrow />
-								</Button>
-							) : (
-								<Button
-									// eslint-disable-next-line react/jsx-props-no-spreading
-									{...styledBtn}
-									icon={
-										getLangWithKey(router.locale as ILang['key']['lng'])?.icon
-									}
-									aria-label='Change language'
-									data-tour='lang-selector'
-								/>
-							)}
-						</DropdownToggle>
-						<DropdownMenu isAlignmentEnd data-tour='lang-selector-menu'>
-							{Object.keys(LANG).map((i) => (
-								<DropdownItem key={LANG[i].lng}>
-									<Button
-										icon={LANG[i].icon}
-										onClick={() => changeLanguage(LANG[i].lng)}>
-										{LANG[i].text}
-									</Button>
-								</DropdownItem>
-							))}
-						</DropdownMenu>
-					</Dropdown>
-				</div> */}
-
-                {/* Quick Panel */}
-                {/* <div className='col-auto'>
-					<Dropdown>
-						<DropdownToggle hasIcon={false}>
-							{/* eslint-disable-next-line react/jsx-props-no-spreading */}
-                {/* <Button {...styledBtn} icon='Tune' aria-label='Quick menu' />
-						</DropdownToggle>
-						<DropdownMenu isAlignmentEnd size='lg' className='py-0 overflow-hidden'>
-							<div className='row g-0'>
-								<div
-									className={classNames(
-										'col-12',
-										'p-4',
-										'd-flex justify-content-center',
-										'fw-bold fs-5',
-										'text-info',
-										'border-bottom border-info',
-										{
-											'bg-l25-info': !darkModeStatus,
-											'bg-lo25-info': darkModeStatus,
-										},
-									)}>
-									Quick Panel
-								</div>
-								<div
-									className={classNames(
-										'col-6 p-4 transition-base cursor-pointer bg-light-hover',
-										'border-end border-bottom',
-										{ 'border-dark': darkModeStatus },
-									)}>
-									<div className='d-flex flex-column align-items-center justify-content-center'>
-										<Icon icon='Public' size='3x' color='info' />
-										<span>Dealers</span>
-										<small className='text-muted'>Options</small>
-									</div>
-								</div>
-								<div
-									className={classNames(
-										'col-6 p-4 transition-base cursor-pointer bg-light-hover',
-										'border-bottom',
-										{ 'border-dark': darkModeStatus },
-									)}>
-									<div className='d-flex flex-column align-items-center justify-content-center'>
-										<Icon icon='Upcoming' size='3x' color='success' />
-										<span>Inbox</span>
-										<small className='text-muted'>Configuration</small>
-									</div>
-								</div>
-								<div
-									className={classNames(
-										'col-6 p-4 transition-base cursor-pointer bg-light-hover',
-										'border-end',
-										{ 'border-dark': darkModeStatus },
-									)}>
-									<div className='d-flex flex-column align-items-center justify-content-center'>
-										<Icon icon='Print' size='3x' color='danger' />
-										<span>Print</span>
-										<small className='text-muted'>Settings</small>
-									</div>
-								</div>
-								<div className='col-6 p-4 transition-base cursor-pointer bg-light-hover'>
-									<div className='d-flex flex-column align-items-center justify-content-center'>
-										<Icon icon='ElectricalServices' size='3x' color='warning' />
-										<span>Power</span>
-										<small className='text-muted'>Mode</small>
-									</div>
-								</div>
-							</div>
-						</DropdownMenu>
-					</Dropdown>
-				</div> */}
-
-                {/*	Notifications */}
-                {/* <div className='col-auto'>
-					<Button
-						// eslint-disable-next-line react/jsx-props-no-spreading
-						{...styledBtn}
-						icon='Notifications'
-						onClick={() => setOffcanvasStatus(true)}
-						aria-label='Notifications'
-					/>
-				</div> */}
                 {afterChildren}
             </div>
-
-            <OffCanvas
-                id='notificationCanvas'
-                titleId='offcanvasExampleLabel'
-                placement='end'
-                isOpen={offcanvasStatus}
-                setOpen={setOffcanvasStatus}>
-                <OffCanvasHeader setOpen={setOffcanvasStatus}>
-                    <OffCanvasTitle id='offcanvasExampleLabel'>Notifications</OffCanvasTitle>
-                </OffCanvasHeader>
-                <OffCanvasBody>
-                    <Alert icon='ViewInAr' isLight color='info' className='flex-nowrap'>
-                        4 new components added.
-                    </Alert>
-                    <Alert icon='ThumbUp' isLight color='warning' className='flex-nowrap'>
-                        New products added to stock.
-                    </Alert>
-                    <Alert icon='Inventory2' isLight color='danger' className='flex-nowrap'>
-                        There are products that need to be packaged.
-                    </Alert>
-                    <Alert icon='BakeryDining' isLight color='success' className='flex-nowrap'>
-                        Your food order is waiting for you at the consultation.
-                    </Alert>
-                    <Alert icon='Escalator' isLight color='primary' className='flex-nowrap'>
-                        Escalator will turn off at 6:00 pm.
-                    </Alert>
-                </OffCanvasBody>
-            </OffCanvas>
         </HeaderRight>
     );
 };

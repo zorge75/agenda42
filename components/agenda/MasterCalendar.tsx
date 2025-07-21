@@ -30,6 +30,7 @@ import { setEventActive, setSwitchEvents } from "../../store/slices/calendarSlic
 import FocusingSelector from "./FocusingSelecter";
 import showNotification from "../extras/showNotification";
 import Icon from "../icon/Icon";
+import { useRefreshFriends } from "../../hooks/useRefreshFriends";
 
 const MasterCalendar = ({
     unitType,
@@ -52,12 +53,14 @@ const MasterCalendar = ({
     const switchEvents = useSelector((state: RootState) => state.calendar.focusing);
     const friends = useSelector((state: RootState) => state.friends.list);
     const wavingList = useSelector((state: RootState) => state.friends.wavingList);
+    const me = useSelector((state: RootState) => state.user.me);
+    const setMyEvents = useRefreshFriends(me?.id, token, setLoad);
 
     const todayAt8AM = dayjs().set('hour', 8).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
     const todayAt0AM = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
     const todayAt20PM = dayjs().set('hour', 20).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
     const todayFinOfDay = dayjs().set('hour', 23).set('minute', 59).set('second', 59).set('millisecond', 0).toISOString();
-    
+
     const localizer = dayjsLocalizer(dayjs);
     const DnDCalendar = withDragAndDrop(Calendar);
 
@@ -75,35 +78,35 @@ const MasterCalendar = ({
         return {};
     }, []);
 
-      useEffect(() => {
+    useEffect(() => {
         wavingList.map(waving => {
-          if (waving.status == "send") {
-           return showNotification(
-              <span className='d-flex align-items-center'>
-                <Icon
-                  icon='WavingHand'
-                  size='lg'
-                  className='me-1'
-                />
-                <span>Hey, it's {waving.author_name},</span>
-              </span>,
-               <p>
-                   I'm waving at you because I saw you at the
-                   <span style={{ margin: 3 }}>{waving.event_title}</span>
-                   event!
-                   <br/>
-                   <p>Open all hands if you read this message.</p>
-               </p>,
-               'default'
-           );
-          }
+            if (waving.status == "send") {
+                return showNotification(
+                    <span className='d-flex align-items-center'>
+                        <Icon
+                            icon='WavingHand'
+                            size='lg'
+                            className='me-1'
+                        />
+                        <span>Hey, it's {waving.author_name},</span>
+                    </span>,
+                    <p>
+                        I'm waving at you because I saw you at the
+                        <span style={{ margin: 3 }}>{waving.event_title}</span>
+                        event!
+                        <br />
+                        <p>Open all hands if you read this message.</p>
+                    </p>,
+                    'default'
+                );
+            }
         })
-      }, [wavingList])
+    }, [wavingList])
 
     return (
         <Card stretch className="no-mobile-grid" >
             <CardHeader style={mobileDesign ? { paddingBottom: 0 } : {}}>
-                <CardActions style={{marginRight: 20}}>
+                <CardActions style={{ marginRight: 20 }}>
                     <CalendarTodayButton
                         unitType={unitType}
                         date={date}
@@ -133,20 +136,21 @@ const MasterCalendar = ({
                         icon="CalendarToday"
                         isDisable={refresh || !scaleUsers}
                         color={switchEvents == "all" ? 'primary' : 'light'}
-                        onClick={() => dispatch(setSwitchEvents("all"))}
-                    />
-                    <Button
-                        style={{ minWidth: 50 }}
-                        icon="FilterAlt"
-                        isDisable={refresh || !scaleUsers}
-                        color={switchEvents == "my" ? 'primary' : 'light'}
-                        onClick={() => dispatch(setSwitchEvents("my"))}
+                        onClick={() => {
+                            dispatch(setSwitchEvents("all"))
+                            setMyEvents();
+                        }}
                     />
                     {
                         (switchEvents == "my" && friends.length)
-                        ?
-                            <FocusingSelector token={token} setLoad={setLoad} friends={friends} />
-                            : null
+                            ? <FocusingSelector me={me} token={token} setLoad={setLoad} friends={friends} />
+                            : <Button
+                                style={{ minWidth: 50 }}
+                                icon="FilterAlt"
+                                isDisable={refresh || !scaleUsers}
+                                color={switchEvents == "my" ? 'primary' : 'light'}
+                                onClick={() => dispatch(setSwitchEvents("my"))}
+                            />
                     }
 
                     {/* <Button
@@ -159,7 +163,7 @@ const MasterCalendar = ({
                 </div>
                 {
                     (refresh || !scaleUsers)
-                                ?
+                        ?
                         <div className="spinner"> <Spinner random inButton /></div>
                         :
                         <Button icon='Refresh' color='storybook' onClick={refreshHandler} />
