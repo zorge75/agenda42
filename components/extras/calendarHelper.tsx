@@ -158,20 +158,10 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
               (viewMode === Views.WEEK && "Week") ||
               (viewMode === Views.WORK_WEEK && "Alternance") ||
               (viewMode === Views.DAY && "Day") ||
-              "Spreadsheet"}
+              "Table"}
           </Button>
         </DropdownToggle>
         <DropdownMenu isAlignmentEnd>
-          <DropdownItem>
-            <Button
-              color="link"
-              icon="calendar_view_month"
-              isActive={viewMode === Views.MONTH}
-              onClick={() => setViewMode(Views.MONTH)}
-            >
-              Month
-            </Button>
-          </DropdownItem>
           <DropdownItem>
             <Button
               color="link"
@@ -194,12 +184,11 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
           <DropdownItem>
             <Button
               color="link"
-              icon="calendar_view_day"
-              className="d-block d-xl-none"
-              isActive={viewMode === Views.DAY}
-              onClick={() => setViewMode(Views.DAY)}
+              icon="calendar_view_month"
+              isActive={viewMode === Views.MONTH}
+              onClick={() => setViewMode(Views.MONTH)}
             >
-              Day
+              Month
             </Button>
           </DropdownItem>
           <DropdownItem>
@@ -209,7 +198,7 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
               isActive={viewMode === Views.AGENDA}
               onClick={() => setViewMode(Views.AGENDA)}
             >
-              Spreadsheet
+              Table
             </Button>
           </DropdownItem>
         </DropdownMenu>

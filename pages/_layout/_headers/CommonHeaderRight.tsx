@@ -77,22 +77,7 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
         <HeaderRight>
             <div className='row g-3'>
                 {beforeChildren}
-				<div className='col-auto'>
-					<Popovers trigger='hover' desc='Waving Hands'>
-						<Button
-							// eslint-disable-next-line react/jsx-props-no-spreading
-							{...styledBtn}
-							onClick={() => setWavingHand(!wavingHandIsOpen)}
-							className='btn-only-icon'
-						>
-							<Icon
-								icon="WavingHand"
-								color={darkModeStatus ? 'light' : 'dark'}
-								className='btn-icon'
-							/>
-						</Button>
-					</Popovers>
-				</div>
+			
 				{/* Dark Mode */}
 				<div className='col-auto'>
 					<Popovers trigger='hover' desc='Dark / Light mode'>
@@ -121,6 +106,22 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 							<Icon
 								icon={darkModeStatus ? 'Water' : 'Water'}
 								color={darkModeStatus ? 'light' : 'info'}
+								className='btn-icon'
+							/>
+						</Button>
+					</Popovers>
+				</div>
+				<div className='col-auto'>
+					<Popovers trigger='hover' desc='Waving Hands'>
+						<Button
+							// eslint-disable-next-line react/jsx-props-no-spreading
+							{...styledBtn}
+							onClick={() => setWavingHand(!wavingHandIsOpen)}
+							className='btn-only-icon'
+						>
+							<Icon
+								icon="WavingHand"
+								color={darkModeStatus ? 'light' : 'dark'}
 								className='btn-icon'
 							/>
 						</Button>
