@@ -25,13 +25,13 @@ const DefaultFooter = () => {
                 "link-light": darkModeStatus,
               })}
             >
-              <small className="fw-bold">École 42</small>
+              <small className="fw-bold">École 42 Paris</small>
             </Link>
           </div>
           <div className="col-auto">
             <div className="d-flex align-items-center" >
               <Tooltips title="Submit suggestions and bug reports in the issues." placement='top'>
-                <div className="m-3 mb-0 mt-0">
+                <div className="m-2 mb-0 mt-0">
                   <Link className="text-decoration-none text-reset" style={{zIndex: 1000}}
                     href="https://github.com/42Paris/">
                     <SvgCustomGithub className="m-1 mt-0" />
@@ -42,7 +42,7 @@ const DefaultFooter = () => {
               {/* <Link className="m-5 mb-0 mt-0 text-decoration-none text-reset text-bold" href="/changelog">
                 Changelog
               </Link> */}
-              <span>version {packageJson.version}</span>
+              <span>{packageJson.version}</span>
             </div>
           </div>
         </div>
