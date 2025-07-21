@@ -19,21 +19,21 @@ const Logo42 = () => {
         >
             <img
                 style={{
-                    marginRight: 10,
+                    marginRight: 15,
                     width: 42,
                     filter: !darkModeStatus ? "brightness(1) invert(1)" : "none"
                 }}
                 src="https://42.fr/wp-content/uploads/2021/05/42-Final-sigle-seul.svg"></img>
-            <h4 className={
+            <h5 className={
                 classNames(
-                    'fw-bold',
+                    'mt-2',
                     {
                         'text-light': darkModeStatus,
                         'text-black': !darkModeStatus
                     }
                 )
             }
-            >Agenda</h4>
+            >Agenda</h5>
         </Link>
     );
 }
