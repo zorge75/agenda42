@@ -33,7 +33,7 @@ const DefaultFooter = () => {
               <Tooltips title="Submit suggestions and bug reports in the issues." placement='top'>
                 <div className="m-3 mb-0 mt-0">
                   <Link className="text-decoration-none text-reset" style={{zIndex: 1000}}
-                    href="https://github.com/brgman/agenda42/issues">
+                    href="https://github.com/42Paris/">
                     <SvgCustomGithub className="m-1 mt-0" />
                     GitHub
                   </Link>
