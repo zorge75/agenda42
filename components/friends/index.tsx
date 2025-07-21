@@ -3,7 +3,7 @@ import OffCanvas, { OffCanvasHeader, OffCanvasTitle, OffCanvasBody } from "../bo
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { setModalFriendsStatus } from "../../store/slices/settingsReducer";
-import { delay, userInIntraHandler } from "../../helpers/helpers";
+import { alphabeticSort, delay, userInIntraHandler } from "../../helpers/helpers";
 import Card, { CardHeader, CardLabel, CardTitle } from "../bootstrap/Card";
 import Avatar from "../Avatar";
 import Button from "../bootstrap/Button";
@@ -70,7 +70,7 @@ const Friends: FC<any> = ({ token }: any) => {
             </OffCanvasHeader>
             <OffCanvasBody tag="form" className="p-4" >
                 {
-                    users.map((user, key) => {
+                    alphabeticSort(users, "friend_login").map((user, key) => {
                         const isIdInSuccess = success && success.includes(user.id);
                         return (
                             <Card isCompact key={key} style={{ paddingBottom: 12 }} >

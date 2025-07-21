@@ -15,7 +15,7 @@ export const useRefreshFriends = (id: any, token: any, setLoad: any) => {
             return;
         }
 
-        if (id == 0)
+        if (id == 0 || !id)
             return;
 
         isFetching.current = true;

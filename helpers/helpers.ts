@@ -41,7 +41,7 @@ export const hasNotch = () => {
 	const iPhone =
 		typeof window !== 'undefined'
 			? // @ts-ignore
-				/iPhone/.test(navigator.userAgent) && !window?.MSStream
+			/iPhone/.test(navigator.userAgent) && !window?.MSStream
 			: '';
 	const aspect = typeof window !== 'undefined' ? window.screen.width / window.screen.height : 0;
 	const aspectFrame = typeof window !== 'undefined' ? window.innerWidth / window.innerHeight : 0;
@@ -120,7 +120,7 @@ export const pathToRoute = (path: string): string => {
 
 export const isTilePast = (tileDate: string): any => {
 	return dayjs(tileDate).isBefore(dayjs());
-  };
+};
 
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -147,4 +147,12 @@ export const getMaxPage = (str: string): number => {
 	const matches = [...str?.matchAll(regex)];
 	const pageNumbers = matches.map(match => parseInt(match[1]));
 	return (pageNumbers[0]);
+}
+
+export const alphabeticSort = (array: any, key: string) => {
+	return [...array].sort((a, b) => {
+		if (a[key] > b[key]) return 1;
+		if (a[key] < b[key]) return -1;
+		return 0;
+	})
 }
