@@ -20,17 +20,11 @@ const FocusingSelector = ({ token, setLoad, friends, me }: any) => {
         return;
 
     const list = [
-        {
-            friend_id: me.id,
-            friend_name: getName(me),
-            friend_login: me.login,
-            friend_image: '',
-        },
         ...alphabeticSort(friends, "friend_login").map(i => ({
             ...i,
             friend_id: i.friend_id | 0
         }))
-    ].slice(0, 6);
+    ].slice(0, 5);
 
     return (
         <CardActions>
@@ -39,7 +33,7 @@ const FocusingSelector = ({ token, setLoad, friends, me }: any) => {
                     <Button
                         color="primary"
                     >
-                        {list?.find(i => (i.friend_id == selected)).friend_name}
+                        {list?.find(i => (i.friend_id == selected))?.friend_name ?? getName(me)} 
                     </Button>
                 </DropdownToggle>
                 <DropdownMenu isAlignmentEnd >
