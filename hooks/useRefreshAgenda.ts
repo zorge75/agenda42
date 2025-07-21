@@ -1,5 +1,5 @@
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { setEvals } from "../store/slices/evalsSlice";
 import { setSavedSettings } from "../store/slices/settingsReducer";
@@ -10,8 +10,11 @@ import { getUserFriends, getUserSettings, getUserWavingHand } from "../common/fu
 import { preparationSlots } from "../common/function/preparationSlots";
 import { setUser } from "../store/slices/userSlice";
 import { setAllEvents, setEvents } from "../store/slices/eventsSlice";
+import { setUnitType } from "../store/slices/calendarSlice";
+import ThemeContext from "../context/themeContext";
 
 export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
+    const { viewModeStatus } = useContext(ThemeContext);
     const dispatch = useDispatch();
     const isFetching = useRef(false); // Prevent concurrent fetches
 
@@ -58,6 +61,8 @@ export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
             res.defancesHistory && dispatch(setDefancesHistory(res.defancesHistory));
             res.events && dispatch(setEvents(res.events));
             res.campusEvents && dispatch(setAllEvents(res.campusEvents));
+
+            dispatch(setUnitType(viewModeStatus));
         } catch (error) {
             console.error('Refresh Agenda Error:', error);
             // Optionally rethrow or handle error for UI feedback

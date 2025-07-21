@@ -5,6 +5,7 @@ import useDeviceScreen from '../hooks/useDeviceScreen';
 export interface IThemeContextProps {
 	asideStatus: boolean;
 	darkModeStatus: boolean;
+	viewModeStatus: "month" | "week" | "work_week" | "day" | "agenda";
 	fullScreenStatus: boolean;
 	leftMenuStatus: boolean;
 	mobileDesign: boolean;
@@ -12,6 +13,7 @@ export interface IThemeContextProps {
 	rightPanel: boolean;
 	setAsideStatus: (value: ((prevState: boolean) => boolean) | boolean) => void;
 	setDarkModeStatus: (value: ((prevState: boolean) => boolean) | boolean) => void;
+	setViewModeStatus: (value: "month" | "week" | "work_week" | "day" | "agenda" | ((prevState: "month" | "work_week" | "week" | "day" | "agenda") => "month" | "week" | "work_week" | "day" | "agenda")) => void;
 	setFullScreenStatus: (value: ((prevState: boolean) => boolean) | boolean) => void;
 	setLeftMenuStatus: (value: ((prevState: boolean) => boolean) | boolean) => void;
 	setRightMenuStatus: (value: ((prevState: boolean) => boolean) | boolean) => void;
@@ -36,6 +38,18 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 	useEffect(() => {
 		localStorage.setItem('fact_darkModeStatus', darkModeStatus.toString());
 	}, [darkModeStatus]);
+
+	const [viewModeStatus, setViewModeStatus] = useState(() => {
+		if (typeof window !== 'undefined') {
+			const storedValue = localStorage.getItem('fact_viewMode');
+			return storedValue ? storedValue : 'week';
+		}
+		return 'week';
+	});
+
+	useEffect(() => {
+		localStorage.setItem('fact_viewMode', viewModeStatus.toString());
+	}, [viewModeStatus]);
 
 	const [fullScreenStatus, setFullScreenStatus] = useState(false);
 
@@ -82,6 +96,8 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 			setRightMenuStatus,
 			rightPanel,
 			setRightPanel,
+			viewModeStatus,
+			setViewModeStatus,
 		}),
 		[
 			asideStatus,
@@ -91,6 +107,7 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 			mobileDesign,
 			rightMenuStatus,
 			rightPanel,
+			viewModeStatus,
 		],
 	);
 

@@ -109,8 +109,6 @@ const Index: NextPage = ({ token, me }: any) => {
   // View modes; Month, Week, Work Week, Day and Agenda
   const views = getViews();
 
-
-
   const refreshHandler = async () => {
     const maxRetries = 3; // Maximum number of retry attempts
     let retryCount = 0;

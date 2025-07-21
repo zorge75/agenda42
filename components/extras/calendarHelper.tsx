@@ -127,11 +127,12 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
   viewMode,
 }) => {
   const dispatch = useDispatch();
-  const { mobileDesign } = useContext(ThemeContext);
+  const { mobileDesign, setViewModeStatus } = useContext(ThemeContext);
   const setViewMode = (
     viewMode: "month" | "week" | "work_week" | "day" | "agenda",
   ) => {
     dispatch(setUnitType(viewMode));
+    setViewModeStatus(viewMode);
   };
 
   if (mobileDesign) {
