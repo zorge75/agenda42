@@ -53,9 +53,11 @@ const MasterCalendar = ({
     const friends = useSelector((state: RootState) => state.friends.list);
     const wavingList = useSelector((state: RootState) => state.friends.wavingList);
 
-    const todayAt9AM = dayjs().set('hour', 7).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
+    const todayAt8AM = dayjs().set('hour', 8).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
     const todayAt0AM = dayjs().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
-
+    const todayAt20PM = dayjs().set('hour', 20).set('minute', 0).set('second', 0).set('millisecond', 0).toISOString();
+    const todayFinOfDay = dayjs().set('hour', 23).set('minute', 59).set('second', 59).set('millisecond', 0).toISOString();
+    
     const localizer = dayjsLocalizer(dayjs);
     const DnDCalendar = withDragAndDrop(Calendar);
 
@@ -179,7 +181,8 @@ const MasterCalendar = ({
                     view={mobileDesign ? Views.DAY : viewMode}
                     date={date}
                     step={15}
-                    min={viewMode == Views.WORK_WEEK ? todayAt9AM : todayAt0AM}
+                    min={viewMode == Views.WORK_WEEK ? todayAt8AM : todayAt0AM}
+                    max={viewMode == Views.WORK_WEEK ? todayAt20PM : todayFinOfDay}
                     onNavigate={(_date) => setDate(_date)}
                     scrollToTime={dayjs().add(-1, 'h').toISOString()}
                     defaultDate={new Date()}

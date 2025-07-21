@@ -155,7 +155,7 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
           >
             {(viewMode === Views.MONTH && "Month") ||
               (viewMode === Views.WEEK && "Week") ||
-              (viewMode === Views.WORK_WEEK && "Work Week") ||
+              (viewMode === Views.WORK_WEEK && "Alternance") ||
               (viewMode === Views.DAY && "Day") ||
               "Spreadsheet"}
           </Button>
@@ -187,7 +187,7 @@ export const CalendarViewModeButtons: FC<ICalendarViewModeButtonsProps> = ({
               icon='view_week'
               isActive={viewMode === Views.WORK_WEEK}
               onClick={() => setViewMode(Views.WORK_WEEK)}>
-              Work Week
+              Alternance
             </Button>
           </DropdownItem>
           <DropdownItem>
