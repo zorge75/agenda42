@@ -9,7 +9,7 @@
 	flex: 1 auto;
 	flex-direction: column;
 	transition: $transition-base;
-	height: 100%;
+	height: 100vh;
 
 	@include aside-close-wrapper {
 		@include media-breakpoint-down(map-get($aside, mobile-breakpoint)) {
