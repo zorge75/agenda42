@@ -9,11 +9,16 @@ import { RootState } from "../../store";
 import Select from "../bootstrap/forms/Select";
 import { useEffect, useState } from "react";
 import { useRefreshFriends } from "../../hooks/useRefreshFriends";
+import { CalendarFriendsButtons } from "../extras/friendsHalper";
+import { CardActions } from "../bootstrap/Card";
+import Dropdown, { DropdownItem, DropdownMenu, DropdownToggle } from "../bootstrap/Dropdown";
+import Avatar from "../Avatar";
+import { getName } from "../../helpers/helpers";
 
 const FocusingSelector = ({ token, setLoad, friends }: any) => {
-    const [selected, setSelected] = useState(0);
+    const me = useSelector((state: RootState) => state.user.me);
+    const [selected, setSelected] = useState(me.id);
     const refreshFriends = useRefreshFriends(selected, token, setLoad);
-    const {id, login} = useSelector((state: RootState) => state.user.me);
 
     useEffect(() => {
         if (selected && friends)
@@ -24,24 +29,42 @@ const FocusingSelector = ({ token, setLoad, friends }: any) => {
         return;
 
     const list = [
-        { text: login, value: id },
+        { 
+            friend_id: me.id,
+            friend_name: getName(me),
+            friend_login: me.login,
+            friend_image:  '',
+         },
         ...friends.map(i => ({
-            text: i.friend_login,
-            value: i.friend_id | 0
+            ...i,
+            friend_id: i.friend_id | 0
         }))
       ];
 
     return (
-        <>
-            <Select
-                ariaLabel={""}
-                color='primary'
-                id="focusing_selector"
-                list={list}
-                onChange={(item: any) => setSelected(item.target.value)}
-            />
-        </>
-    );
+        <CardActions>
+            <Dropdown direction="down">
+                <DropdownToggle>
+                    <Button
+                        color="primary"
+                    >
+                        {list?.find(i => (i.friend_id == selected)).friend_name}
+                    </Button>
+                </DropdownToggle>
+                <DropdownMenu isAlignmentEnd >
+                    {list.map(item => <DropdownItem>
+                        <Button
+                            color="link"
+                            onClick={() => setSelected(item.friend_id)}
+                        >
+                            <Avatar src={item.friend_image} size={32} />
+                            <span style={{ marginLeft: 15 }}>{item.friend_name} ({item.friend_login})</span>
+                        </Button>
+                    </DropdownItem>)}
+                </DropdownMenu>
+            </Dropdown>
+        </CardActions>
+      );
 };
 
 export default FocusingSelector;

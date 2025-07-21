@@ -60,15 +60,16 @@
 		}
 	}
 
-	.switch_events button {
+	.switch_events > button {
 		border-radius: 0;
 	}
 
-	.switch_events button:nth-child(1) {
+	.switch_events > button:nth-child(1) {
 		border-radius: 1rem 0 0 1rem;
 	}
 
-	.switch_events button:last-child {
+	.switch_events button:last-child,
+	.switch_events .dropdown button {
 		border-radius: 0 1rem 1rem 0;
 		// opacity: 0.5;
 	}
