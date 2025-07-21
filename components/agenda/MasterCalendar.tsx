@@ -105,7 +105,18 @@ const MasterCalendar = ({
 
     return (
         <Card stretch className="no-mobile-grid" >
-            <CardHeader style={mobileDesign ? { paddingBottom: 0 } : {}}>
+            <CardHeader style={
+                mobileDesign // TODO: test with other phones and make the classname
+                ? { 
+                    padding: 20,
+                    position: 'fixed',
+                    background: 'rgba(255, 255, 255, 0.5)', 
+                    backdropFilter: 'blur(0.2rem)',
+                    willChange: 'backdrop-filter',
+                    zIndex: 100
+                }
+                : {}
+            }>
                 <CardActions style={{ marginRight: 20 }}>
                     <CalendarTodayButton
                         unitType={unitType}
@@ -130,6 +141,13 @@ const MasterCalendar = ({
                 >
                     <Button color="light">{calendarDateLabel}</Button>
                 </Popovers>
+                {
+                    (refresh || !scaleUsers)
+                        ?
+                        <div className="spinner"> <Spinner random inButton /></div>
+                        :
+                        <Button icon='Refresh' color='storybook' onClick={refreshHandler} />
+                }
                 <div className="switch_events">
                     <Button
                         style={{ minWidth: 50 }}
@@ -161,18 +179,12 @@ const MasterCalendar = ({
                                       Meeting rooms
                                     </Button> */}
                 </div>
-                {
-                    (refresh || !scaleUsers)
-                        ?
-                        <div className="spinner"> <Spinner random inButton /></div>
-                        :
-                        <Button icon='Refresh' color='storybook' onClick={refreshHandler} />
-                }
+                
 
                 <CalendarViewModeButtons viewMode={viewMode} />
 
             </CardHeader>
-            <CardBody isScrollable >
+            <CardBody isScrollable style={mobileDesign ? { marginTop: 110, } : {}}>
                 <DnDCalendar
                     formats={customFormats}
                     selectable
@@ -207,7 +219,6 @@ const MasterCalendar = ({
                     }}
                     eventPropGetter={eventStyleGetter}
                     slotPropGetter={slotPropGetter}
-                    style={mobileDesign ? { height: '66vh' } : {}}
                 />
                 <style>{customStyles}</style>
             </CardBody>
