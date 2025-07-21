@@ -50,9 +50,7 @@ const MyApp = ({ Component, pageProps }: AppPropsCustom) => {
 					<App>
 						<Wrapper>
 							{/* eslint-disable-next-line react/jsx-props-no-spreading */}
-							<StoreProvider >
 								<Component {...pageProps} />
-							</StoreProvider>
 						</Wrapper>
 					</App>
 					<Portal id='portal-notification'>

@@ -36,7 +36,7 @@ const FocusingSelector = ({ token, setLoad, friends, me }: any) => {
                         {list?.find(i => (i.friend_id == selected))?.friend_name ?? getName(me)} 
                     </Button>
                 </DropdownToggle>
-                <DropdownMenu isAlignmentEnd >
+                <DropdownMenu >
                     <DropdownItem>
                         <Button
                             color="link"

@@ -1,6 +1,4 @@
-import React, { FC, ReactNode, useContext, useEffect, useRef } from 'react';
-import ThemeContext from '../../context/themeContext';
-import { useFullscreen } from 'react-use';
+import React, { FC, ReactNode, useEffect } from 'react';
 import useDarkMode from '../../hooks/useDarkMode';
 import useMounted from '../../hooks/useMounted';
 
@@ -51,23 +49,8 @@ const App: FC<IAppProps> = ({ children }) => {
 		}
 	});
 
-	/**
-	 * Full Screen
-	 */
-	const { fullScreenStatus, setFullScreenStatus } = useContext(ThemeContext);
-	const ref = useRef(null);
-	useFullscreen(ref, fullScreenStatus, {
-		onClose: () => setFullScreenStatus(false),
-	});
 	return (
-		<div
-			ref={ref}
-			className='app'
-			style={{
-				backgroundColor: fullScreenStatus ? 'var(--bs-body-bg)' : undefined,
-				zIndex: fullScreenStatus ? 1 : undefined,
-				overflow: fullScreenStatus ? 'scroll' : undefined,
-			}}>
+		<div>
 			{children}
 		</div>
 	);
