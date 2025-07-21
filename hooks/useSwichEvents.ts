@@ -10,7 +10,6 @@ const useSwitchEvents = (events: any, allEvents: any, setEventsActive: any) => {
 
   useEffect(() => {
     if (switchEvents == 'all' && allEvents) {
-      dispatch(setUnitType("week"));
       const eventList = allEvents.map((event: any) => ({
         id: event.id,
         name: event.name ?? event.id,
@@ -35,7 +34,6 @@ const useSwitchEvents = (events: any, allEvents: any, setEventsActive: any) => {
       ));
     }
     else {
-      dispatch(setUnitType("agenda"));
       setEventsActive([
         ...events
       ]);
