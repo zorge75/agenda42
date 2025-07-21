@@ -118,7 +118,15 @@ const MasterCalendar = ({
                 : {}
             }>
                 <CardActions style={{ marginRight: 20 }}>
-                <Popovers
+                                        <CalendarTodayButton
+                        unitType={unitType}
+                        date={date}
+                        setDate={setDate}
+                        viewMode={viewMode}
+                        central
+                    />
+                </CardActions>
+             <Popovers
                     desc={
                         <DatePicker
                             locale={fr}
@@ -130,10 +138,10 @@ const MasterCalendar = ({
                     placement="bottom-end"
                     className="mw-100"
                     trigger="click"
-                >
+            >
                     <Button color="light">{calendarDateLabel}</Button>
                 </Popovers>
-                </CardActions>
+
                 {
                     (refresh || !scaleUsers)
                         ?
