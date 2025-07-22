@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
+    pointsForPinned: string;
     slotRemoveMod: boolean;
     settingsIsOpen: boolean;
     piscineIsOpen: boolean;
@@ -10,6 +11,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
+    pointsForPinned: process.env.POINTS_FOR_PINNED as string,
     slotRemoveMod: false,
     settingsIsOpen: false,
     friendsIsOpen: false,
