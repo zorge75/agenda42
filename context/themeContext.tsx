@@ -48,7 +48,8 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 	});
 
 	useEffect(() => {
-		localStorage.setItem('fact_viewMode', viewModeStatus.toString());
+		if (viewModeStatus != "day")
+			localStorage.setItem('fact_viewMode', viewModeStatus.toString());
 	}, [viewModeStatus]);
 
 	const [fullScreenStatus, setFullScreenStatus] = useState(false);

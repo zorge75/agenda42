@@ -42,13 +42,23 @@ function hasBDE(eventItem: string) {
   }
 
 const Event = ({ eventItem }: any) => {
-    const events = useSelector((state: RootState) => state.events.events);
     const me = useSelector((state: RootState) => state.user.me);
-    const isException = [33210].some(e => eventItem.id === e);
-    const isSubscribed = events.some(e => eventItem.id === e.id);
+    const gender = useSelector((state: RootState) => state.settings.gender?.gender);
     const unsubscribeHandler = async (event: any) => {
         window.open(`https://profile.intra.42.fr/events/${event.id}`, "_blank");
     };
+
+    function isException(eventItem: any) {
+        return (
+            [33210].some(e => eventItem.id === e) // Specific event LGBTQ+
+            || (eventItem.name.toLowerCase().includes("femmes") && gender !== "F")
+            || (eventItem.name.toLowerCase().includes("hommes") && gender !== "M")
+            || (eventItem.description?.toLowerCase().includes("aux femmes") && gender !== "F")
+            || (eventItem.description?.toLowerCase().includes("aux hommes") && gender !== "M")
+            || (eventItem.description?.toLowerCase().includes("pour les femmes") && gender !== "F")
+            || (eventItem.description?.toLowerCase().includes("pour les hommes") && gender !== "M")
+        );
+    }
 
     return (
         <>
@@ -95,7 +105,7 @@ const Event = ({ eventItem }: any) => {
                     </Card>
 
                     {
-                        !isException
+                        !isException(eventItem)
                             ? <UsersOfEvent id={eventItem.id} size={eventItem.nbr_subscribers} myId={me.id} eventTitle={eventItem.name} />
                             : <Button
                                 isDisable

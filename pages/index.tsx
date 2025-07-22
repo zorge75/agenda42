@@ -49,6 +49,7 @@ import axiosRetry from "axios-retry";
 import Piscine from "../components/piscine";
 import Friends from "../components/friends";
 import WavingHand from "../components/waving_hand";
+import GenderModal from "../components/GenderModal";
 
 axiosRetry(axios, {
   retries: 3,
@@ -84,6 +85,7 @@ const Index: NextPage = ({ token, me }: any) => {
   const defancesHistory = useSelector((state: RootState) => state.slots.defancesHistory);
   const eventItem = useSelector((state: RootState) => state.calendar.eventActive);
   const toggleInfoEventCanvas = useSelector((state: RootState) => state.calendar.canvasIsOpen);
+  const gender = useSelector((state: RootState) => state.settings.gender);
 
   const [date, setDate] = useState(new Date());
   const [eventAdding, setEventAdding] = useState(false);
@@ -392,7 +394,7 @@ const Index: NextPage = ({ token, me }: any) => {
               eventStyleGetter={eventStyleGetter}
               setDate={setDate}
               setUnitType={setUnitType}
-            />
+              />
           </div>
           <div className="col-xl-9 no-mobile-grid">
             <MasterCalendar
@@ -410,7 +412,7 @@ const Index: NextPage = ({ token, me }: any) => {
               eventStyleGetter={eventStyleGetter}
               token={token}
               setLoad={setLoad}
-            />
+              />
           </div>
         </div>
 
@@ -421,14 +423,14 @@ const Index: NextPage = ({ token, me }: any) => {
           }}
           isOpen={toggleInfoEventCanvas}
           titleId="canvas-title"
-        >
+          >
           <OffCanvasHeader
             setOpen={(status: boolean) => {
               dispatch(setCanvasIsOpen());
               setEventAdding(status);
             }}
             className="p-4"
-          >
+            >
             <OffCanvasTitle id="canvas-title">
               {eventAdding ? "Add Event" : ""}
             </OffCanvasTitle>
@@ -437,18 +439,18 @@ const Index: NextPage = ({ token, me }: any) => {
             tag="form"
             onSubmit={formik.handleSubmit}
             className="p-4"
-          >
+            >
             {!eventAdding ? (
               <div className="row g-4" style={{ backgroundColor: 'transparent' }}>
                 {(eventItem?.scale_team?.id && !(eventItem?.type === "defances")) ? (
                   <Evaluation token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
                 ) :
-                  (eventItem?.type === "defances")
-                    ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
-                    : (eventItem?.name != "Available")
-                      ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
-                      : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
-                }
+                (eventItem?.type === "defances")
+                ? <Defanse token={token} eventItem={eventItem} scaleUsers={scaleUsers} me={me} />
+                : (eventItem?.name != "Available")
+                ? <Event eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
+                : <Slot eventItem={eventItem} token={token} originalSlotsIntra={originalSlotsIntra} />
+              }
               </div>
             ) : (
               <div className="row g-4">{ }</div>
@@ -459,6 +461,7 @@ const Index: NextPage = ({ token, me }: any) => {
         {piscineIsOpen ? <Piscine token={token} /> : null}
         {friendsIsOpen ? <Friends /> : null}
         {wavingHandIsOpen ? <WavingHand /> : null}
+        {(!gender) ? <GenderModal token={token} setLoad={setLoad} /> : null}
         <OverlappingModal events={events} />
       </Page>
     </PageWrapper>
