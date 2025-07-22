@@ -185,8 +185,9 @@ const MasterCalendar = ({
                 <CalendarViewModeButtons viewMode={viewMode} />
 
             </CardHeader>
-            <CardBody isScrollable style={mobileDesign ? { marginTop: 110, } : {}}>
+            <CardBody isScrollable style={mobileDesign ? { marginTop: 112, } : {}}>
                 <DnDCalendar
+                    style={mobileDesign ? { maxHeight: '60vh' }: {}}
                     formats={customFormats}
                     selectable
                     toolbar={false}

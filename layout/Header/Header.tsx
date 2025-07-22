@@ -97,7 +97,7 @@ const Header: FC<IHeaderProps> = ({ children, hasLeftMobileMenu, hasRightMobileM
 			<header ref={refMobileHeader} className='mobile-header'>
 				<div className='container-fluid'>
 					<div className='row'>
-						{process.env.NODE_ENV == 'production' ? <Logo42 /> : process.env.NODE_ENV}
+						<Logo42 />
 						{/*<div className='col'>
 							 <Button
 								aria-label='Toggle Aside'

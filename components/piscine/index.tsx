@@ -12,6 +12,7 @@ import Badge from "../bootstrap/Badge";
 import useDarkMode from "../../hooks/useDarkMode";
 import { addFriendToList } from "../../store/slices/friendsReducer";
 import dayjs from "dayjs";
+import PiscineSelect from "../extras/piscineSelect";
 
 const Piscine: FC<any> = ({ token }: any) => {
     const friends = useSelector((state: RootState) => state.friends.list);
@@ -30,7 +31,7 @@ const Piscine: FC<any> = ({ token }: any) => {
     }
 
     const [refresh, setRefresh] = useState(false);
-    const [signSort, setSignSort] = useState(false);
+    const [yearSort, setYear] = useState(0);
     const [users, setUsers] = useState<any[]>([]);
     const [success, setSuccess] = useState<number[]>([]);
     const [update, setUpdate] = useState(false);
@@ -46,13 +47,13 @@ const Piscine: FC<any> = ({ token }: any) => {
             setRefresh(true);
             try {
                 const res = await fetch(
-                    `/api/piscine?year=${me.pool_year}&page=${page}&month=${me.pool_month}&signSort=${signSort ? "" : "-"}`,
+                    `/api/piscine?year=${me.pool_year}&page=${page}&month=${me.pool_month}&yearSort=${yearSort}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 const response = await res.json();
                 const pageNumbers = getMaxPage(response.links);
 
-                if (!maxPage) setMaxPage(pageNumbers);
+                if (maxPage <= 1) setMaxPage(pageNumbers);
 
                 if (res.ok) {
                     setUsers((last) => [...last, ...response.data]);
@@ -143,7 +144,7 @@ const Piscine: FC<any> = ({ token }: any) => {
 
     useEffect(() => {
         getMyPiscine();
-    }, [signSort])
+    }, [yearSort])
 
     if (!me || !users)
         return;
@@ -160,24 +161,15 @@ const Piscine: FC<any> = ({ token }: any) => {
             >
                 <OffCanvasTitle id="canvas-title" className="h2">
                     <span style={{ marginRight: 10 }}>Pool:</span>
-                    <Badge
+                    {!yearSort ?<Badge
                         isLight={darkModeStatus ? false : true}
                         color={'piscine'}
                     >
                         {me.pool_month} {me.pool_year}
-                    </Badge>
+                    </Badge> : null}
                 </OffCanvasTitle>
             </OffCanvasHeader>
-            <Button
-                className='h4 m-4'
-                icon={signSort ? "ArrowUpward" : "ArrowDownward"}
-                color="light"
-                onClick={() => {
-                    setSignSort(!signSort);
-                    setUsers([])
-                }}
-            >sort with parameter 'updated_at'
-            </Button>
+            <PiscineSelect selected={yearSort} setYear={setYear} setUsers={setUsers} setPage={setPage} setMaxPage={setMaxPage} />
             <OffCanvasBody tag="form" className="p-4" >
                 {
                     (refresh && !users.length)
@@ -193,18 +185,18 @@ const Piscine: FC<any> = ({ token }: any) => {
                                             <CardHeader style={{ borderRadius: 20 }} >
                                                 <CardLabel>
                                                     <CardTitle>
-                                                        <span style={{marginRight: 20}}>
-                                                        {getName(user)}
-                                                            </span>
+                                                        <span style={{ marginRight: 20 }}>
+                                                            {getName(user)}
+                                                        </span>
                                                         <Badge
                                                             isLight={darkModeStatus ? false : true}
                                                             color={user.location ? 'success' : 'dark'}
                                                         >
-                                                          {
-                                                            user.location
-                                                            ? user.location
-                                                            : dayjs(user.updated_at).fromNow()
-                                                          }
+                                                            {
+                                                                user.location
+                                                                    ? user.location
+                                                                    : dayjs(user.updated_at).fromNow()
+                                                            }
                                                         </Badge>
                                                     </CardTitle>
                                                     <div style={{ marginTop: 10 }}>
@@ -226,12 +218,12 @@ const Piscine: FC<any> = ({ token }: any) => {
                                                             </Badge>
                                                         </span>
                                                         {!user['active?'] ? <Badge
-                                                            
+
                                                             color='info'
                                                         >
                                                             freeze / bh
                                                         </Badge> : null}
-                                                        
+
                                                     </div>
                                                 </CardLabel>
                                                 <Avatar src={user.image.versions.medium} size={64} />
@@ -243,7 +235,7 @@ const Piscine: FC<any> = ({ token }: any) => {
                                                     <Button
                                                         style={{ marginRight: 15 }}
                                                         className='h4'
-                                                        icon={update ? "Refresh" : (isFriend || isIdInSuccess) ? "Group": "Add"}
+                                                        icon={update ? "Refresh" : (isFriend || isIdInSuccess) ? "Group" : "Add"}
                                                         color={(isIdInSuccess || isFriend) ? "success" : "light"}
                                                         isDisable={update || isFriend}
                                                         type="submit"
@@ -258,12 +250,12 @@ const Piscine: FC<any> = ({ token }: any) => {
                                                         onClick={() => userInIntraHandler(user.id)}
                                                     >
                                                     </Button>
-                                                        <Button
-                                                            className='h4'
-                                                            icon={update ? "Refresh" : "WavingHand"}
-                                                            color={isIdInSuccessWavingHand ? "success" : "brand"}
-                                                            onClick={() => addWavingHandHandler(user.id, "", "send", user.image.versions.medium, getName(user), user.login)}
-                                                        />
+                                                    <Button
+                                                        className='h4'
+                                                        icon={update ? "Refresh" : "WavingHand"}
+                                                        color={isIdInSuccessWavingHand ? "success" : "brand"}
+                                                        onClick={() => addWavingHandHandler(user.id, "", "send", user.image.versions.medium, getName(user), user.login)}
+                                                    />
                                                 </div>
                                                 <div className='col-lg-6'>
                                                     <div className='h4 text-end'>
@@ -282,8 +274,8 @@ const Piscine: FC<any> = ({ token }: any) => {
                             }
 
                             {
-                                maxPage !== page 
-                                ? (
+                                maxPage !== page
+                                    ? (
                                         <Button
                                             style={{ width: '100%' }}
                                             className='h4'
@@ -292,7 +284,7 @@ const Piscine: FC<any> = ({ token }: any) => {
                                             isDisable={refresh}
                                             onClick={() => getMyPiscine()}
                                         >Page {page} from {maxPage}</Button>
-                                ) : null}
+                                    ) : null}
                         </>
                 }
             </OffCanvasBody>
