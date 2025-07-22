@@ -8,15 +8,7 @@ import Avatar from "../Avatar";
 import { alphabeticSort, getName } from "../../helpers/helpers";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-
-function getRandom(friends: any) {
-    const shuffled = [...friends];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled.slice(0, 3);
-}
+import { getRandomProtection } from "../../common/function/getRndomWithHash";
 
 const FocusingSelector = ({ token, setLoad, friends, me }: any) => {
     const [selected, setSelected] = useState(me.id);
@@ -46,7 +38,7 @@ const FocusingSelector = ({ token, setLoad, friends, me }: any) => {
                 setList([]);
             else
                 setList([
-                    ...alphabeticSort(getRandom(friends), "friend_login").map(i => ({
+                    ...alphabeticSort(getRandomProtection(friends), "friend_login").map(i => ({
                         ...i,
                         friend_id: i.friend_id | 0
                     }))
