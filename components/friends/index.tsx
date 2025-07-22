@@ -3,18 +3,21 @@ import OffCanvas, { OffCanvasHeader, OffCanvasTitle, OffCanvasBody } from "../bo
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { setModalFriendsStatus } from "../../store/slices/settingsReducer";
-import { alphabeticSort, delay, userInIntraHandler } from "../../helpers/helpers";
+import { alphabeticSort, delay, pinSort, userInIntraHandler } from "../../helpers/helpers";
 import Card, { CardHeader, CardLabel, CardTitle } from "../bootstrap/Card";
 import Avatar from "../Avatar";
 import Button from "../bootstrap/Button";
 import Badge from "../bootstrap/Badge";
 import useDarkMode from "../../hooks/useDarkMode";
-import { removeFriendFromList } from "../../store/slices/friendsReducer";
+import { addFriendToPinList, removeFriendFromList, removeFriendFromPinList } from "../../store/slices/friendsReducer";
 
 const Friends: FC<any> = ({ token }: any) => {
     const friendsIsOpen = useSelector((state: RootState) => state.settings.friendsIsOpen);
     const me = useSelector((state: RootState) => state.user.me);
     const users = useSelector((state: RootState) => state.friends.list);
+    const pins = useSelector((state: RootState) => state.friends.pins);
+    const pointsForPinned = useSelector((state: RootState) => state.settings.pointsForPinned);
+
     const { darkModeStatus } = useDarkMode();
 
     const [success, setSuccess] = useState<number[]>([]);
@@ -26,30 +29,14 @@ const Friends: FC<any> = ({ token }: any) => {
         dispatch(setModalFriendsStatus(status));
     }
 
-    const removeFriendHandler = async (id: number) => {
-        setUpdate(true);
-        await fetch("/api/friends", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                user_id: me.id,
-                friend_id: id | 0
-            }),
-        }).then(async (response) => {
-            setUpdate(false);
-            if (!response.ok) {
-                console.log(`Failed to create settings: ${response.statusText}`);
-            } else {
-                setSuccess((i: number[]) => [...i, id]);
-                dispatch(removeFriendFromList(id))
-                if (users.length == 1)
-                    setModal(false);
-            }
-            return { success: true };
-        })
-    };
+    const pinFriendHandler = (id: string) => {
+        const isPined = pins.includes(id);
+        if (!isPined)
+            dispatch(addFriendToPinList(id))
+        else {
+            dispatch(removeFriendFromPinList(id))
+        }
+    }
 
     if (!me)
         return;
@@ -69,9 +56,18 @@ const Friends: FC<any> = ({ token }: any) => {
                 </OffCanvasTitle>
             </OffCanvasHeader>
             <OffCanvasBody tag="form" className="p-4" >
+                <Button
+                    style={{ marginBottom: 30, textAlign: 'left' }}
+                    icon="PushPin"
+                    color={me.correction_point >= pointsForPinned ? "warning" : "light"}
+                    isDisable
+                >
+                    Hey ! You can " pined " friends to filtred the agenda if you have {pointsForPinned} or more correction points. Now you have {me.correction_point} correction points.
+                </Button>
                 {
-                    alphabeticSort(users, "friend_login").map((user, key) => {
+                    pinSort(alphabeticSort(users, "friend_login"), pins).map((user, key) => {
                         const isIdInSuccess = success && success.includes(user.id);
+                        const isPined = pins.includes(user.friend_id);
                         return (
                             <Card isCompact key={key} style={{ paddingBottom: 12 }} >
                                 <CardHeader style={{ borderRadius: 20 }} >
@@ -103,11 +99,19 @@ const Friends: FC<any> = ({ token }: any) => {
                                                 {user?.pool_month} {user?.pool_year}
                                             </Badge>
                                         </CardTitle>
-                                       
+
                                     </CardLabel>
-                                    
-                                        {user?.friend_image && <Avatar src={user?.friend_image} size={64} />}
+
+                                    {user?.friend_image && <Avatar src={user?.friend_image} size={64} />}
                                 </CardHeader>
+                                <Button
+                                    style={{ position: 'absolute', top: 5, right: 5 }}
+                                    className='h4'
+                                    icon="PushPin"
+                                    color={isPined ? "warning" : "light"}
+                                    isDisable={me.correction_point < pointsForPinned}
+                                    onClick={() => pinFriendHandler(user.friend_id)}
+                                />
                             </Card>
                         )
                     })

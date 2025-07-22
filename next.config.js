@@ -61,6 +61,7 @@ const nextConfig = withInterceptStdout(
       API_TOKEN: process.env.API_TOKEN,
       PORT: process.env.PORT,
       STATUS: process.env.STATUS,
+      POINTS_FOR_PINNED: process.env.POINTS_FOR_PINNED,
     },
     typescript: {
       ignoreBuildErrors: true,

@@ -5,7 +5,7 @@ import { setEvals } from "../store/slices/evalsSlice";
 import { setOriginalSlots, setSlots, setDefances, setDefancesHistory } from "../store/slices/slotsSlice";
 import { setEvents } from "../store/slices/eventsSlice";
 
-export const useRefreshFriends = (year: any, token: any, setLoad: any) => {
+export const useRefreshFriends = (id: any, token: any, setLoad: any) => {
     const dispatch = useDispatch();
     const isFetching = useRef(false); // Prevent concurrent fetches
 
@@ -15,14 +15,14 @@ export const useRefreshFriends = (year: any, token: any, setLoad: any) => {
             return;
         }
 
-        if (year == 0 || !year)
+        if (id == 0 || !id)
             return;
 
         isFetching.current = true;
         try {
             setLoad(true);
 
-            const response = await fetch(`/api/friends_mode?year=${year}`, {
+            const response = await fetch(`/api/friends_mode?id=${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
                 cache: 'no-store', // Prevent stale data if needed
             });
@@ -51,7 +51,7 @@ export const useRefreshFriends = (year: any, token: any, setLoad: any) => {
             setLoad(false);
             isFetching.current = false;
         }
-    }, [dispatch, year, token, setLoad]); // Stable dependencies
+    }, [dispatch, id, token, setLoad]); // Stable dependencies
 
     return refreshAgenda;
 };

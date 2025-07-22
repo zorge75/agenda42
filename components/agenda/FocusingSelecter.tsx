@@ -6,46 +6,79 @@ import { CardActions } from "../bootstrap/Card";
 import Dropdown, { DropdownItem, DropdownMenu, DropdownToggle } from "../bootstrap/Dropdown";
 import Avatar from "../Avatar";
 import { alphabeticSort, getName } from "../../helpers/helpers";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+
+function getRandom(friends: any) {
+    const shuffled = [...friends];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, 3);
+}
 
 const FocusingSelector = ({ token, setLoad, friends, me }: any) => {
     const [selected, setSelected] = useState(me.id);
+    const [list, setList] = useState<any[]>();
     const refreshFriends = useRefreshFriends(selected, token, setLoad);
+    const pins = useSelector((state: RootState) => state.friends.pins);
+    const pointsForPinned = useSelector((state: RootState) => state.settings.pointsForPinned);
 
     useEffect(() => {
         if (selected && friends)
             refreshFriends();
     }, [refreshFriends, selected]);
 
+    useEffect(() => {
+        if (pins.length && pointsForPinned <= me.correction_point) {
+            setList([
+                ...alphabeticSort(friends, "friend_login")
+                    .filter(index => pins.includes(index.friend_id))
+                    .map(i => ({
+                        ...i,
+                        friend_id: i.friend_id | 0
+                    }))
+            ])
+        }
+        else {
+            setList([
+                ...alphabeticSort(getRandom(friends), "friend_login").map(i => ({
+                    ...i,
+                    friend_id: i.friend_id | 0
+                }))
+            ])
+        }
+    }, [pins]);
+
     if (!friends)
         return;
-
-    const list = [
-        ...alphabeticSort(friends, "friend_login").map(i => ({
-            ...i,
-            friend_id: i.friend_id | 0
-        }))
-    ].slice(0, 5);
 
     return (
         <CardActions>
             <Dropdown direction="down">
                 <DropdownToggle>
                     <Button
-                        color="primary"
+                        color={pins.length ? "warning" : "primary"}
                     >
-                        {list?.find(i => (i.friend_id == selected))?.friend_name ?? getName(me)} 
+                        {list?.find(i => (i.friend_id == selected))?.friend_name ?? getName(me)}
                     </Button>
                 </DropdownToggle>
                 <DropdownMenu >
                     <DropdownItem>
                         <Button
                             color="link"
-                            icon="Info"
+                            icon={pins.length ? "PushPin" : "Info"}
                             isDisable
-                        >Maximum 5 first friends
+                        >
+                            {
+                                pins.length
+                                    ? "Your pinned friends"
+                                    : "Max 3 random or pined friends"
+                            }
                         </Button>
                     </DropdownItem>
-                    {list.map(item => (
+                    {list?.map(item => (
                         <DropdownItem>
                             <Button
                                 color="link"

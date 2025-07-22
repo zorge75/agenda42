@@ -156,3 +156,19 @@ export const alphabeticSort = (array: any, key: string) => {
 		return 0;
 	})
 }
+
+export const pinSort = <T extends { friend_id: string | number }>(
+	array: T[],
+	pins: (string | number)[]
+): T[] => {
+	if (!pins || pins.length === 0) return [...array];
+
+	return [...array].sort((a, b) => {
+		const aIsPinned = pins.includes(a.friend_id);
+		const bIsPinned = pins.includes(b.friend_id);
+
+		if (aIsPinned && !bIsPinned) return -1;
+		if (!aIsPinned && bIsPinned) return 1;
+		return 0; 
+	});
+  };
