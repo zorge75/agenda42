@@ -43,7 +43,7 @@ jobs:
             -e API_TOKEN=${{ secrets.API_TOKEN }} \
             -e CLIENT_ID=${{ secrets.CLIENT_ID }} \
             -e STATUS=${{ secrets.STATUS }} \
-            -e POINTS_FOR_PINNED=${{ secrets.POINTS_FOR_PINNED }}
+            -e POINTS_FOR_PINNED=${{ secrets.POINTS_FOR_PINNED }} \
             -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
             agenda42:latest
 
