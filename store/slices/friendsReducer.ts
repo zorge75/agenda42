@@ -26,7 +26,7 @@ const userSlice = createSlice({
             state.list = [...state.list, payload.payload]
         },
         removeFriendFromList(state, payload: PayloadAction<any>) {
-            state.list = state.list.filter(i => i !== payload.payload);
+            state.list = state.list.filter(i => i.friend_id !== payload.payload);
         },
         addFriendToPinList(state, payload: PayloadAction<any>) {
             state.pins = [...state.pins, payload.payload]

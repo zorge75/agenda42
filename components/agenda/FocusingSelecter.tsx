@@ -42,12 +42,15 @@ const FocusingSelector = ({ token, setLoad, friends, me }: any) => {
             ])
         }
         else {
-            setList([
-                ...alphabeticSort(getRandom(friends), "friend_login").map(i => ({
-                    ...i,
-                    friend_id: i.friend_id | 0
-                }))
-            ])
+            if (friends.length < 15)
+                setList([]);
+            else
+                setList([
+                    ...alphabeticSort(getRandom(friends), "friend_login").map(i => ({
+                        ...i,
+                        friend_id: i.friend_id | 0
+                    }))
+                ])
         }
     }, [pins]);
 
@@ -78,7 +81,7 @@ const FocusingSelector = ({ token, setLoad, friends, me }: any) => {
                             }
                         </Button>
                     </DropdownItem>
-                    {list?.map(item => (
+                    {list?.length ? list.map(item => (
                         <DropdownItem>
                             <Button
                                 color="link"
@@ -88,7 +91,11 @@ const FocusingSelector = ({ token, setLoad, friends, me }: any) => {
                                 <span style={{ marginLeft: 15 }}>{item.friend_name} ({item.friend_login})</span>
                             </Button>
                         </DropdownItem>
-                    ))}
+                    )) :
+                        <div style={{marginLeft: 25, marginBottom: 25, marginRight: 25}}
+                            color="warning"
+                        >You need 15 or more friends on the list to select a friend to view the agenda.</div>
+                    }
                 </DropdownMenu>
             </Dropdown>
         </CardActions>

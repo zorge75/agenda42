@@ -38,6 +38,32 @@ const Friends: FC<any> = ({ token }: any) => {
         }
     }
 
+    const removeFriendHandler = async (id: number) => {
+        setUpdate(true);
+        await fetch("/api/friends", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user_id: me.id,
+                friend_id: id | 0
+            }),
+        }).then(async (response) => {
+            setUpdate(false);
+            if (!response.ok) {
+                console.log(`Failed to create settings: ${response.statusText}`);
+            } else {
+                setSuccess((i: number[]) => [...i, id]);
+                dispatch(removeFriendFromList(id))
+                if (users.length == 1)
+                    setModal(false);
+            }
+            return { success: true };
+        })
+    };
+
+
     if (!me)
         return;
 

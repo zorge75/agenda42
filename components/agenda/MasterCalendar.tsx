@@ -161,7 +161,7 @@ const MasterCalendar = ({
                         }}
                     />
                     {
-                        (switchEvents == "my" && friends.length)
+                        (switchEvents == "my")
                             ? <FocusingSelector me={me} token={token} setLoad={setLoad} friends={friends} />
                             : <Button
                                 style={{ minWidth: 50 }}
