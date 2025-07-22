@@ -2,11 +2,11 @@
 import { useRef, useCallback, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { setEvals } from "../store/slices/evalsSlice";
-import { setSavedSettings } from "../store/slices/settingsReducer";
+import { setGender, setSavedSettings } from "../store/slices/settingsReducer";
 import { setSavedFriends, setSavedWavingHand } from "../store/slices/friendsReducer";
 import { setOriginalSlots, setSlots, setDefances, setDefancesHistory } from "../store/slices/slotsSlice";
 import { getNextEvaluation } from "../common/function/getNextEvaluation";
-import { getUserFriends, getUserSettings, getUserWavingHand } from "../common/function/getUserSettings";
+import { getGenderOfUser, getUserFriends, getUserSettings, getUserWavingHand } from "../common/function/getUserSettings";
 import { preparationSlots } from "../common/function/preparationSlots";
 import { setUser } from "../store/slices/userSlice";
 import { setAllEvents, setEvents } from "../store/slices/eventsSlice";
@@ -27,6 +27,12 @@ export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
         isFetching.current = true;
         try {
             setLoad(true);
+            dispatch(setUser(me));
+            const genderData = await getGenderOfUser(me.login);
+            dispatch(setGender(genderData));
+            if (!genderData?.data)
+                return;
+
             const response = await fetch(`/api/refresh_agenda?id=${me.id}&campusId=1`, {
                 headers: { Authorization: `Bearer ${token}` },
                 cache: 'no-store', // Prevent stale data if needed
@@ -38,7 +44,6 @@ export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
             }
 
             // Update Redux store in a single batch to minimize re-renders
-            dispatch(setUser(me));
 
             const settingsData = await getUserSettings(me.id);
             const friendsData = await getUserFriends(me.id);
