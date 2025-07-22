@@ -52,7 +52,7 @@ const FocusingSelector = ({ token, setLoad, friends, me }: any) => {
                     }))
                 ])
         }
-    }, [pins]);
+    }, [pins, friends]);
 
     if (!friends)
         return;
