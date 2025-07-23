@@ -63,7 +63,6 @@ const Friends: FC<any> = ({ token }: any) => {
         })
     };
 
-
     if (!me)
         return;
 

@@ -73,7 +73,7 @@ const useParsingEvents = (
             });
 
             const defancesList = [...defancesHistory, ...defances]
-                .filter((i) => i.team?.project_gitlab_path?.split('/').pop() && i.comment)
+                .filter((i) => i.team?.project_gitlab_path?.split('/').pop()) // i.comment
                 .map((slot: any) => ({
                     id: slot.id,
                     name: `⬇️ ${slot.team?.project_gitlab_path?.split('/').pop()}`,
