@@ -23,6 +23,9 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      - name: Back-up of database
+        run: docker cp agenda42:app/agenda42.sqlite /home/aron
+
       - name: Build Docker image
         run: |
           docker build \
