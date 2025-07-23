@@ -29,8 +29,9 @@ export const useRefreshAgenda = ({ me, token, setLoad }: any) => {
             setLoad(true);
             dispatch(setUser(me));
             const genderData = await getGenderOfUser(me.login);
+            console.log("genderData", genderData)
             dispatch(setGender(genderData));
-            if (!genderData?.data)
+            if (genderData.status == "NOT_FOUND")
                 return;
 
             const response = await fetch(`/api/refresh_agenda?id=${me.id}&campusId=1`, {
