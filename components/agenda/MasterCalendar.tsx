@@ -79,7 +79,7 @@ const MasterCalendar = ({
     }, []);
 
     useEffect(() => {
-        wavingList.map(waving => {
+        wavingList?.map(waving => {
             if (waving.status == "send") {
                 return showNotification(
                     <span className='d-flex align-items-center'>

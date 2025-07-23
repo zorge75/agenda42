@@ -1,7 +1,3 @@
-// Select three random users from a list of 15 or more people, sorted alphabetically,
-// ensuring that the selection remains consistent across page reloads by using the sum of user IDs
-// as a seed since they are unique. 
-// 
 // The solution should minimize the risk of stalking by making it
 // difficult to manipulate the selection to include a specific user.
 

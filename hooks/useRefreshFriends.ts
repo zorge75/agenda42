@@ -39,8 +39,10 @@ export const useRefreshFriends = (id: any, token: any, setLoad: any) => {
             if (res.events)
                 dispatch(setEvents(res.events.map((event: any) => (event.event))));
 
-            if (res.evaluations)
+            if (res.evaluations) {
+                dispatch(setEvals(res.evaluations));
                 dispatch(setDefances(res.evaluations));
+            }
             
             if (res.defancesHistory)
                 dispatch(setDefancesHistory(res.defancesHistory));

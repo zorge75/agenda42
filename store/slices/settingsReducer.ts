@@ -12,7 +12,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
-    pointsForPinned: process.env.POINTS_FOR_PINNED || 5,
+    pointsForPinned: process.env.POINTS_FOR_PINNED as string || "0", // DEBUG
     slotRemoveMod: false,
     settingsIsOpen: false,
     friendsIsOpen: false,

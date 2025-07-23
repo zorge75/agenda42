@@ -205,7 +205,7 @@ const UsersOfEvent = ({ myId, id, size = 30, token, eventTitle }: any) => {
                                             className='h4'
                                             icon={update ? "Refresh" : "WavingHand"}
                                             color={isIdInSuccessWavingHand ? "success" : "brand"}
-                                            onClick={() => addWavingHandHandler(user.id, eventTitle, "send", user.image.versions.medium, getName(user), user.login)}
+                                            onClick={() => addWavingHandHandler(user.id, eventTitle, "send", me.image.versions.medium, getName(user), me.login)}
                                         >
                                         </Button>
                                     </div>

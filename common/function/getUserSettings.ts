@@ -45,11 +45,6 @@ export async function getGenderOfUser(userId: any): Promise<void> {
             method: "GET",
         });
 
-        if (!response.ok) {
-            console.log(`Failed to fetch evaluation for user ${userId}: ${response}`);
-            return;
-        }
-
         const data = await response.json();
         return data;
     } catch (error) {

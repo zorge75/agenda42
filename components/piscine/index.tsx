@@ -254,7 +254,7 @@ const Piscine: FC<any> = ({ token }: any) => {
                                                         className='h4'
                                                         icon={update ? "Refresh" : "WavingHand"}
                                                         color={isIdInSuccessWavingHand ? "success" : "brand"}
-                                                        onClick={() => addWavingHandHandler(user.id, "", "send", user.image.versions.medium, getName(user), user.login)}
+                                                        onClick={() => addWavingHandHandler(user.id, "Pool", "send", me.image.versions.medium, getName(user), me.login)}
                                                     />
                                                 </div>
                                                 <div className='col-lg-6'>
