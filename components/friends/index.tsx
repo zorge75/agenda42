@@ -87,7 +87,8 @@ const Friends: FC<any> = ({ token }: any) => {
                     color={me.correction_point >= pointsForPinned ? "warning" : "light"}
                     isDisable
                 >
-                    Hey ! You can " pined " friends to filtred the agenda if you have {pointsForPinned} or more correction points. Now you have {me.correction_point} correction points.
+                    You can pin friends to filter the agenda if you’ve got {pointsForPinned} or more correction points. Right now, you’re sitting at {me.correction_point} correction points. Oh, and heads up—those points reset to 4 every Sunday!
+
                 </Button>
                 {
                     pinSort(alphabeticSort(users, "friend_login"), pins).map((user, key) => {
