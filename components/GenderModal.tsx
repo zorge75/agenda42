@@ -60,9 +60,6 @@ const GenderModal: React.FC = ({ token, setLoad }: any) => {
                     To provide you with the most relevant events and a personalized experience, please indicate your gender.
                     </p>
                 <p className="h4 m-5">
-                    This will help us show you events tailored to your interests.
-                </p>
-                <p className="h4 m-5">
                     Your privacy is important to us, and this information will only be used to customize content.
                 </p>
             </ModalBody>
