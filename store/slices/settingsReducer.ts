@@ -12,7 +12,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
-    pointsForPinned: process.env.POINTS_FOR_PINNED as string,
+    pointsForPinned: process.env.POINTS_FOR_PINNED as string || "0",
     slotRemoveMod: false,
     settingsIsOpen: false,
     friendsIsOpen: false,
