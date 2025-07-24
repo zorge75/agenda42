@@ -17,21 +17,65 @@ function getPrevTenNumbers() {
     return result;
 }
 
-const PiscineSelect = ({ selected, setYear, setUsers, setPage, setMaxPage }: any) => {
+function getMonths() {
+    return [
+        'january',
+        'february',
+        'march',
+        'april',
+        'may',
+        'june',
+        'july',
+        'august',
+        'september',
+        'october',
+        'november',
+        'december'
+    ];
+}
+
+const PiscineSelect = ({ monthSort, yearSort, setYear, setMonth, setUsers, setPage, setMaxPage }: any) => {
     return (
         <div style={{ marginLeft: 20, display: 'flex' }}>
             <Button
                 style={{ borderRadius: '1rem 0 0 1rem' }}
                 color="light"
             >
-                Year
+                Month and year :
             </Button>
             <Dropdown direction="down">
                 <DropdownToggle>
                     <Button style={{ borderRadius: '0 1rem 1rem 0' }}
                         color="light"
                     >
-                        {selected > 0 ? selected : "My piscine" }
+                        {monthSort}
+                    </Button>
+                </DropdownToggle>
+                <DropdownMenu >
+                    {getMonths().map(item => (
+                        <DropdownItem>
+                            <Button
+                                color="link"
+                                onClick={() => {
+                                    setUsers([]);
+                                    setMonth(item);
+                                    setPage(1);
+                                    setMaxPage(1);
+                                }
+                                }
+                            >
+                                <span>{item}</span>
+                            </Button>
+                        </DropdownItem>
+                    ))}
+                </DropdownMenu>
+            </Dropdown>
+            <Dropdown direction="down">
+                <DropdownToggle>
+                    <Button style={{ borderRadius: '0 1rem 1rem 0' }}
+                        color="light"
+                    >
+                        {yearSort}
                     </Button>
                 </DropdownToggle>
                 <DropdownMenu >

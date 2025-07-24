@@ -31,7 +31,8 @@ const Piscine: FC<any> = ({ token }: any) => {
     }
 
     const [refresh, setRefresh] = useState(false);
-    const [yearSort, setYear] = useState(0);
+    const [monthSort, setMonth] = useState(me.pool_month);
+    const [yearSort, setYear] = useState(me.pool_year);
     const [users, setUsers] = useState<any[]>([]);
     const [success, setSuccess] = useState<number[]>([]);
     const [update, setUpdate] = useState(false);
@@ -47,7 +48,7 @@ const Piscine: FC<any> = ({ token }: any) => {
             setRefresh(true);
             try {
                 const res = await fetch(
-                    `/api/piscine?year=${me.pool_year}&page=${page}&month=${me.pool_month}&yearSort=${yearSort}`,
+                    `/api/piscine?year=${me.pool_year}&page=${page}&month=${me.pool_month}&yearSort=${yearSort}&monthSort=${monthSort}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 const response = await res.json();
@@ -169,7 +170,7 @@ const Piscine: FC<any> = ({ token }: any) => {
                     </Badge> : null}
                 </OffCanvasTitle>
             </OffCanvasHeader>
-            <PiscineSelect selected={yearSort} setYear={setYear} setUsers={setUsers} setPage={setPage} setMaxPage={setMaxPage} />
+            <PiscineSelect yearSort={yearSort} monthSort={monthSort} setMonth={setMonth} setYear={setYear} setUsers={setUsers} setPage={setPage} setMaxPage={setMaxPage} />
             <OffCanvasBody tag="form" className="p-4" >
                 {
                     (refresh && !users.length)
