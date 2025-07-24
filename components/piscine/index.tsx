@@ -13,6 +13,7 @@ import useDarkMode from "../../hooks/useDarkMode";
 import { addFriendToList } from "../../store/slices/friendsReducer";
 import dayjs from "dayjs";
 import PiscineSelect from "../extras/piscineSelect";
+import Icon from "../icon/Icon";
 
 const Piscine: FC<any> = ({ token }: any) => {
     const friends = useSelector((state: RootState) => state.friends.list);
@@ -145,7 +146,7 @@ const Piscine: FC<any> = ({ token }: any) => {
 
     useEffect(() => {
         getMyPiscine();
-    }, [yearSort])
+    }, [monthSort, yearSort])
 
     if (!me || !users)
         return;
@@ -161,13 +162,16 @@ const Piscine: FC<any> = ({ token }: any) => {
                 className="p-4"
             >
                 <OffCanvasTitle id="canvas-title" className="h2">
-                    <span style={{ marginRight: 10 }}>Pool:</span>
-                    {!yearSort ?<Badge
+                    <Icon
+                        style={{ marginRight: 10 }}
+                        icon={'Water'}
+                        color={darkModeStatus ? 'info' : 'info'}
+                    />
+                    <Badge
                         isLight={darkModeStatus ? false : true}
-                        color={'piscine'}
-                    >
-                        {me.pool_month} {me.pool_year}
-                    </Badge> : null}
+                        color={ me.pool_month == monthSort && me.pool_year == yearSort ? 'piscine' : 'dark'}
+                    > {monthSort} {yearSort}
+                    </Badge>
                 </OffCanvasTitle>
             </OffCanvasHeader>
             <PiscineSelect yearSort={yearSort} monthSort={monthSort} setMonth={setMonth} setYear={setYear} setUsers={setUsers} setPage={setPage} setMaxPage={setMaxPage} />
