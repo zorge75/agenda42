@@ -107,7 +107,7 @@ const Event = ({ eventItem }: any) => {
 
                     {
                         !isException
-                            ? <UsersOfEvent isExceprion={!isException} gender={gender} id={eventItem.id} size={eventItem.nbr_subscribers} myId={me.id} eventTitle={eventItem.name} />
+                            ? <UsersOfEvent desc={eventItem.description} gender={gender} id={eventItem.id} myId={me.id} eventTitle={eventItem.name} />
                             : <Button
                                 isDisable
                                 color="dark"

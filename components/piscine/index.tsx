@@ -288,7 +288,7 @@ const Piscine: FC<any> = ({ token }: any) => {
                                             color={"success"}
                                             isDisable={refresh}
                                             onClick={() => getMyPiscine()}
-                                        >Page {page} from {maxPage}</Button>
+                                        >Load page {page} from {maxPage}</Button>
                                     ) : null}
                         </>
                 }
