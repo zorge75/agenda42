@@ -176,9 +176,9 @@ const UsersOfEvent = ({ desc, myId, id, token, eventTitle }: any) => {
                         const isFriend = friends?.find(i => i.friend_id == user.id);
                         return (
                             <Card isCompact key={key}
-                                className={isFriend ? "friend" : ""}
+                                borderSize={ isFriend ? 2 : 0}
+                                borderColor="success"
                             >
-
                                 <CardHeader
                                     style={{ borderRadius: 20 }}
                                 >
@@ -211,13 +211,15 @@ const UsersOfEvent = ({ desc, myId, id, token, eventTitle }: any) => {
                                             onClick={() => userInIntraHandler(user.id)}
                                         >
                                         </Button>
-                                        <Button
+                                        {isFriend 
+                                        ? <Button
                                             className='h4'
                                             icon={update ? "Refresh" : "WavingHand"}
                                             color={isIdInSuccessWavingHand ? "success" : "brand"}
                                             onClick={() => addWavingHandHandler(user.id, eventTitle, "send", me.image.versions.medium, getName(user), me.login)}
                                         >
-                                        </Button>
+                                        </Button> 
+                                        : null }
                                     </div>
                                     <div className='col-lg-6'>
                                         <div className='h4 text-end'>
@@ -235,7 +237,7 @@ const UsersOfEvent = ({ desc, myId, id, token, eventTitle }: any) => {
                     })
                 }
                 {
-                    (maxPage !== page && maxPage > 0)
+                    (maxPage !== page && maxPage > 1)
                         ? (
                             <Button
                                 style={{ width: '100%' }}
