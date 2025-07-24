@@ -179,7 +179,7 @@ const Piscine: FC<any> = ({ token }: any) => {
                                 users.map(user => {
                                     const isIdInSuccess = success && success.includes(user.id);
                                     const isIdInSuccessWavingHand = success && successWavingHand.includes(user.id);
-                                    const isFriend = friends.find(i => i.friend_id == user.id);
+                                    const isFriend = friends?.find(i => i.friend_id == user.id);
                                     return (
                                         <Card isCompact className={isFriend ? "friend" : ""} >
                                             <CardHeader style={{ borderRadius: 20 }} >
@@ -226,7 +226,7 @@ const Piscine: FC<any> = ({ token }: any) => {
 
                                                     </div>
                                                 </CardLabel>
-                                                <Avatar src={user.image.versions.medium} size={64} />
+                                                <Avatar className="avatar-abs" src={user.image.versions.medium} size={64} />
 
                                             </CardHeader>
 

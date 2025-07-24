@@ -81,6 +81,23 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
         <HeaderRight>
             <div className='row g-3'>
                 {beforeChildren}
+
+				
+
+				<div className='col-auto'>
+					<Popovers trigger='hover' desc='Submit suggestions and bug reports in the issues.'>
+						<Button
+							color= {darkModeStatus ? 'dark' : 'light'}
+							hoverShadow={'default'}
+							size={'lg'}
+							onClick={() => {
+								window.open('https://github.com/brgman/agenda42/issues/new', '_blank')
+							}}
+							data-tour='new-issue'>
+							<span style={{fontSize: '1rem'}}>Bug request</span>
+						</Button>
+					</Popovers>
+				</div>
 			
 				{/* Dark Mode */}
 				<div className='col-auto'>

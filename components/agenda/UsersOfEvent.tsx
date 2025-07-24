@@ -163,7 +163,7 @@ const UsersOfEvent = ({ myId, id, size = 30, token, eventTitle }: any) => {
                     users.map(({ user, key }) => {
                         const isIdInSuccess = success && success.includes(user.id);
                         const isIdInSuccessWavingHand = success && successWavingHand.includes(user.id);
-                        const isFriend = friends.find(i => i.friend_id == user.id);
+                        const isFriend = friends?.find(i => i.friend_id == user.id);
                         return (
                             <Card isCompact key={key}
                                 className={isFriend ? "friend" : ""}
@@ -180,7 +180,7 @@ const UsersOfEvent = ({ myId, id, size = 30, token, eventTitle }: any) => {
                                         </CardTitle>
                                         <p className="mt-2" >{user.email}</p>
                                     </CardLabel>
-                                    <Avatar src={user.image.versions.medium} size={64} />
+                                   <Avatar className="avatar-abs" src={user.image.versions.medium} size={64} />
                                 </CardHeader>
 
                                 <div className='card-aside d-flex row align-items-end event_row m-3 mt-0'>

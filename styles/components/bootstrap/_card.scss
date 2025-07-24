@@ -235,6 +235,12 @@ $border-radius-child: #{$card-border-radius - $card-border-width};
 			border-bottom-color: rgba($value, $card-header-border-opacity);
 		}
 	}
+
+	.avatar-abs {
+		position: absolute;
+		right: 2rem;
+		top: 2rem;
+	}
 }
 
 .card-label {
