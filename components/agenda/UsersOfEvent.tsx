@@ -12,7 +12,7 @@ import useDarkMode from "../../hooks/useDarkMode";
 import Link from "next/dist/client/link";
 import { addFriendToList } from "../../store/slices/friendsReducer";
 
-const UsersOfEvent = ({ myId, id, size = 30, token, eventTitle }: any) => {
+const UsersOfEvent = ({ isExceprion, myId, id, size = 30, token, eventTitle }: any) => {
     const dispatch = useDispatch();
 
     const me = useSelector((state: RootState) => state.user.me);
@@ -150,9 +150,10 @@ const UsersOfEvent = ({ myId, id, size = 30, token, eventTitle }: any) => {
                 className="mb-3"
             >
                 {
-                    refresh || users.length <= 0
-                        ? <Spinner isSmall />
-                        : "Users registered for this event"
+                    (refresh || users.length <= 0)
+                        ? <Spinner isSmall /> :
+                        isExceprion ? "List of students (only be accessed to girls)"
+                        : "Students registered for this event"
                 }
             </Button>
             <Collapse
