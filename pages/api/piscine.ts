@@ -1,17 +1,18 @@
 import axios from "axios";
 
 
-function makeMonthOfPiscine(yearSort: number,year: number, month: number)
+function makeMonthOfPiscine(yearSort: number, monthSort: string, year: number, month: number)
 {
-    if (yearSort > 0)
-        return `&filter[pool_year]=${yearSort}`;
+    if (yearSort && monthSort)
+        return `&filter[pool_year]=${yearSort}`
+            + `&filter[pool_month]=${monthSort}`;
     else
         return `&filter[pool_year]=${year}`
             + `&filter[pool_month]=${month}`;
 }
 
 export default async function handler(req: any, res: any) {
-    const { month, year, yearSort, page } = req.query;
+    const { month, year, yearSort, monthSort, page } = req.query;
     const cookies = req.headers.cookie || "";
     const cookieObj = cookies
         ? Object.fromEntries(cookies.split("; ").map((c: any) => c.split("=")))
@@ -21,7 +22,7 @@ export default async function handler(req: any, res: any) {
         + `?page[number]=${page}`
         + `&filter[primary_campus_id]=1`
         + `&sort=-updated_at`
-        + makeMonthOfPiscine(yearSort, year,  month);
+        + makeMonthOfPiscine(yearSort, monthSort, year,  month);
 
     try {
         const response = await axios.get(

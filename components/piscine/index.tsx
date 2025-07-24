@@ -13,6 +13,7 @@ import useDarkMode from "../../hooks/useDarkMode";
 import { addFriendToList } from "../../store/slices/friendsReducer";
 import dayjs from "dayjs";
 import PiscineSelect from "../extras/piscineSelect";
+import Icon from "../icon/Icon";
 
 const Piscine: FC<any> = ({ token }: any) => {
     const friends = useSelector((state: RootState) => state.friends.list);
@@ -31,7 +32,8 @@ const Piscine: FC<any> = ({ token }: any) => {
     }
 
     const [refresh, setRefresh] = useState(false);
-    const [yearSort, setYear] = useState(0);
+    const [monthSort, setMonth] = useState(me.pool_month);
+    const [yearSort, setYear] = useState(me.pool_year);
     const [users, setUsers] = useState<any[]>([]);
     const [success, setSuccess] = useState<number[]>([]);
     const [update, setUpdate] = useState(false);
@@ -47,7 +49,7 @@ const Piscine: FC<any> = ({ token }: any) => {
             setRefresh(true);
             try {
                 const res = await fetch(
-                    `/api/piscine?year=${me.pool_year}&page=${page}&month=${me.pool_month}&yearSort=${yearSort}`,
+                    `/api/piscine?year=${me.pool_year}&page=${page}&month=${me.pool_month}&yearSort=${yearSort}&monthSort=${monthSort}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 const response = await res.json();
@@ -144,7 +146,7 @@ const Piscine: FC<any> = ({ token }: any) => {
 
     useEffect(() => {
         getMyPiscine();
-    }, [yearSort])
+    }, [monthSort, yearSort])
 
     if (!me || !users)
         return;
@@ -160,16 +162,19 @@ const Piscine: FC<any> = ({ token }: any) => {
                 className="p-4"
             >
                 <OffCanvasTitle id="canvas-title" className="h2">
-                    <span style={{ marginRight: 10 }}>Pool:</span>
-                    {!yearSort ?<Badge
+                    <Icon
+                        style={{ marginRight: 10 }}
+                        icon={'Water'}
+                        color={darkModeStatus ? 'info' : 'info'}
+                    />
+                    <Badge
                         isLight={darkModeStatus ? false : true}
-                        color={'piscine'}
-                    >
-                        {me.pool_month} {me.pool_year}
-                    </Badge> : null}
+                        color={ me.pool_month == monthSort && me.pool_year == yearSort ? 'piscine' : 'dark'}
+                    > {monthSort} {yearSort}
+                    </Badge>
                 </OffCanvasTitle>
             </OffCanvasHeader>
-            <PiscineSelect selected={yearSort} setYear={setYear} setUsers={setUsers} setPage={setPage} setMaxPage={setMaxPage} />
+            <PiscineSelect yearSort={yearSort} monthSort={monthSort} setMonth={setMonth} setYear={setYear} setUsers={setUsers} setPage={setPage} setMaxPage={setMaxPage} />
             <OffCanvasBody tag="form" className="p-4" >
                 {
                     (refresh && !users.length)
@@ -179,7 +184,7 @@ const Piscine: FC<any> = ({ token }: any) => {
                                 users.map(user => {
                                     const isIdInSuccess = success && success.includes(user.id);
                                     const isIdInSuccessWavingHand = success && successWavingHand.includes(user.id);
-                                    const isFriend = friends.find(i => i.friend_id == user.id);
+                                    const isFriend = friends?.find(i => i.friend_id == user.id);
                                     return (
                                         <Card isCompact className={isFriend ? "friend" : ""} >
                                             <CardHeader style={{ borderRadius: 20 }} >
@@ -226,7 +231,7 @@ const Piscine: FC<any> = ({ token }: any) => {
 
                                                     </div>
                                                 </CardLabel>
-                                                <Avatar src={user.image.versions.medium} size={64} />
+                                                <Avatar className="avatar-abs" src={user.image.versions.medium} size={64} />
 
                                             </CardHeader>
 

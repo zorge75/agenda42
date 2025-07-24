@@ -82,7 +82,7 @@ const WavingHand: FC<any> = ({ token }: any) => {
                                 [...wavingList].sort((a: any, b: any) => b.id - a.id).map((waving, key) => {
                                     changeStatusHandler(waving.id);
                                     const isIdInSuccessWavingHand = successWavingHand.includes(waving.id);
-                                    const isFriend = friends.find(i => i.friend_id == waving.author_id);
+                                    const isFriend = friends?.find(i => i.friend_id == waving.author_id);
                                     return (
                                         <Card isCompact className={isFriend ? "friend" : ""} key={key} >
                                             <CardHeader style={{ borderRadius: 20 }} >

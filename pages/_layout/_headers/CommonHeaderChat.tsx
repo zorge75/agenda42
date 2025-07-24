@@ -69,7 +69,7 @@ const CommonHeaderChat = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <Avatar src={user?.image.versions.small} size={48} />
+                        <Avatar className="avatar-abs" src={user?.image.versions.small} size={48} />
                     </Link>
                     {/* {!!msgCount && (
 						<span className='position-absolute top-15 start-85 translate-middle badge rounded-pill bg-danger'>
