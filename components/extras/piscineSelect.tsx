@@ -36,7 +36,7 @@ function getMonths() {
 
 const PiscineSelect = ({ monthSort, yearSort, setYear, setMonth, setUsers, setPage, setMaxPage }: any) => {
     return (
-        <div style={{ margin: '0 20', display: 'flex', justifyContent: 'start' }}>
+        <div style={{ margin: 20, display: 'flex', justifyContent: 'start' }}>
             <Dropdown direction="down">
                 <DropdownToggle>
                     <Button style={{ borderRadius: '1rem 0 0 1rem' }}

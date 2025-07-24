@@ -1,16 +1,22 @@
 import dayjs from "dayjs";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { setUnitType } from "../store/slices/calendarSlice";
 
 const useSwitchEvents = (events: any, allEvents: any, setEventsActive: any) => {
   const switchEvents = useSelector((state: RootState) => state.calendar.focusing);
-  const dispatch = useDispatch();
+  const gender = useSelector((state: RootState) => state.settings.gender?.gender);
+
+    function isException(eventItem: any) {
+        return (
+            (eventItem.description?.toLowerCase().includes("aux femmes") && gender !== "F") ||
+            (eventItem.description?.toLowerCase().includes("aux hommes") && gender !== "M")
+        );
+    }
 
   useEffect(() => {
     if (switchEvents == 'all' && allEvents) {
-      const eventList = allEvents.map((event: any) => ({
+      const eventList = allEvents.filter(event => !isException(event)).map((event: any) => ({
         id: event.id,
         name: event.name ?? event.id,
         start: dayjs(event["begin_at"]).toDate(),
